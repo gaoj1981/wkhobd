@@ -22,7 +22,6 @@ import com.wkhmedical.repository.mongo.ObdLicRepository;
 import com.wkhmedical.repository.mongo.ObdLicReqRepository;
 import com.wkhmedical.repository.mongo.ObdLicSumRepository;
 import com.wkhmedical.service.ObdLicService;
-import com.wkhmedical.util.BizUtil;
 import com.wkhmedical.util.DateUtil;
 import com.wkhmedical.util.RSAUtil;
 

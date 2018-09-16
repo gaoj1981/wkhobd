@@ -5,4 +5,13 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
+	<util:properties id="query">
+		<prop key="findUserInfo">
+			<![CDATA[
+			SELECT u.id as userId, u.userName, u.userIdCard, u.userMobi, u.userSex, u.userBirth, u.state,u.userEthnic 
+			FROM yun_user u 
+			WHERE u.userMobi = ? OR u.userIdCard = ? 
+			]]>
+		</prop>
+	</util:properties>
 </beans>
