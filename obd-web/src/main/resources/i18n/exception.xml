@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties PUBLIC "-//java.sun.com//DTD PROPERTIES//EN" "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="resource_not_exists">{0}不存在</entry>
+	<entry key="resource_no_permission">没有该{0}权限</entry>
+	<entry key="invalid_sms_captcha">验证码无效</entry>
+	<entry key="img_captcha_error">图形验证码错误</entry>
+	<entry key="invalid_wx_appid">不可用的APPID: {0}</entry>
+	<entry key="expire_wx_appid">授权已过期APPID: {0}</entry>
+	<entry key="invalid_token">无效的Token</entry>
+
+	<!-- 小程序错误信息模板 -->
+	<entry key="-1">微信服务器系统繁忙，请稍候再试</entry>
+	<entry key="40001">AppSecret错误或者AppSecret不属于这个公众号</entry>
+	<entry key="40002">请确保grant_type字段值为client_credential</entry>
+	<entry key="40037">template_id不正确</entry>
+	<entry key="40164">用接口的IP地址不在白名单中，请在接口IP白名单中进行设置</entry>
+	<entry key="41028">form_id不正确，或者过期</entry>
+	<entry key="41029">form_id已被使用</entry>
+	<entry key="41030">page不正确</entry>
+	<entry key="45009">接口调用超过限额</entry>
+
+	<!-- 业务错误信息模板 -->
+	<entry key="obdlic_bizdata_error">请求业务数据错误</entry>
+	<entry key="obdlic_bizdata_error_expire">过期的请求数据</entry>
+	<entry key="obdlic_rsa_error">请求加密数据错误</entry>
+	<entry key="obdlic_rsa_id_nomatch">设备ID不匹配。ID：{0}</entry>
+	<entry key="obdlic_active_already">该设备已存在使用中的授权。ID：{0}</entry>
+
+</properties>

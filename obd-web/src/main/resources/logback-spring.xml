@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/base.xml" />
+
+	<!-- 开发环境. 多个使用逗号隔开. -->
+	<springProfile name="dev">
+		<root level="INFO">
+			<appender-ref ref="CONSOLE" />
+		</root>
+		<!-- <logger name="org.springframework.web" level="DEBUG" /> -->
+		<logger name="org.springframework.data.mongodb.core.MongoTemplate" level="DEBUG" />
+		<logger name="org.mongodb.driver" level="OFF" />
+		<logger name="Mongo" level="DEBUG" additivity="false">
+			<appender-ref ref="CONSOLE" />
+		</logger>
+		<logger name="jdbc" level="OFF" />
+		<logger name="jdbc.sqltiming" level="INFO" additivity="false">
+			<appender-ref ref="CONSOLE" />
+		</logger>
+	</springProfile>
+	
+	<!-- 测试环境. -->
+	<springProfile name="test">
+		<root level="WARN">
+			<appender-ref ref="CONSOLE" />
+		</root>
+	</springProfile>
+
+	<!-- 生产环境. -->
+	<springProfile name="prod">
+		<root level="WARN">
+			<appender-ref ref="CONSOLE" />
+			<appender-ref ref="FILE" />
+		</root>
+	</springProfile>
+</configuration>
