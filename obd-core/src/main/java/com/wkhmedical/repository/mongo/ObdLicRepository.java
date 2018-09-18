@@ -11,10 +11,10 @@ import com.wkhmedical.po.MgObdLic;
 @Repository
 public interface ObdLicRepository extends MongoRepository<MgObdLic, String>, IObdLicRepository {
 
-	List<MgObdLic> findByDid(String did);
+	List<MgObdLic> findByEid(String eid);
 
-	List<MgObdLic> findByDidAndStatus(String did, LicStatus status);
+	List<MgObdLic> findByEidAndStatus(String eid, LicStatus status);
 
-	MgObdLic findByDidAndSn(String id, String sn);
+	MgObdLic findByEidAndSn(String eid, String sn);
 
 }

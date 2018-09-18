@@ -1,34 +1,15 @@
 package com.wkhmedical.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ObdLicDTO {
 
-	private String id;
+	private String eid;
 	private Long st;
 
 	private LicInfoDTO lic;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public Long getSt() {
-		return st;
-	}
-
-	public void setSt(Long st) {
-		this.st = st;
-	}
-
-	public LicInfoDTO getLic() {
-		return lic;
-	}
-
-	public void setLic(LicInfoDTO lic) {
-		this.lic = lic;
-	}
 
 }

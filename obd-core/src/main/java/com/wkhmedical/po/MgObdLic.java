@@ -11,15 +11,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.wkhmedical.constant.LicStatus;
 
 @Document(collection = "obd_lic")
-@CompoundIndexes({ @CompoundIndex(name = "idx_did_sn", def = "{'did': 1, 'sn': -1}", unique = true),
-		@CompoundIndex(name = "idx_did_status", def = "{'did': 1, 'status': -1}") })
+@CompoundIndexes({ @CompoundIndex(name = "idx_eid_sn", def = "{'eid': 1, 'sn': -1}", unique = true),
+		@CompoundIndex(name = "idx_eid_status", def = "{'eid': 1, 'status': -1}") })
 public class MgObdLic {
 
 	@Id
 	private String id;
 
 	@Indexed
-	private String did;
+	private String eid;
 
 	private String sn;
 
@@ -35,12 +35,12 @@ public class MgObdLic {
 	private Map<String, Integer> conf;
 	private Map<String, Integer> stats;
 
-	public String getDid() {
-		return did;
+	public String getEid() {
+		return eid;
 	}
 
-	public void setDid(String did) {
-		this.did = did;
+	public void setEid(String eid) {
+		this.eid = eid;
 	}
 
 	public String getId() {

@@ -239,7 +239,7 @@ public class RSAUtil {
 		System.out.println("公钥: \n" + publicKey);
 		System.out.println("私钥： \n" + privateKey);
 
-		String str = "{\"id\":\"abcdeabcde\",\"lic\":{\"sn\": \"F1C732521557AED3D2\",\"stats\": {\"bio_used\": 12,\"user_used\": 119},\"v\": 1536933830316},\"stats\":{\"bio_used\":1000,\"user_used\":199},\"st\":"+DateUtil.getTimestamp()+"}";
+		String str = "{\"eid\":\"WKH20180826J002\",\"lic\":{\"sn\": \"7B477B1C155ECFEFEA\",\"stats\": {\"bio_used\": 12,\"user_used\": 158,\"bc_used\": 58},\"v\": 1536760566900},\"stats\":{\"bio_used\":1000,\"user_used\":199},\"st\":"+DateUtil.getTimestamp()+"}";
 		System.out.println("\r明文：\r" + str);
 		System.out.println("明文大小：\r" + str.getBytes().length);
 

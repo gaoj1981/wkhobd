@@ -11,7 +11,7 @@ public class MgObdLicReq {
 	private String id;
 
 	@Indexed(unique = true)
-	private String did;
+	private String eid;
 
 	private Long st;
 
@@ -23,12 +23,12 @@ public class MgObdLicReq {
 		this.id = id;
 	}
 
-	public String getDid() {
-		return did;
+	public String getEid() {
+		return eid;
 	}
 
-	public void setDid(String did) {
-		this.did = did;
+	public void setEid(String eid) {
+		this.eid = eid;
 	}
 
 	public Long getSt() {

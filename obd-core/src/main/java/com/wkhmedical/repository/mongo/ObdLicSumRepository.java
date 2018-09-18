@@ -8,6 +8,6 @@ import com.wkhmedical.po.MgObdLicSum;
 @Repository
 public interface ObdLicSumRepository extends MongoRepository<MgObdLicSum, String>, IObdLicSumRepository {
 
-	MgObdLicSum findByDid(String did);
+	MgObdLicSum findByEid(String eid);
 
 }

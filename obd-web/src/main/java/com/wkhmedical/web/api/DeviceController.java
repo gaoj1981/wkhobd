@@ -41,12 +41,12 @@ public class DeviceController {
 	 * @param licInfo 加密请求信息
 	 * @return 加密后授权信息
 	 */
-	@PostMapping("/{id:[0-9a-f]+}/auth")
-	public String getWare(@PathVariable String id, @RequestBody @Valid String licStr) {
+	@PostMapping("/{eid:[0-9a-zA-Z]+}/auth")
+	public String getWare(@PathVariable String eid, @RequestBody @Valid String licStr) {
 		log.info("============BEGIN==============");
-		log.info("请求设备编号：" + id);
+		log.info("请求设备编号：" + eid);
 		log.info("请求加密数据：" + licStr);
-		ObdLicDTO rtnDTO = obdLicService.getObdLic(id, licStr);
+		ObdLicDTO rtnDTO = obdLicService.getObdLic(eid, licStr);
 		String rtnJsonStr = JSON.toJSONString(rtnDTO);
 		log.info("返回数据：" + rtnJsonStr);
 		// 加密返回数据

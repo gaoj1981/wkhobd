@@ -15,7 +15,7 @@ public class MgObdLicSum {
 	private String id;
 
 	@Indexed(unique = true)
-	private String did;
+	private String eid;
 
 	private Long ut;
 
@@ -32,12 +32,12 @@ public class MgObdLicSum {
 		this.id = id;
 	}
 
-	public String getDid() {
-		return did;
+	public String getEid() {
+		return eid;
 	}
 
-	public void setDid(String did) {
-		this.did = did;
+	public void setEid(String eid) {
+		this.eid = eid;
 	}
 
 	public Long getUt() {

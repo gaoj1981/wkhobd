@@ -18,11 +18,11 @@ public class ObdLicRepositoryImpl implements IObdLicRepository {
 	MongoSupport mongoSupport;
 
 	@Override
-	public MgObdLic getLicInfoGtNow(String did, LicStatus status, Integer type) {
+	public MgObdLic getLicInfoGtNow(String eid, LicStatus status, Integer type) {
 		Criteria criteria = new Criteria();
 		criteria.and("exp").gt(DateUtil.getTimestamp());
-		if (did != null) {
-			criteria.and("did").is(did);
+		if (eid != null) {
+			criteria.and("eid").is(eid);
 		}
 		if (status != null) {
 			criteria.and("status").is(status);

@@ -42,7 +42,7 @@ public class ObdLicServiceImpl implements ObdLicService {
 	ObdLicReqRepository licReqRepository;
 
 	@Override
-	public ObdLicDTO getObdLic(String id, String rsaStr) {
+	public ObdLicDTO getObdLic(String urlEid, String rsaStr) {
 		String decodedData = null;
 		// 获取并验证加密数据
 		try {
@@ -54,17 +54,17 @@ public class ObdLicServiceImpl implements ObdLicService {
 		}
 
 		JSONObject requestJso = JSONObject.parseObject(decodedData);
-		String did = requestJso.getString("id");
+		String eid = requestJso.getString("eid");
 		// 加密数据中与接口地址中ID是否一致
-		if (!id.equals(did)) {
-			throw new ObdLicException("obdlic_rsa_id_nomatch", id);
+		if (!urlEid.equals(eid)) {
+			throw new ObdLicException("obdlic_rsa_id_nomatch", urlEid);
 		}
 
-		List<MgObdLic> lstActiveLic = licRepository.findByDidAndStatus(did, LicStatus.Active);
+		List<MgObdLic> lstActiveLic = licRepository.findByEidAndStatus(eid, LicStatus.Active);
 		// 判断使用中的授权
 		if (lstActiveLic != null && lstActiveLic.size() > 1) {
 			// 有多个使用中授权，直接返回错误信息
-			throw new ObdLicException("obdlic_active_already", did);
+			throw new ObdLicException("obdlic_active_already", eid);
 		}
 
 		JSONObject licJso = requestJso.getJSONObject("lic");
@@ -77,18 +77,20 @@ public class ObdLicServiceImpl implements ObdLicService {
 			}
 			else {
 				// Step1:先取试用
-				rtnLicInfo = licRepository.getLicInfoGtNow(did, LicStatus.None, 0);
+				rtnLicInfo = licRepository.getLicInfoGtNow(eid, LicStatus.None, 0);
 				// Step2:若无试用，优先取Wait状态Lic
 				if (rtnLicInfo == null) {
-					rtnLicInfo = licRepository.getLicInfoGtNow(did, LicStatus.Wait, null);
+					rtnLicInfo = licRepository.getLicInfoGtNow(eid, LicStatus.Wait, null);
 				}
 				// Step3:无Wait状态Lic，取正常授权
 				if (rtnLicInfo == null) {
-					rtnLicInfo = licRepository.getLicInfoGtNow(did, LicStatus.None, null);
+					rtnLicInfo = licRepository.getLicInfoGtNow(eid, LicStatus.None, null);
 				}
 				// Step4:授权状态更新为Active
-				rtnLicInfo.setStatus(LicStatus.Active);
-				licRepository.update(rtnLicInfo);
+				if (rtnLicInfo != null) {
+					rtnLicInfo.setStatus(LicStatus.Active);
+					licRepository.update(rtnLicInfo);
+				}
 			}
 		}
 		// 正常使用中的请求
@@ -97,16 +99,16 @@ public class ObdLicServiceImpl implements ObdLicService {
 			JSONObject stats = licJso.getJSONObject("stats");
 			if (stats == null) {
 				// 客户端POST数量无用量Key，直接返回错误信息
-				throw new ObdLicException("obdlic_active_already", did);
+				throw new ObdLicException("obdlic_active_already", eid);
 			}
 
-			MgObdLic curLicInfo = licRepository.findByDidAndSn(id, sn);
+			MgObdLic curLicInfo = licRepository.findByEidAndSn(eid, sn);
 			if (curLicInfo == null) {
 				throw new ObdLicException("obdlic_bizdata_error");
 			}
 			// 判断请求是否过期时间戳
 			Long curReqSt = requestJso.getLong("st");
-			MgObdLicReq licReqInfo = licReqRepository.findByDid(did);
+			MgObdLicReq licReqInfo = licReqRepository.findByEid(eid);
 			if (licReqInfo != null) {
 				Long reqSt = licReqInfo.getSt();
 				if (curReqSt == null || reqSt.compareTo(curReqSt) > 0) {
@@ -119,7 +121,7 @@ public class ObdLicServiceImpl implements ObdLicService {
 			else {
 				// 插入请求时间戳
 				licReqInfo = new MgObdLicReq();
-				licReqInfo.setDid(did);
+				licReqInfo.setEid(eid);
 				licReqInfo.setSt(curReqSt);
 				licReqRepository.save(licReqInfo);
 			}
@@ -139,7 +141,7 @@ public class ObdLicServiceImpl implements ObdLicService {
 			licRepository.update(curLicInfo);
 
 			// 获取当前设备总次数
-			MgObdLicSum licSum = licSumRepository.findByDid(did);
+			MgObdLicSum licSum = licSumRepository.findByEid(eid);
 			// 更新此设备的Lic使用总次数
 			Map<String, Integer> mapSumStats = new HashMap<String, Integer>();
 			JSONObject statsSum = requestJso.getJSONObject("stats");
@@ -154,7 +156,7 @@ public class ObdLicServiceImpl implements ObdLicService {
 			}
 			if (licSum == null) {
 				licSum = new MgObdLicSum();
-				licSum.setDid(did);
+				licSum.setEid(eid);
 				licSum.setUt(DateUtil.getTimestamp());
 				licSum.setStats(mapSumStats);
 				licSumRepository.save(licSum);
@@ -178,7 +180,7 @@ public class ObdLicServiceImpl implements ObdLicService {
 					}
 					else {
 						// 无可使用状态时，则查找返回Wait状态Lic
-						rtnLicInfo = licRepository.getLicInfoGtNow(did, LicStatus.Wait, null);
+						rtnLicInfo = licRepository.getLicInfoGtNow(eid, LicStatus.Wait, null);
 					}
 				}
 				else {
@@ -195,7 +197,7 @@ public class ObdLicServiceImpl implements ObdLicService {
 						entryKey = entry.getKey();
 						xxKey = entryKey.replaceAll("_used", "");
 						xxLimKey = xxKey + "_lim";
-						limitValue = mapCurConf.get(xxLimKey);
+						limitValue = mapCurConf.get(xxLimKey) == null ? 0 : mapCurConf.get(xxLimKey);
 						entryValue = (Integer) entry.getValue();
 						if (entryValue >= limitValue) {
 							// 如果授权中有任意一项数值超标，则进行结转操作
@@ -206,52 +208,55 @@ public class ObdLicServiceImpl implements ObdLicService {
 					// 结转操作
 					if (isCover) {
 						// 优先返回Wait状态Lic
-						rtnLicInfo = licRepository.getLicInfoGtNow(did, LicStatus.Wait, null);
+						rtnLicInfo = licRepository.getLicInfoGtNow(eid, LicStatus.Wait, null);
 						if (rtnLicInfo == null) {
 							// 无Wait状态Lic情况下，返回未使用
-							rtnLicInfo = licRepository.getLicInfoGtNow(did, LicStatus.None, null);
+							rtnLicInfo = licRepository.getLicInfoGtNow(eid, LicStatus.None, null);
 						}
-						String xxLimCoverKey = "";
 						if (rtnLicInfo != null) {
-							// 对待授权进行结转
-							Map<String, Integer> mapConf = rtnLicInfo.getConf();
-							Integer licConfValue;
-							Integer curLimitValue;
-							Integer coverValue;
-							for (Map.Entry<String, Object> entry : stats.entrySet()) {
-								entryKey = entry.getKey();
-								xxKey = entryKey.replaceAll("_used", "");
-								xxLimKey = xxKey + "_lim";
-								xxLimCoverKey = xxLimKey + "_b";
-								// 当前授权XX项的总量
-								curLimitValue = mapCurConf.get(xxLimKey);
-								// 当前授权XX项的用量
-								entryValue = (Integer) entry.getValue();
-								// 当前授权XX项的余量
-								coverValue = curLimitValue - entryValue;
-								// 待授权的XX项总量
-								licConfValue = mapConf.get(xxLimKey);
-								// 更新待授权结转数据
-								if (licConfValue == null) {
-									// 结转授权中无此XX项，则添加此XX项
-									mapConf.put(xxLimKey, coverValue);
-									mapConf.put(xxLimCoverKey, coverValue);
-								}
-								else {
-									// 结转授权中有此XX项，则xx项次数+结转次数
-									mapConf.put(xxLimKey, licConfValue + coverValue);
-									// 待授权的XX项现有的结转量
-									Integer licConfCoverValue = mapConf.get(xxLimCoverKey);
-									if (licConfCoverValue == null) licConfCoverValue = 0;
-									// xx项结转次数 +本次结转次数
-									mapConf.put(xxLimCoverKey, licConfCoverValue + coverValue);
-								}
-							}
+							/**
+							 * 客户要求只切Lic，无需结转，暂注释以下代码
+							 */
+							// // 对待授权进行结转
+							// Map<String, Integer> mapConf = rtnLicInfo.getConf();
+							// Integer licConfValue;
+							// Integer curLimitValue;
+							// Integer coverValue;
+							// String xxLimCoverKey = "";
+							// for (Map.Entry<String, Object> entry : stats.entrySet()) {
+							// entryKey = entry.getKey();
+							// xxKey = entryKey.replaceAll("_used", "");
+							// xxLimKey = xxKey + "_lim";
+							// xxLimCoverKey = xxLimKey + "_b";
+							// // 当前授权XX项的总量
+							// curLimitValue = mapCurConf.get(xxLimKey);
+							// // 当前授权XX项的用量
+							// entryValue = (Integer) entry.getValue();
+							// // 当前授权XX项的余量
+							// coverValue = curLimitValue - entryValue;
+							// // 待授权的XX项总量
+							// licConfValue = mapConf.get(xxLimKey);
+							// // 更新待授权结转数据
+							// if (licConfValue == null) {
+							// // 结转授权中无此XX项，则添加此XX项
+							// mapConf.put(xxLimKey, coverValue);
+							// mapConf.put(xxLimCoverKey, coverValue);
+							// }
+							// else {
+							// // 结转授权中有此XX项，则xx项次数+结转次数
+							// mapConf.put(xxLimKey, licConfValue + coverValue);
+							// // 待授权的XX项现有的结转量
+							// Integer licConfCoverValue = mapConf.get(xxLimCoverKey);
+							// if (licConfCoverValue == null) licConfCoverValue = 0;
+							// // xx项结转次数 +本次结转次数
+							// mapConf.put(xxLimCoverKey, licConfCoverValue + coverValue);
+							// }
+							// }
 							// 结束当前授权
 							curLicInfo.setStatus(LicStatus.Discard);
 							licRepository.update(curLicInfo);
-							// 更新待授权及
-							rtnLicInfo.setConf(mapConf);
+							// 更新待授权
+							// rtnLicInfo.setConf(mapConf);//Lic需结转时，需打开
 							rtnLicInfo.setStatus(LicStatus.Active);
 							licRepository.update(rtnLicInfo);
 						}
@@ -259,6 +264,11 @@ public class ObdLicServiceImpl implements ObdLicService {
 				}
 			}
 			else {
+				// 当前Lic为非Active时，属异常请求
+				LicStatus status = curLicInfo.getStatus();
+				if (!status.equals(LicStatus.Active)) {
+					throw new ObdLicException("obdlic_bizdata_error");
+				}
 				rtnLicInfo = curLicInfo;
 			}
 		}
@@ -267,7 +277,7 @@ public class ObdLicServiceImpl implements ObdLicService {
 		// 组装返回数据结构
 		ObdLicDTO rtnDTO = new ObdLicDTO();
 		LicInfoDTO licInfoDTO = new LicInfoDTO();
-		rtnDTO.setId(did);
+		rtnDTO.setEid(eid);
 		rtnDTO.setSt(DateUtil.getTimestamp());
 		if (rtnLicInfo != null) {
 			licInfoDTO.setSn(rtnLicInfo.getSn());

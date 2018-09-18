@@ -8,6 +8,6 @@ import com.wkhmedical.po.MgObdLicReq;
 @Repository
 public interface ObdLicReqRepository extends MongoRepository<MgObdLicReq, String>, IObdLicReqRepository {
 
-	MgObdLicReq findByDid(String did);
+	MgObdLicReq findByEid(String eid);
 
 }

@@ -4,5 +4,5 @@ import com.wkhmedical.dto.ObdLicDTO;
 
 public interface ObdLicService {
 
-	ObdLicDTO getObdLic(String id, String rsaStr);
+	ObdLicDTO getObdLic(String urlEid, String rsaStr);
 }

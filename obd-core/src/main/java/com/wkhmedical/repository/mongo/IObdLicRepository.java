@@ -13,6 +13,6 @@ public interface IObdLicRepository {
 	 * @param type 类型
 	 * @return
 	 */
-	MgObdLic getLicInfoGtNow(String did, LicStatus status, Integer type);
+	MgObdLic getLicInfoGtNow(String eid, LicStatus status, Integer type);
 
 }
