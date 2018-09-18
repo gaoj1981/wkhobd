@@ -6,6 +6,11 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.Length;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class RegisterBody implements Serializable {
 
 	/**
@@ -28,45 +33,5 @@ public class RegisterBody implements Serializable {
 	private String userName;
 
 	private String userPwd;
-
-	public String getUserMobi() {
-		return userMobi;
-	}
-
-	public void setUserMobi(String userMobi) {
-		this.userMobi = userMobi;
-	}
-
-	public String getValiCode() {
-		return valiCode;
-	}
-
-	public void setValiCode(String valiCode) {
-		this.valiCode = valiCode;
-	}
-
-	public String getIdCard() {
-		return idCard;
-	}
-
-	public void setIdCard(String idCard) {
-		this.idCard = idCard;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getUserPwd() {
-		return userPwd;
-	}
-
-	public void setUserPwd(String userPwd) {
-		this.userPwd = userPwd;
-	}
 
 }

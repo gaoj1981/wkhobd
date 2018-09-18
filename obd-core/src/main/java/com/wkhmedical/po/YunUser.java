@@ -15,6 +15,11 @@ import org.hibernate.annotations.DynamicUpdate;
 import com.wkhmedical.constant.Ethnic;
 import com.wkhmedical.constant.Gender;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "yun_user")
 @DynamicInsert
@@ -44,85 +49,5 @@ public class YunUser implements Serializable {
 
 	@Enumerated(EnumType.STRING)
 	private Ethnic userEthnic;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getUserIdCard() {
-		return userIdCard;
-	}
-
-	public void setUserIdCard(String userIdCard) {
-		this.userIdCard = userIdCard;
-	}
-
-	public String getUserPwdSalt() {
-		return userPwdSalt;
-	}
-
-	public void setUserPwdSalt(String userPwdSalt) {
-		this.userPwdSalt = userPwdSalt;
-	}
-
-	public String getUserMobi() {
-		return userMobi;
-	}
-
-	public void setUserMobi(String userMobi) {
-		this.userMobi = userMobi;
-	}
-
-	public Date getUserBirth() {
-		return userBirth;
-	}
-
-	public void setUserBirth(Date userBirth) {
-		this.userBirth = userBirth;
-	}
-
-	public Gender getUserSex() {
-		return userSex;
-	}
-
-	public void setUserSex(Gender userSex) {
-		this.userSex = userSex;
-	}
-
-	public Integer getState() {
-		return state;
-	}
-
-	public void setState(Integer state) {
-		this.state = state;
-	}
-
-	public String getUserPwd() {
-		return userPwd;
-	}
-
-	public void setUserPwd(String userPwd) {
-		this.userPwd = userPwd;
-	}
-
-	public Ethnic getUserEthnic() {
-		return userEthnic;
-	}
-
-	public void setUserEthnic(Ethnic userEthnic) {
-		this.userEthnic = userEthnic;
-	}
 
 }
