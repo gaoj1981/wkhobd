@@ -48,6 +48,10 @@ public class WebOAuthConfig {
 					  .withClient("c3a14543425cbb")
 					  .secret("CZbx1vbRkybpdkUObTRN9ktPRDwNOUmv1iG7IyJjOVE=")
 					  .authorizedGrantTypes("client_credentials")
+					  .scopes("app")
+					  .and().withClient("obdada3108b0ee")
+					  .secret("57DCE5A6cbc0f48f4376E3F057746577a7c28059f8F=")
+					  .authorizedGrantTypes("client_credentials")
 					  .scopes("app");
 		}
 	}
@@ -81,10 +85,10 @@ public class WebOAuthConfig {
 			http
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
 			.and()
-				.requestMatchers().antMatchers("/api/**","/ws","/stomp")
+				.requestMatchers().antMatchers("/api/**","/obd/**","/ws","/stomp")
 			.and()
 				.authorizeRequests()
-				.antMatchers("/api/**").access("hasRole('ROLE_USER') or hasRole('ROLE_WXUSER') or #oauth2.isOAuth()");
+				.antMatchers("/api/**","/obd/**").access("hasRole('ROLE_USER') or hasRole('ROLE_WXUSER') or #oauth2.isOAuth()");
 			// @formatter:on
 		}
 	}
