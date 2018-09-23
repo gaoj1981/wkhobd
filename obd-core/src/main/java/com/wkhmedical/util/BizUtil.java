@@ -8,7 +8,9 @@ import org.springframework.stereotype.Component;
 
 import com.wkhmedical.config.ConfigProperties;
 import com.wkhmedical.constant.Gender;
+import com.wkhmedical.dto.CarSendDTO;
 import com.wkhmedical.dto.IdCardValidator;
+import com.wkhmedical.po.MgObdCar;
 
 @Component
 public class BizUtil {
@@ -112,6 +114,37 @@ public class BizUtil {
 			idCardValiInfo.setErrMsg("身份证号位数错误");
 			return idCardValiInfo;
 		}
+	}
+
+	public static MgObdCar convertCarInfo(CarSendDTO carInfo) {
+		MgObdCar rtnCar = new MgObdCar();
+		rtnCar.setDeviceNumber(carInfo.getDeviceNumber());
+		rtnCar.setAccStatus(carInfo.getAccStatus());
+		rtnCar.setAdId(carInfo.getId());
+		rtnCar.setAirDoorTemperature(carInfo.getAirDoorTemperature());
+		rtnCar.setAirflow(carInfo.getAirflow());
+		rtnCar.setAverageGasUsed(carInfo.getAverageGasUsed());
+		rtnCar.setAverageSpeed(carInfo.getAverageSpeed());
+		rtnCar.setBatteryvoltage(carInfo.getBatteryvoltage());
+		rtnCar.setCarRunningTime(carInfo.getCarRunningTime());
+		rtnCar.setCoolWaterTemperature(carInfo.getCoolWaterTemperature());
+		rtnCar.setDeviceCreatTime(carInfo.getDeviceCreatTime());
+		rtnCar.setDashboardTotalMileage(carInfo.getDashboardTotalMileage());
+		rtnCar.setEnginePressure(carInfo.getEnginePressure());
+		rtnCar.setEngineRuntime(carInfo.getEngineRuntime());
+		rtnCar.setEngineTurnSpeed(carInfo.getEngineTurnSpeed());
+		rtnCar.setEnvironmentTemperature(carInfo.getEnvironmentTemperature());
+		rtnCar.setFaulContext(carInfo.getFaulContext());
+		rtnCar.setFaultLightStatus(carInfo.getFaultLightStatus());
+		rtnCar.setFaultLigthNumber(carInfo.getFaultLigthNumber());
+		rtnCar.setFaultRunMileage(carInfo.getFaultRunMileage());
+		rtnCar.setOneTimeDirveGasTotal(carInfo.getOneTimeDirveGasTotal());
+		rtnCar.setOneTimeDriveDistance(carInfo.getOneTimeDriveDistance());
+		rtnCar.setRemainingGasValue(carInfo.getRemainingGasValue());
+		rtnCar.setTotalGasUsed(carInfo.getTotalGasUsed());
+		rtnCar.setTotalMileage(carInfo.getTotalMileage());
+		rtnCar.setVehicleSpeed(carInfo.getVehicleSpeed());
+		return rtnCar;
 	}
 
 }
