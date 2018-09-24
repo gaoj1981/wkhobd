@@ -7,5 +7,6 @@ import com.wkhmedical.po.CarInfo;
 
 @Repository
 public interface CarInfoRepository extends JpaRepository<CarInfo, Long>, ICarInfoRepository {
-	
+
+	CarInfo findByEid(String eid);
 }

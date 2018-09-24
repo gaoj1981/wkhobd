@@ -11,8 +11,6 @@ import lombok.Setter;
 @Setter
 public class CarInfoDTO implements Serializable {
 
-	private Long id;
-
 	private String eid;
 
 	private String deviceNumber;

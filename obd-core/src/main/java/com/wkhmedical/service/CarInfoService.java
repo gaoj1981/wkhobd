@@ -1,10 +1,14 @@
 package com.wkhmedical.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 import com.wkhmedical.dto.CarInfoDTO;
-import com.wkhmedical.dto.CarInfoListBody;
+import com.wkhmedical.dto.CarInfoPageParam;
+import com.wkhmedical.dto.CarInfoParam;
+import com.wkhmedical.po.CarInfo;
 
 public interface CarInfoService {
-	List<CarInfoDTO> getCarInfoList(CarInfoListBody paramBody);
+	Page<CarInfo> getCarInfoList(CarInfoPageParam paramBody);
+	
+	CarInfoDTO getCarInfo(CarInfoParam paramBody);
 }

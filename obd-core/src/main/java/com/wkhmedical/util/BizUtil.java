@@ -6,6 +6,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.alibaba.fastjson.JSON;
 import com.wkhmedical.config.ConfigProperties;
 import com.wkhmedical.constant.Gender;
 import com.wkhmedical.dto.CarSendDTO;
@@ -147,4 +148,8 @@ public class BizUtil {
 		return rtnCar;
 	}
 
+	public static <T> T coverBean(Object obj, Class<T> clazz) {
+		String json = JSON.toJSONString(obj);
+		return JSON.parseObject(json, clazz);
+	}
 }

@@ -19,7 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "yun_user")
+@Table(name = "car_info")
 @DynamicInsert
 @DynamicUpdate
 public class CarInfo implements Serializable {
