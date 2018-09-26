@@ -47,7 +47,7 @@ public class WebOAuthConfig {
 			clients.inMemory() // 使用in-memory存储
 					  .withClient("c3a14543425cbb")
 					  .secret("CZbx1vbRkybpdkUObTRN9ktPRDwNOUmv1iG7IyJjOVE=")
-					  .authorizedGrantTypes("client_credentials")
+					  .authorizedGrantTypes("client_credentials","password")
 					  .scopes("app")
 					  .and().withClient("obdada3108b0ee")
 					  .secret("57DCE5A6cbc0f48f4376E3F057746577a7c28059f8F=")

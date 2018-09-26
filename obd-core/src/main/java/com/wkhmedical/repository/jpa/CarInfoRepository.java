@@ -9,4 +9,9 @@ import com.wkhmedical.po.CarInfo;
 public interface CarInfoRepository extends JpaRepository<CarInfo, Long>, ICarInfoRepository {
 
 	CarInfo findByEid(String eid);
+
+	CarInfo findByDeviceNumber(String deviceNumber);
+
+	CarInfo findByEidAndDelFlag(String eid, int delFlag);
+
 }

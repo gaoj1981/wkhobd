@@ -7,11 +7,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
-import com.wkhmedical.security.DefaultUserDetailsService;
 import com.taoxeo.boot.security.AbstractWebSecurityConfig;
+import com.taoxeo.boot.security.CustomLoginFilter;
+import com.wkhmedical.security.DefaultAuthenticationFailureHandler;
+import com.wkhmedical.security.DefaultAuthenticationSuccessHandler;
+import com.wkhmedical.security.DefaultUserDetailsService;
 
 /**
  * The Class WebSecurityConfig.
@@ -34,11 +38,15 @@ public class WebSecurityConfig extends AbstractWebSecurityConfig {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		//@formatter:off
-		 http.authorizeRequests()
+		 http
+		 		.authorizeRequests()
             	.antMatchers("/wx/login").permitAll()
 				.antMatchers("/wx/**", "/api/**").hasAnyRole("USER", "WXUSER")
 				.antMatchers("/**").hasAnyRole("USER")
-				.and().formLogin().loginPage("/login.html").loginProcessingUrl("/login").permitAll().defaultSuccessUrl("/")
+				.and().formLogin().loginPage("/login.html").loginProcessingUrl("/login")
+				.successHandler(new DefaultAuthenticationSuccessHandler())
+				.failureHandler(new DefaultAuthenticationFailureHandler())
+				.permitAll()
 				.and().logout()
 				.and().csrf().disable()
 				.sessionManagement().enableSessionUrlRewriting(true)

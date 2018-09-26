@@ -13,5 +13,12 @@
 			WHERE u.userMobi = ? OR u.userIdCard = ? 
 			]]>
 		</prop>
+		<prop key="findCarCount">
+			<![CDATA[
+			SELECT COUNT(1) 
+			FROM car_info  
+			WHERE areaId = ? 
+			]]>
+		</prop>
 	</util:properties>
 </beans>

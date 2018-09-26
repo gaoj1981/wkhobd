@@ -13,13 +13,13 @@ import lombok.Setter;
 @ApiModel(value = "车辆参数对象", description = "用于检索车辆分页列表用")
 @Getter
 @Setter
-public class CarInfoPageParam implements Serializable {
+public class CarInfoPage implements Serializable {
 
 	@ApiModelProperty(value = "内存页码", required = true)
 	@NotNull
 	@Min(1)
 	private Integer paging;
-	
-	private Integer provId;
+
+	private Integer areaId;
 
 }

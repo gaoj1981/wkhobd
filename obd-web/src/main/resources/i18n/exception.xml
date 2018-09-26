@@ -26,5 +26,18 @@
 	<entry key="obdlic_rsa_error">请求加密数据错误</entry>
 	<entry key="obdlic_rsa_id_nomatch">设备ID不匹配。ID：{0}</entry>
 	<entry key="obdlic_active_already">该设备已存在使用中的授权。ID：{0}</entry>
+	
+	<entry key="obdcar_not_devicenumber">deviceNumber不存在</entry>
+	<entry key="obdcar_carinfo_nomatch">OBD的eid:{0}与deviceNumber：{1}不匹配</entry>
+	<entry key="obdcar_eid_devicenumber_double">eid:{0}与deviceNumber：{1}匹配重复</entry>
+	<entry key="obdcar_eid_devicenumber_already_exists">eid：{0}与deviceNumber：{1}已存在关联信息</entry>
+	<entry key="obdcar_eid_already_exists">eid：{0}已存在deviceNumber关联信息</entry>
+	<entry key="obdcar_devicenumber_already_exists">devicenumber：{0}已存在eid关联信息</entry>
+	<entry key="obdcar_not_related">eid：{0}未关联OBD实时设备</entry>
+	<entry key="carinfo_not_exists">eid：{0}车辆不存在</entry>
+	<entry key="carinfo_already_exists">eid：{0}车辆已存在</entry>
+	<entry key="carinfo_devicenumber_already_exists">devicenumber：{0}车辆已存在</entry>
+	<entry key="carinfo_edit_id_must">待修改车辆的主KEY（id字段）必须</entry>
+	<entry key="carinfo_not_exists">id：{0}车辆不存在</entry>
 
 </properties>

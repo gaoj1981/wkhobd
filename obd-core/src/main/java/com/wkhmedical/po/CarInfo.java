@@ -61,29 +61,13 @@ public class CarInfo implements Serializable {
 
 	private Long prinId;
 
-	private String prinName;
-
-	private String prinJob;
-
-	private String prinTel;
-
-	private String prinUrName;
-
-	private String prinUrTel;
-
 	private Long maintId;
-
-	private String maintName;
-
-	private String maintTel;
-
-	private String maintUrName;
-
-	private String maintUrTel;
 
 	private Integer provId;
 
 	private Integer cityId;
 
 	private Integer areaId;
+
+	private Integer delFlag;
 }

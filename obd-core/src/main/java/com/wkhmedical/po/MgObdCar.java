@@ -24,6 +24,12 @@ public class MgObdCar {
 	private Integer adId;
 
 	/**
+	 * 车辆ID，对应设备用
+	 */
+	@Indexed
+	private String eid;
+
+	/**
 	 * 设备编号
 	 */
 	@Indexed(unique = true)
