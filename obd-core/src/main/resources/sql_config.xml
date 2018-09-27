@@ -20,5 +20,12 @@
 			WHERE areaId = ? 
 			]]>
 		</prop>
+		<prop key="findCount">
+			<![CDATA[
+			SELECT COUNT(1) 
+			FROM yun_user  
+			WHERE id = ? 
+			]]>
+		</prop>
 	</util:properties>
 </beans>

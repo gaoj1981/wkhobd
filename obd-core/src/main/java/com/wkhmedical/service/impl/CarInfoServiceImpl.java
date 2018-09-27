@@ -117,7 +117,7 @@ public class CarInfoServiceImpl implements CarInfoService {
 		// id检查
 		Long id = carInfoBody.getId();
 		if (id == null) {
-			throw new BizRuntimeException("carinfo_edit_id_must", id);
+			throw new BizRuntimeException("info_edit_id_must", id);
 		}
 		// 判断待修改记录唯一性
 		Optional<CarInfo> optObj = carInfoRepository.findById(id);
@@ -151,7 +151,11 @@ public class CarInfoServiceImpl implements CarInfoService {
 		MgObdCar obdCar = obdCarRepository.findByEid(eid);
 		if (obdCar != null) {
 			String deviceNumberObd = obdCar.getDeviceNumber();
-			if (!StringUtils.isEmpty(deviceNumberObd) && !deviceNumberObd.equals(deviceNumber)) {
+			if(StringUtils.isEmpty(deviceNumberObd)){
+				//OBD的deviceNumber为空，说明存在脏数据
+				throw new BizRuntimeException("obdcar_data_dirty");
+			}
+			if (!deviceNumberObd.equals(deviceNumber)) {
 				if (deviceNumber == null) {
 					if (deviceNumberDB == null) {
 						// 关联OBD的deviceNumber

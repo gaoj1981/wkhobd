@@ -27,6 +27,7 @@
 	<entry key="obdlic_rsa_id_nomatch">设备ID不匹配。ID：{0}</entry>
 	<entry key="obdlic_active_already">该设备已存在使用中的授权。ID：{0}</entry>
 	
+	<entry key="obdcar_data_dirty">OBD存在脏数据</entry>
 	<entry key="obdcar_not_devicenumber">deviceNumber不存在</entry>
 	<entry key="obdcar_carinfo_nomatch">OBD的eid:{0}与deviceNumber：{1}不匹配</entry>
 	<entry key="obdcar_eid_devicenumber_double">eid:{0}与deviceNumber：{1}匹配重复</entry>
@@ -40,4 +41,7 @@
 	<entry key="carinfo_edit_id_must">待修改车辆的主KEY（id字段）必须</entry>
 	<entry key="carinfo_not_exists">id：{0}车辆不存在</entry>
 
+	<entry key="info_not_exists">id：{0}对应信息不存在</entry>
+    <entry key="info_edit_id_must">待修改的主KEY（id字段）必须</entry>
+	
 </properties>
