@@ -14,6 +14,11 @@ import lombok.Setter;
 @ApiModel(value = "车辆对象", description = "返回的车辆信息")
 public class CarInfoDTO implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@ApiModelProperty(value = "车辆ID")
 	private String eid;
 

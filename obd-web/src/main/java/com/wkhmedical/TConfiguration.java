@@ -21,6 +21,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.web.client.RestTemplate;
 
+import com.taoxeo.aliyun.AliyunConfig;
 import com.taoxeo.repository.JpaConfig;
 import com.taoxeo.repository.JpaRepositoryFactoryBean;
 import com.taoxeo.repository.MongoConfig;
@@ -38,7 +39,7 @@ import com.taoxeo.repository.MongoRepositoryFactoryBean;
 @EnableRedisRepositories(basePackages = { "com.wkhmedical.repository.redis" })
 @EnableMongoRepositories(basePackages = { "com.wkhmedical.repository.mongo" }, repositoryFactoryBeanClass = MongoRepositoryFactoryBean.class)
 @EnableJpaRepositories(basePackages = { "com.wkhmedical.repository.jpa" }, repositoryFactoryBeanClass = JpaRepositoryFactoryBean.class)
-@Import({ JpaConfig.class, MongoConfig.class })
+@Import({ JpaConfig.class, MongoConfig.class, AliyunConfig.class })
 public class TConfiguration {
 	
 	/** The application context. */

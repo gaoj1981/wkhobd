@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import com.taoxeo.lang.BeanUtils;
 import com.taoxeo.lang.exception.BizRuntimeException;
 import com.wkhmedical.dto.CarInfoBody;
 import com.wkhmedical.dto.CarInfoDTO;
@@ -151,8 +152,8 @@ public class CarInfoServiceImpl implements CarInfoService {
 		MgObdCar obdCar = obdCarRepository.findByEid(eid);
 		if (obdCar != null) {
 			String deviceNumberObd = obdCar.getDeviceNumber();
-			if(StringUtils.isEmpty(deviceNumberObd)){
-				//OBD的deviceNumber为空，说明存在脏数据
+			if (StringUtils.isEmpty(deviceNumberObd)) {
+				// OBD的deviceNumber为空，说明存在脏数据
 				throw new BizRuntimeException("obdcar_data_dirty");
 			}
 			if (!deviceNumberObd.equals(deviceNumber)) {
@@ -187,48 +188,7 @@ public class CarInfoServiceImpl implements CarInfoService {
 		}
 
 		// 更新
-		if (carInfoBody.getEid() != null) {
-			carInfoUpd.setEid(carInfoBody.getEid());
-		}
-		if (carInfoBody.getDeviceNumber() != null) {
-			carInfoUpd.setDeviceNumber(carInfoBody.getDeviceNumber());
-		}
-		if (carInfoBody.getCarName() != null) {
-			carInfoUpd.setCarName(carInfoBody.getCarName());
-		}
-		if (carInfoBody.getBaiOilUsed() != null) {
-			carInfoUpd.setBaiOilUsed(carInfoBody.getBaiOilUsed());
-		}
-		if (carInfoBody.getPlateNum() != null) {
-			carInfoUpd.setPlateNum(carInfoBody.getPlateNum());
-		}
-		if (carInfoBody.getCarModel() != null) {
-			carInfoUpd.setCarModel(carInfoBody.getCarModel());
-		}
-		if (carInfoBody.getCarColor() != null) {
-			carInfoUpd.setCarColor(carInfoBody.getCarColor());
-		}
-		if (carInfoBody.getCarSize() != null) {
-			carInfoUpd.setCarSize(carInfoBody.getCarSize());
-		}
-		if (carInfoBody.getEngineNum() != null) {
-			carInfoUpd.setEngineNum(carInfoBody.getEngineNum());
-		}
-		if (carInfoBody.getFrameNum() != null) {
-			carInfoUpd.setFrameNum(carInfoBody.getFrameNum());
-		}
-		if (carInfoBody.getEnginePower() != null) {
-			carInfoUpd.setEnginePower(carInfoBody.getEnginePower());
-		}
-		if (carInfoBody.getFuelType() != null) {
-			carInfoUpd.setFuelType(carInfoBody.getFuelType());
-		}
-		if (carInfoBody.getPrinId() != null) {
-			carInfoUpd.setPrinId(carInfoBody.getPrinId());
-		}
-		if (carInfoBody.getMaintId() != null) {
-			carInfoUpd.setMaintId(carInfoBody.getMaintId());
-		}
+		BeanUtils.merageProperty(carInfoUpd, carInfoBody);
 		carInfoRepository.update(carInfoUpd);
 	}
 

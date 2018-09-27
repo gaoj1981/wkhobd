@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 /**
  * The Class PublicController.
  *
@@ -16,16 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 1.0, 2018-9-13
  */
 @RestController
-@RequestMapping("/public/**")
+@Api(tags = "公共接口")
+@RequestMapping("/public")
 public class PublicController {
-	
+
 	/**
-	 * Info.
+	 * dateNow.
 	 *
 	 * @return the date
 	 */
-	@GetMapping("info")
-	public Date info() {
+	@ApiOperation(value = "服务端系统时间")
+	@GetMapping("/sys/date")
+	public Date dateNow() {
 		return new Date();
 	}
 }

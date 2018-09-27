@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.taoxeo.lang.BeanUtils;
 import com.taoxeo.lang.exception.BizRuntimeException;
 import com.wkhmedical.dto.BindUserBody;
 import com.wkhmedical.dto.BindUserDTO;
@@ -73,8 +74,9 @@ public class BindUserServiceImpl implements BindUserService {
 			throw new BizRuntimeException("info_not_exists", id);
 		}
 		BindUser bindUserUpd = optObj.get();
-		// TODO 传递的参数Body与PO对象的合并
-
+		// merge修改body与原记录对象
+		BeanUtils.merageProperty(bindUserUpd, infoBody);
+		// 更新库记录
 		bindUserRepository.update(bindUserUpd);
 	}
 
