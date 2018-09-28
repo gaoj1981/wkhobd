@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.taoxeo.boot.security.CurrentUser;
-import com.wkhmedical.dto.CarInsurBody;
+import com.wkhmedical.dto.CarInsurBodyAdd;
+import com.wkhmedical.dto.CarInsurBodyEdit;
 import com.wkhmedical.dto.CarInsurDTO;
 import com.wkhmedical.dto.CarInsurPage;
 import com.wkhmedical.dto.CarInsurParam;
@@ -59,13 +60,13 @@ public class CarInsurController {
 
 	@ApiOperation(value = "添加车辆保险")
 	@PostMapping("/add")
-	public void carInsurAdd(@RequestBody @Valid CarInsurBody paramBody, @CurrentUser TUserDetails user) {
+	public void carInsurAdd(@RequestBody @Valid CarInsurBodyAdd paramBody, @CurrentUser TUserDetails user) {
 		carInsurService.addInfo(paramBody);
 	}
 
 	@ApiOperation(value = "修改车辆保险")
 	@PostMapping("/edit")
-	public void carInsurEdit(@RequestBody @Valid CarInsurBody paramBody) {
+	public void carInsurEdit(@RequestBody @Valid CarInsurBodyEdit paramBody) {
 		carInsurService.updateInfo(paramBody);
 	}
 

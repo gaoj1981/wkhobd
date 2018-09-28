@@ -21,6 +21,9 @@
 	<entry key="45009">接口调用超过限额</entry>
 
 	<!-- 业务错误信息模板 -->
+	<entry key="info_not_exists">id：{0}对应信息不存在</entry>
+    <entry key="info_edit_id_must">待修改的主KEY（id字段）必须</entry>
+	
 	<entry key="obdlic_bizdata_error">请求业务数据错误</entry>
 	<entry key="obdlic_bizdata_error_expire">过期的请求数据</entry>
 	<entry key="obdlic_rsa_error">请求加密数据错误</entry>
@@ -35,13 +38,12 @@
 	<entry key="obdcar_eid_already_exists">eid：{0}已存在deviceNumber关联信息</entry>
 	<entry key="obdcar_devicenumber_already_exists">devicenumber：{0}已存在eid关联信息</entry>
 	<entry key="obdcar_not_related">eid：{0}未关联OBD实时设备</entry>
+	
 	<entry key="carinfo_not_exists">eid：{0}车辆不存在</entry>
 	<entry key="carinfo_already_exists">eid：{0}车辆已存在</entry>
 	<entry key="carinfo_devicenumber_already_exists">devicenumber：{0}车辆已存在</entry>
 	<entry key="carinfo_edit_id_must">待修改车辆的主KEY（id字段）必须</entry>
 	<entry key="carinfo_not_exists">id：{0}车辆不存在</entry>
 
-	<entry key="info_not_exists">id：{0}对应信息不存在</entry>
-    <entry key="info_edit_id_must">待修改的主KEY（id字段）必须</entry>
-	
+	<entry key="carinsur_already_exists">该车辆该保险已存在</entry>
 </properties>

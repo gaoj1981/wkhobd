@@ -26,7 +26,7 @@ public class CarInsur implements Serializable {
 	@Id
 	private Long id;
 	
-	private String eid;
+	private Long cid;
 	
 	private String insurNum;
 	

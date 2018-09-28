@@ -42,6 +42,7 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 		StringBuffer sqlBuf = new StringBuffer("");
 		sqlBuf.append(" SELECT *");
 		sqlBuf.append(" FROM car_insur");
+		sqlBuf.append(" ");
 		sqlBuf.append(" WHERE id = ?");
 		paramList.add(paramBody.getId());
 		//

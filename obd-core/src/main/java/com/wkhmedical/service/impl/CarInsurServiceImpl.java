@@ -11,11 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.taoxeo.lang.BeanUtils;
 import com.taoxeo.lang.exception.BizRuntimeException;
-import com.wkhmedical.dto.CarInsurBody;
+import com.wkhmedical.dto.CarInsurBodyAdd;
+import com.wkhmedical.dto.CarInsurBodyEdit;
 import com.wkhmedical.dto.CarInsurDTO;
 import com.wkhmedical.dto.CarInsurPage;
 import com.wkhmedical.dto.CarInsurParam;
+import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.po.CarInsur;
+import com.wkhmedical.repository.jpa.CarInfoRepository;
 import com.wkhmedical.repository.jpa.CarInsurRepository;
 import com.wkhmedical.service.CarInsurService;
 import com.wkhmedical.util.AssistUtil;
@@ -29,6 +32,8 @@ public class CarInsurServiceImpl implements CarInsurService {
 
 	@Resource
 	CarInsurRepository carInsurRepository;
+	@Resource
+	CarInfoRepository carInfoRepository;
 
 	@Override
 	public CarInsur getInfo(CarInsurParam paramBody) {
@@ -51,10 +56,25 @@ public class CarInsurServiceImpl implements CarInsurService {
 	}
 
 	@Override
-	public void addInfo(CarInsurBody infoBody) {
+	public void addInfo(CarInsurBodyAdd infoBody) {
+		// 校验eid
+		String eid = infoBody.getEid();
+		// 此处不需要findByEidAndDelFlag
+		CarInfo carInfo = carInfoRepository.findByEid(eid);
+		if (carInfo == null) {
+			throw new BizRuntimeException("carinfo_not_exists", eid);
+		}
+		// 校验车辆保险是否重复
+		int insurType = infoBody.getInsurType();
+		Long cid = carInfo.getId();
+		CarInsur insurTmp = carInsurRepository.findByCidAndInsurType(cid, insurType);
+		if (insurTmp != null) {
+			throw new BizRuntimeException("carinsur_already_exists");
+		}
 		// 组装Bean
 		CarInsur carInsur = AssistUtil.coverBean(infoBody, CarInsur.class);
 		carInsur.setId(BizUtil.genDbId());
+		carInsur.setCid(carInfo.getId());
 		carInsur.setDelFlag(0);
 		// 入库
 		carInsurRepository.save(carInsur);
@@ -62,20 +82,40 @@ public class CarInsurServiceImpl implements CarInsurService {
 
 	@Override
 	@Transactional
-	public void updateInfo(CarInsurBody infoBody) {
-		// id检查
+	public void updateInfo(CarInsurBodyEdit infoBody) {
 		Long id = infoBody.getId();
-		if (id == null) {
-			throw new BizRuntimeException("info_edit_id_must", id);
-		}
+		// // id检查 加入idValidation，此处代码不需要
+		// if (id == null) {
+		// throw new BizRuntimeException("info_edit_id_must", id);
+		// }
 		// 判断待修改记录唯一性
 		Optional<CarInsur> optObj = carInsurRepository.findById(id);
 		if (!optObj.isPresent()) {
-			throw new BizRuntimeException("info_not_exists", id);
+			// 不加""exception中产生千分位
+			throw new BizRuntimeException("info_not_exists", id + "");
 		}
 		CarInsur carInsurUpd = optObj.get();
+		// 校验eid
+		String eid = infoBody.getEid();
+		CarInfo carInfo = carInfoRepository.findByEid(eid);
+		if (carInfo == null) {
+			throw new BizRuntimeException("carinfo_not_exists", eid);
+		} else {
+			// 由于会导致DuplicateKEY异常 需在此处校验车辆保险是否重复
+			if (!carInfo.getId().equals(carInsurUpd.getCid())) {
+				// 会导致代码很复杂
+			}
+			carInsurUpd.setCid(carInfo.getId());
+		}
 		// merge修改body与原记录对象
 		BeanUtils.merageProperty(carInsurUpd, infoBody);
+		// 校验车辆保险是否重复
+		int insurType = carInsurUpd.getInsurType();
+		Long cid = carInsurUpd.getId();
+		CarInsur insurTmp = carInsurRepository.findByCidAndInsurType(cid, insurType);
+		if (insurTmp != null && !insurTmp.getId().equals(id)) {
+			throw new BizRuntimeException("carinsur_already_exists");
+		}
 		// 更新库记录
 		carInsurRepository.update(carInsurUpd);
 	}
