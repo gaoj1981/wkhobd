@@ -83,13 +83,11 @@ public class CarInsurServiceImpl implements CarInsurService {
 	public void updateInfo(CarInsurBodyEdit infoBody) {
 		Long id = infoBody.getId();
 		// 判断待修改记录唯一性
-		Optional<CarInsur> optObj = carInsurRepository.findById(id);
-		if (!optObj.isPresent()) {
+		CarInsur carInsurUpd = carInsurRepository.findByKey(id);
+		if (carInsurUpd == null) {
 			// 不加""exception中产生千分位
 			throw new BizRuntimeException("info_not_exists", id + "");
 		}
-		//
-		CarInsur carInsurUpd = optObj.get();
 		// merge修改body与原记录对象
 		BeanUtils.merageProperty(carInsurUpd, infoBody);
 		// 校验保单号是否重复

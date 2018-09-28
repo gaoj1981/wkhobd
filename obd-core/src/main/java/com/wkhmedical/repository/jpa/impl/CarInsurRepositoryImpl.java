@@ -44,15 +44,15 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 		sqlBuf.append(" SELECT ci.*");
 		sqlBuf.append(" FROM car_insur ci");
 		sqlBuf.append(" LEFT JOIN car_info car ON car.id=ci.cid");
-		sqlBuf.append(" WHERE 1 = 1");
+		sqlBuf.append(" WHERE ci.delFlag = 0");
 		BizUtil.setSqlJoin(paramBody, "id", sqlBuf, paramList, " AND ci.id = ?");
 		BizUtil.setSqlJoin(paramBody, "eid", sqlBuf, paramList, " AND car.eid = ?");
 		BizUtil.setSqlJoin(paramBody, "insurType", sqlBuf, paramList, " AND ci.insurType = ?");
 		BizUtil.setSqlJoin(paramBody, "insurNum", sqlBuf, paramList, " AND ci.insurNum = ?");
-		Integer valiType = (Integer)BizUtil.getFieldValueByName("valiType", paramBody);
-		if(valiType!=null){
-			if(valiType.intValue()==1){
-				
+		Integer valiType = (Integer) BizUtil.getFieldValueByName("valiType", paramBody);
+		if (valiType != null) {
+			if (valiType.intValue() == 1) {
+
 			}
 		}
 		//
@@ -63,6 +63,23 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 		int skip = (curPg - 1) * BizConstant.FIND_PAGE_NUM;
 		return hibernateSupport.findByNativeSql(CarInsurDTO.class, sqlBuf.toString(), paramList.toArray(), skip,
 				BizConstant.FIND_PAGE_NUM);
+	}
+
+	@Override
+	public CarInsur findByKey(Long id) {
+		List<Object> paramList = new ArrayList<Object>();
+		StringBuffer sqlBuf = new StringBuffer("");
+		sqlBuf.append(" SELECT *");
+		sqlBuf.append(" FROM car_insur");
+		sqlBuf.append(" WHERE id = ?");
+		paramList.add(id);
+
+		List<CarInsur> lstCarInsur = hibernateSupport.findByNativeSql(CarInsur.class, sqlBuf.toString(),
+				paramList.toArray());
+		if (lstCarInsur != null) {
+			return lstCarInsur.get(0);
+		}
+		return null;
 	}
 
 	@Override
