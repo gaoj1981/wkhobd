@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -21,10 +23,8 @@ public class CarInsurBodyEdit implements Serializable {
 	@NotNull(message = "主KEY必须")
 	private Long id;
 
-	@ApiModelProperty(value = "车辆ID（等同设备ID）", required = true)
-	@NotNull(message = "车辆ID必须")
 	private String eid;
-
+	
 	@ApiModelProperty(value = "保险类别；1：交强险；2：商业险")
 	private Integer insurType;
 
@@ -37,10 +37,12 @@ public class CarInsurBodyEdit implements Serializable {
 	@ApiModelProperty(value = "客服电话")
 	private String servTel;
 
-	@ApiModelProperty(value = "生效日期")
+	@ApiModelProperty(value = "生效日期（格式：yyyy-MM-dd）")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date effectDate;
 
-	@ApiModelProperty(value = "失效日期")
+	@ApiModelProperty(value = "失效日期（格式：yyyy-MM-dd）")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date expDate;
 
 	@ApiModelProperty(value = "业务员姓名")

@@ -1,12 +1,16 @@
 package com.wkhmedical.util;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSON;
 import com.wkhmedical.config.ConfigProperties;
 import com.wkhmedical.constant.Gender;
 import com.wkhmedical.dto.CarSendDTO;
@@ -111,6 +115,40 @@ public class BizUtil {
 			idCardValiInfo.setVali(false);
 			idCardValiInfo.setErrMsg("身份证号位数错误");
 			return idCardValiInfo;
+		}
+	}
+
+	public static void setSqlJoin(Object obj, String fname, StringBuffer sqlBuf, List<Object> paramList,
+			String sqlStr) {
+		Object value = getFieldValueByName(fname, obj);
+		if (value != null) {
+			sqlBuf.append(sqlStr);
+			paramList.add(value);
+		}
+	}
+
+	/** * 根据属性名获取属性值 * */
+	public static Object getFieldValueByName(String fname, Object obj) {
+		try {
+			String firstLetter = fname.substring(0, 1).toUpperCase();
+			String getter = "get" + firstLetter + fname.substring(1);
+			Method method = obj.getClass().getMethod(getter, new Class[] {});
+			Object value = method.invoke(obj, new Object[] {});
+			return value;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public static Map<String, Object> getFieldInfo(Object obj, String fname) {
+		try {
+			Field field = obj.getClass().getDeclaredField(fname);
+			Map<String, Object> infoMap = new HashMap<String, Object>();
+			infoMap.put("type", field.getType().toString());
+			infoMap.put("value", getFieldValueByName(fname, obj));
+			return infoMap;
+		} catch (Exception e) {
+			return null;
 		}
 	}
 

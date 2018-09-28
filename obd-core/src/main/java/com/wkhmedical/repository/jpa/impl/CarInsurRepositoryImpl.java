@@ -19,6 +19,7 @@ import com.wkhmedical.dto.CarInsurPage;
 import com.wkhmedical.po.CarInsur;
 import com.wkhmedical.repository.jpa.CarInsurRepository;
 import com.wkhmedical.repository.jpa.ICarInsurRepository;
+import com.wkhmedical.util.BizUtil;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -40,11 +41,20 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 	public List<CarInsurDTO> findCarInsurList(CarInsurPage paramBody) {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = new StringBuffer("");
-		sqlBuf.append(" SELECT *");
-		sqlBuf.append(" FROM car_insur");
-		sqlBuf.append(" ");
-		sqlBuf.append(" WHERE id = ?");
-		paramList.add(paramBody.getId());
+		sqlBuf.append(" SELECT ci.*");
+		sqlBuf.append(" FROM car_insur ci");
+		sqlBuf.append(" LEFT JOIN car_info car ON car.id=ci.cid");
+		sqlBuf.append(" WHERE 1 = 1");
+		BizUtil.setSqlJoin(paramBody, "id", sqlBuf, paramList, " AND ci.id = ?");
+		BizUtil.setSqlJoin(paramBody, "eid", sqlBuf, paramList, " AND car.eid = ?");
+		BizUtil.setSqlJoin(paramBody, "insurType", sqlBuf, paramList, " AND ci.insurType = ?");
+		BizUtil.setSqlJoin(paramBody, "insurNum", sqlBuf, paramList, " AND ci.insurNum = ?");
+		Integer valiType = (Integer)BizUtil.getFieldValueByName("valiType", paramBody);
+		if(valiType!=null){
+			if(valiType.intValue()==1){
+				
+			}
+		}
 		//
 		String orderByStr = " ORDER BY insTime DESC";
 		sqlBuf.append(orderByStr);

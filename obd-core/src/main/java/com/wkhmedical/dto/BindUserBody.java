@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 @ApiModel(value = "绑定人员对象", description = "用于添加或修改相关绑定人员信息")
 public class BindUserBody implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "人员ID")
 	private Long id;

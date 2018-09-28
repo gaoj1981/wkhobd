@@ -9,4 +9,6 @@ import com.wkhmedical.po.CarInsur;
 public interface CarInsurRepository extends JpaRepository<CarInsur, Long>, ICarInsurRepository {
 
 	CarInsur findByCidAndInsurType(Long cid, Integer insurType);
+	
+	CarInsur findByInsurNum(String insurNum);
 }

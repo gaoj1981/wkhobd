@@ -20,6 +20,18 @@ public class CarInsurPage implements Serializable {
 	@Min(1)
 	private Integer paging;
 
+	@ApiModelProperty(value = "主KEY")
 	private Long id;
 
+	@ApiModelProperty(value = "车辆ID")
+	private String eid;
+
+	@ApiModelProperty(value = "保险类别；1：交强险；2：商业险")
+	private Integer insurType;
+
+	@ApiModelProperty(value = "保单号")
+	private String insurNum;
+
+	@ApiModelProperty(value = "获取类型。0:未生效；1:已生效；2：已失效")
+	private Integer valiType;
 }
