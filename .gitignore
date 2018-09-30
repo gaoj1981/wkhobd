@@ -12,9 +12,7 @@ dist/
 *.iml
 *.stackdump
 .metadata
-*a
 *rebel.xml*
-*.*
 *.eml
 *.springBeans
 *.gz
