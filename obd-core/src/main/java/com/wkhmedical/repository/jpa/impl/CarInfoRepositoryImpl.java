@@ -16,9 +16,11 @@ import com.taoxeo.repository.JdbcQuery;
 import com.wkhmedical.constant.BizConstant;
 import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoPage;
+import com.wkhmedical.dto.CarInfoParam;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
 import com.wkhmedical.repository.jpa.ICarInfoRepository;
+import com.wkhmedical.util.BizUtil;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -35,6 +37,19 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 	@Value("#{query.findCarCount}")
 	private String findCarCount;
 
+	private StringBuffer getSelectSql() {
+		StringBuffer sqlBuf = new StringBuffer("");
+		sqlBuf.append(" SELECT ci.*,");
+		sqlBuf.append(" bu1.uname AS prinName,bu1.job AS prinJob,bu1.tel AS prinTel,");
+		sqlBuf.append(" bu1.urName AS prinUrName,bu1.urTel AS prinUrTel,");
+		sqlBuf.append(" bu2.uname AS maintName,bu2.tel AS maintTel,bu2.urName AS maintUrName,bu2.urTel AS maintUrTel");
+		sqlBuf.append(" FROM car_info ci");
+		sqlBuf.append(" LEFT JOIN bind_user bu1 ON ci.prinId = bu1.id");
+		sqlBuf.append(" LEFT JOIN bind_user bu2 ON ci.maintId = bu2.id");
+		sqlBuf.append(" WHERE ci.delFlag = 0");
+		return sqlBuf;
+	}
+
 	@Override
 	public List<CarInfoDTO> findCarInfoList(CarInfoPage paramBody) {
 		List<Object> paramList = new ArrayList<Object>();
@@ -46,8 +61,8 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		sqlBuf.append(" FROM car_info ci");
 		sqlBuf.append(" LEFT JOIN bind_user bu1 ON ci.prinId = bu1.id");
 		sqlBuf.append(" LEFT JOIN bind_user bu2 ON ci.maintId = bu2.id");
-		sqlBuf.append(" WHERE ci.areaId = ?");
-		paramList.add(paramBody.getAreaId());
+		sqlBuf.append(" WHERE ci.delFlag = 0");
+		BizUtil.setSqlJoin(paramBody, "areaId", sqlBuf, paramList, " AND ci.areaId = ?");
 		//
 		String orderByStr = " ORDER BY ci.insTime DESC";
 		sqlBuf.append(orderByStr);
@@ -57,6 +72,19 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		return hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(), paramList.toArray(), skip,
 				BizConstant.FIND_PAGE_NUM);
 
+	}
+
+	@Override
+	public CarInfoDTO findCarInfo(CarInfoParam paramBody) {
+		List<Object> paramList = new ArrayList<Object>();
+		StringBuffer sqlBuf = getSelectSql();
+		BizUtil.setSqlJoin(paramBody, "eid", sqlBuf, paramList, " AND ci.eid = ?");
+		List<CarInfoDTO> lstCarInfo = hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(),
+				paramList.toArray(), 1);
+		if (lstCarInfo != null && lstCarInfo.size() > 0) {
+			return lstCarInfo.get(0);
+		}
+		return null;
 	}
 
 	public Page<CarInfo> findPgCarInfo(CarInfoPage paramBody) {

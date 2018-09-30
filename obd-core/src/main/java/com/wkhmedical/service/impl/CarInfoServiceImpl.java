@@ -46,14 +46,15 @@ public class CarInfoServiceImpl implements CarInfoService {
 	}
 
 	@Override
-	public CarInfoDTO getCarInfo(CarInfoParam paramBody) {
-		String eid = paramBody.getEid();
-		CarInfo carInfo = carInfoRepository.findByEidAndDelFlag(eid, 0);
-		if (carInfo == null) {
+	public CarInfoDTO getCarInfo(String eid) {
+		CarInfoParam paramBody = new CarInfoParam();
+		paramBody.setEid(eid);
+		CarInfoDTO carInfoDTO = carInfoRepository.findCarInfo(paramBody);
+		if (carInfoDTO == null) {
 			log.error("查询不存在的车辆ID");
 			throw new BizRuntimeException("carinfo_not_exists", eid);
 		}
-		return AssistUtil.coverBean(carInfo, CarInfoDTO.class);
+		return carInfoDTO;
 	}
 
 	@Override

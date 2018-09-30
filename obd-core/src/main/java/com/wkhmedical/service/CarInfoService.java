@@ -8,7 +8,6 @@ import com.wkhmedical.dto.CarInfoAddBody;
 import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoEditBody;
 import com.wkhmedical.dto.CarInfoPage;
-import com.wkhmedical.dto.CarInfoParam;
 import com.wkhmedical.po.CarInfo;
 
 public interface CarInfoService {
@@ -16,7 +15,7 @@ public interface CarInfoService {
 
 	List<CarInfoDTO> getCarInfoList(CarInfoPage paramBody);
 
-	CarInfoDTO getCarInfo(CarInfoParam paramBody);
+	CarInfoDTO getCarInfo(String eid);
 
 	void addCarInfo(CarInfoAddBody carInfoBody);
 

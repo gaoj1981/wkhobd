@@ -6,14 +6,11 @@ import java.util.Optional;
 import javax.annotation.Resource;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.taoxeo.lang.BeanUtils;
 import com.taoxeo.lang.exception.BizRuntimeException;
-import com.wkhmedical.constant.BizConstant;
 import com.wkhmedical.dto.CarInsurBodyAdd;
 import com.wkhmedical.dto.CarInsurBodyEdit;
 import com.wkhmedical.dto.CarInsurDTO;
@@ -55,15 +52,7 @@ public class CarInsurServiceImpl implements CarInsurService {
 
 	@Override
 	public Page<CarInsur> getPgList(CarInsurPage paramBody) {
-		int page = paramBody.getPaging();
-		page = page - 1;
-		if (page < 0)
-			page = 0;
-		Pageable pageable = PageRequest.of(page, BizConstant.FIND_PAGE_NUM);
-		String[] objArr = new String[0];
-		return carInsurRepository.findPageByNativeSql("SELECT * FROM car_insur", "SELECT COUNT(1) FROM car_insur",
-				objArr, pageable);
-		// return carInsurRepository.findPgCarInsur(paramBody);
+		 return carInsurRepository.findPgCarInsur(paramBody);
 	}
 
 	@Override

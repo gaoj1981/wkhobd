@@ -168,7 +168,7 @@ public class BizUtil {
 		if(StringUtils.isEmpty(delFieldVal)){
 			return null;
 		}else{
-			return delFieldVal+"_backup";
+			return delFieldVal+"_del_"+System.currentTimeMillis();
 		}
 	}
 }

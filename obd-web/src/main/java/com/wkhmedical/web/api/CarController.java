@@ -50,9 +50,7 @@ public class CarController {
 	@ApiOperation(value = "获取车辆基本信息")
 	@GetMapping("/get")
 	public CarInfoDTO getCarInfo(@ApiParam(name = "eid", value = "车辆ID", required = true) @RequestParam String eid) {
-		CarInfoParam paramBody = new CarInfoParam();
-		paramBody.setEid(eid);
-		return carInfoService.getCarInfo(paramBody);
+		return carInfoService.getCarInfo(eid);
 	}
 
 	@ApiOperation(value = "获取车辆分页列表")
