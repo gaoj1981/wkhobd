@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +42,7 @@ public class CarInsurServiceImpl implements CarInsurService {
 		Long id = paramBody.getId();
 		Optional<CarInsur> optObj = carInsurRepository.findById(id);
 		if (!optObj.isPresent()) {
-			throw new BizRuntimeException("info_not_exists", id);
+			throw new BizRuntimeException("info_not_exists", id + "");
 		}
 		return optObj.get();
 	}
@@ -52,7 +54,7 @@ public class CarInsurServiceImpl implements CarInsurService {
 
 	@Override
 	public Page<CarInsur> getPgList(CarInsurPage paramBody) {
-		 return carInsurRepository.findPgCarInsur(paramBody);
+		return carInsurRepository.findPgCarInsur(paramBody);
 	}
 
 	@Override
@@ -88,35 +90,39 @@ public class CarInsurServiceImpl implements CarInsurService {
 			// 不加""exception中产生千分位
 			throw new BizRuntimeException("info_not_exists", id + "");
 		}
-		// merge修改body与原记录对象
-		BeanUtils.merageProperty(carInsurUpd, infoBody);
 		// 校验保单号是否重复
-		String insurNum = carInsurUpd.getInsurNum();
-		if (insurNum != null) {
+		String insurNum = infoBody.getInsurNum();
+		if (StringUtils.isNotEmpty(insurNum)) {
 			CarInsur insurTmp = carInsurRepository.findByInsurNum(insurNum);
 			if (insurTmp != null && !insurTmp.getId().equals(id)) {
 				throw new BizRuntimeException("carinsur_insurnum_already_exists", insurNum);
 			}
 		}
+		// merge修改body与原记录对象
+		BeanUtils.merageProperty(carInsurUpd, infoBody);
 		// 更新库记录
 		carInsurRepository.update(carInsurUpd);
 	}
 
 	@Override
 	public void deleteInfo(Long id) {
-		carInsurRepository.deleteById(id);
+		try {
+			carInsurRepository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			log.error("物理删除id不存在" + id);
+		}
+
 	}
 
 	@Override
 	public void delInfo(Long id) {
 		Optional<CarInsur> optObj = carInsurRepository.findById(id);
-		if (!optObj.isPresent()) {
-			throw new BizRuntimeException("info_not_exists", id + "");
+		if (optObj.isPresent()) {
+			CarInsur carInsurUpd = optObj.get();
+			carInsurUpd.setInsurNum(BizUtil.getDelBackupVal(carInsurUpd.getInsurNum()));
+			carInsurUpd.setDelFlag(1);
+			carInsurRepository.update(carInsurUpd);
 		}
-		log.info("逻辑删除");
-		CarInsur carInsurUpd = optObj.get();
-		carInsurUpd.setDelFlag(1);
-		carInsurRepository.update(carInsurUpd);
 	}
 
 }

@@ -18,7 +18,6 @@ import com.wkhmedical.dto.CarInfoAddBody;
 import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoEditBody;
 import com.wkhmedical.dto.CarInfoPage;
-import com.wkhmedical.dto.CarInfoParam;
 import com.wkhmedical.dto.ObdCarDTO;
 import com.wkhmedical.security.TUserDetails;
 import com.wkhmedical.service.CarInfoService;
@@ -40,20 +39,20 @@ public class CarController {
 	@Autowired
 	ObdCarService obdCarService;
 
-	@ApiOperation(value = "获取车辆OBD实时信息")
+	@ApiOperation(value = "获取车辆OBD实时信息（APP用）")
 	@PostMapping("/get.obd")
 	public ObdCarDTO getCarObdInfo(@ApiParam(name = "eid", value = "车辆ID", required = true) @RequestParam String eid) {
 		log.info("car's obd");
 		return obdCarService.getObdCar(eid);
 	}
 
-	@ApiOperation(value = "获取车辆基本信息")
+	@ApiOperation(value = "获取车辆基本信息（APP用）")
 	@GetMapping("/get")
 	public CarInfoDTO getCarInfo(@ApiParam(name = "eid", value = "车辆ID", required = true) @RequestParam String eid) {
 		return carInfoService.getCarInfo(eid);
 	}
 
-	@ApiOperation(value = "获取车辆分页列表")
+	@ApiOperation(value = "获取车辆分页列表（APP用）")
 	@PostMapping("/get.list")
 	public List<CarInfoDTO> getCarData(@RequestBody @Valid CarInfoPage paramBody) {
 		return carInfoService.getCarInfoList(paramBody);

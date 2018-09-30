@@ -23,8 +23,6 @@ public class CarInsurBodyEdit implements Serializable {
 	@NotNull(message = "主KEY必须")
 	private Long id;
 
-	private String eid;
-	
 	@ApiModelProperty(value = "保险类别；1：交强险；2：商业险")
 	private Integer insurType;
 

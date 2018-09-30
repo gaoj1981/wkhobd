@@ -3,6 +3,8 @@ package com.wkhmedical.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -31,9 +33,11 @@ public class CarInsurDTO implements Serializable {
 	private String servTel;
 
 	@ApiModelProperty(value = "生效日期")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date effectDate;
 
 	@ApiModelProperty(value = "失效日期")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date expDate;
 
 	@ApiModelProperty(value = "保险类别；1：交强险；2：商业险")
@@ -45,7 +49,7 @@ public class CarInsurDTO implements Serializable {
 	@ApiModelProperty(value = "业务员电话")
 	private String salesTel;
 
-	@ApiModelProperty(value = "保单备份")
+	@ApiModelProperty(value = "保单图片（多张以“,”分隔）")
 	private String insurImgs;
 
 }

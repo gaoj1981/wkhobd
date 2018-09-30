@@ -46,7 +46,7 @@ public class CarInsurController {
 		return carInsurService.getInfo(paramBody);
 	}
 
-	@ApiOperation(value = "获取车辆保险分页列表")
+	@ApiOperation(value = "获取车辆保险分页列表（APP用）")
 	@PostMapping("/get.list")
 	public List<CarInsurDTO> getCarInsurData(@RequestBody @Valid CarInsurPage paramBody) {
 		return carInsurService.getList(paramBody);
@@ -58,7 +58,7 @@ public class CarInsurController {
 		return carInsurService.getPgList(paramBody);
 	}
 
-	@ApiOperation(value = "添加车辆保险")
+	@ApiOperation(value = "添加车辆保险（APP用）")
 	@PostMapping("/add")
 	public void carInsurAdd(@RequestBody @Valid CarInsurBodyAdd paramBody, @CurrentUser TUserDetails user) {
 		carInsurService.addInfo(paramBody);

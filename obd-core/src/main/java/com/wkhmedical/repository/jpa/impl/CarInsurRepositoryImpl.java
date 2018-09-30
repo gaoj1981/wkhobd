@@ -1,6 +1,7 @@
 package com.wkhmedical.repository.jpa.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -51,12 +52,21 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 		BizUtil.setSqlJoin(paramBody, "insurNum", sqlBuf, paramList, " AND ci.insurNum = ?");
 		Integer valiType = (Integer) BizUtil.getFieldValueByName("valiType", paramBody);
 		if (valiType != null) {
-			if (valiType.intValue() == 1) {
-
+			Date dtNow = new Date();
+			if (valiType.intValue() == 0) {
+				sqlBuf.append(" AND ci.effectDate > ?");
+				paramList.add(dtNow);
+			}else if(valiType.intValue() == 1){
+				sqlBuf.append(" AND ci.effectDate < ? AND ci.expDate > ?");
+				paramList.add(dtNow);
+				paramList.add(dtNow);
+			}else if(valiType.intValue() == 2){
+				sqlBuf.append(" AND ci.expDate < ?");
+				paramList.add(dtNow);
 			}
 		}
 		//
-		String orderByStr = " ORDER BY insTime DESC";
+		String orderByStr = " ORDER BY ci.insTime DESC";
 		sqlBuf.append(orderByStr);
 		//
 		int curPg = paramBody.getPaging();
