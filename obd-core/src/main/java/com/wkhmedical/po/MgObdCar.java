@@ -1,5 +1,8 @@
 package com.wkhmedical.po;
 
+import java.util.Date;
+
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,21 +21,19 @@ public class MgObdCar {
 	@Id
 	private String id;
 
+	@Indexed
+	@CreatedDate
+	private Date insTime;
+
 	/**
 	 * 广告标识符，只支持单个查询
 	 */
 	private Integer adId;
 
 	/**
-	 * 车辆ID，对应设备用
-	 */
-	@Indexed
-	private String eid;
-
-	/**
 	 * 设备编号
 	 */
-	@Indexed(unique = true)
+	@Indexed
 	private String deviceNumber;
 
 	/**

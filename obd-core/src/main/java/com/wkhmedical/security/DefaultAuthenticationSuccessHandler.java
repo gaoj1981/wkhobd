@@ -16,7 +16,6 @@ import lombok.Setter;
 
 @Setter
 public class DefaultAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
-	private String defaultSuccessUrl;
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,

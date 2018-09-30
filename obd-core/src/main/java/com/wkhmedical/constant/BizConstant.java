@@ -1,6 +1,7 @@
 package com.wkhmedical.constant;
 
 public class BizConstant {
+
 	// 每页查询出的数据库记录条数
 	public final static int FIND_PAGE_NUM = 20;
 

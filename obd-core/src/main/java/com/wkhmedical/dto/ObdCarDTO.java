@@ -12,8 +12,10 @@ import lombok.Setter;
 @ApiModel(value = "车辆OBD信息", description = "返回车辆的实时信息")
 public class ObdCarDTO implements Serializable {
 
-	@ApiModelProperty(value = "车辆ID")
-	private String eid;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "发动机转速")
 	private Integer engineTurnSpeed;

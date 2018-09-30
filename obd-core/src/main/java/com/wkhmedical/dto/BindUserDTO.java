@@ -12,6 +12,11 @@ import lombok.Setter;
 @ApiModel(value = "相关人员", description = "返回的车辆或设备的相关人员信息")
 public class BindUserDTO implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@ApiModelProperty(value = "人员ID")
 	private Long id;
 	

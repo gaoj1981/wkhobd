@@ -85,10 +85,10 @@ public class WebOAuthConfig {
 			http
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
 			.and()
-				.requestMatchers().antMatchers("/api/**","/obd/**","/ws","/stomp")
+				.requestMatchers().antMatchers("/api/**","/obd/**","/ws","/stomp", "/public/**")
 			.and()
 				.authorizeRequests()
-				.antMatchers("/api/**","/obd/**").access("hasRole('ROLE_USER') or hasRole('ROLE_WXUSER') or #oauth2.isOAuth()");
+				.antMatchers("/api/**","/obd/**", "/public/**").access("hasRole('ROLE_USER') or hasRole('ROLE_WXUSER') or #oauth2.isOAuth()");
 			// @formatter:on
 		}
 	}

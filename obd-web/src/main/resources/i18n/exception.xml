@@ -21,6 +21,13 @@
 	<entry key="45009">接口调用超过限额</entry>
 
 	<!-- 业务错误信息模板 -->
+	<entry key="public_captcha_error">图形验证码错误</entry>
+	<entry key="public_mobivali_error">手机验证码错误</entry>
+	<entry key="public_apiparam_blank">缺少必要接口参数。请检查：{0}</entry>
+	
+	<entry key="ali_sendmsg_error">短信发送失败：{0}</entry>
+	<entry key="ali_sendmsg_overtimes">手机号:{0}发送次数过于频繁</entry>
+	
 	<entry key="info_not_exists">id：{0}对应信息不存在</entry>
     <entry key="info_edit_id_must">待修改的主KEY（id字段）必须</entry>
 	

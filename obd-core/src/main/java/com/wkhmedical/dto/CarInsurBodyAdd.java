@@ -3,6 +3,7 @@ package com.wkhmedical.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -20,7 +21,7 @@ public class CarInsurBodyAdd implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "车辆ID（等同设备ID）", required = true)
-	@NotNull(message = "车辆ID必须")
+	@NotBlank(message = "车辆ID必须")
 	private String eid;
 
 	@ApiModelProperty(value = "保险类别；1：交强险；2：商业险", required = true)

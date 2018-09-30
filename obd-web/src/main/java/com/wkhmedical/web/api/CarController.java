@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.taoxeo.boot.security.CurrentUser;
-import com.wkhmedical.dto.CarInfoBody;
+import com.wkhmedical.dto.CarInfoAddBody;
 import com.wkhmedical.dto.CarInfoDTO;
+import com.wkhmedical.dto.CarInfoEditBody;
 import com.wkhmedical.dto.CarInfoPage;
 import com.wkhmedical.dto.CarInfoParam;
 import com.wkhmedical.dto.ObdCarDTO;
@@ -62,20 +63,20 @@ public class CarController {
 
 	@ApiOperation(value = "添加车辆")
 	@PostMapping("/add")
-	public void carInfoAdd(@RequestBody @Valid CarInfoBody paramBody, @CurrentUser TUserDetails user) {
+	public void carInfoAdd(@RequestBody @Valid CarInfoAddBody paramBody, @CurrentUser TUserDetails user) {
 		carInfoService.addCarInfo(paramBody);
 	}
 
 	@ApiOperation(value = "修改车辆")
 	@PostMapping("/edit")
-	public void carInfoEdit(@RequestBody @Valid CarInfoBody paramBody) {
+	public void carInfoEdit(@RequestBody @Valid CarInfoEditBody paramBody) {
 		carInfoService.updateCarInfo(paramBody);
 	}
 
 	@ApiOperation(value = "删除车辆")
 	@DeleteMapping("/delete")
-	public boolean carInfoDel(@ApiParam(value = "id主KEY", required = true) @RequestParam Long id) {
-		carInfoService.deleteCarInfo(id);
+	public boolean carInfoDel(@ApiParam(value = "id主KEY", required = true) @RequestParam String eid) {
+		carInfoService.deleteCarInfo(eid);
 		return true;
 	}
 }

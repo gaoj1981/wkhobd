@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel(value = "车辆增改对象", description = "用于添加或修改车辆信息")
-public class CarInfoBody implements Serializable {
+public class CarInfoAddBody implements Serializable {
 
 	/**
 	 * 

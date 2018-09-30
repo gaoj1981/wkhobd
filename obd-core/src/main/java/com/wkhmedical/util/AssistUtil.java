@@ -12,8 +12,7 @@ public class AssistUtil {
 	}
 
 	public static Object combineSydwCore(Object sourceBean, Object targetBean) {
-		Class sourceBeanClass = sourceBean.getClass();
-		Class targetBeanClass = targetBean.getClass();
+		Class<?> sourceBeanClass = sourceBean.getClass();
 		Field[] sourceFields = sourceBeanClass.getDeclaredFields();
 		Field[] targetFields = sourceBeanClass.getDeclaredFields();
 		for (int i = 0; i < sourceFields.length; i++) {

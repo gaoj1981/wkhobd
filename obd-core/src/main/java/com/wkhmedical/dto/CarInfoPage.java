@@ -15,6 +15,11 @@ import lombok.Setter;
 @Setter
 public class CarInfoPage implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@ApiModelProperty(value = "内存页码", required = true)
 	@NotNull
 	@Min(1)

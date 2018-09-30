@@ -12,7 +12,6 @@ public interface ObdCarRepository extends MongoRepository<MgObdCar, String>, IOb
 
 	MgObdCar findByDeviceNumber(String deviceNumber);
 
-	MgObdCar findByEid(String eid);
-
-	List<MgObdCar> findByEidOrDeviceNumber(String deviceNumber, String eid);
+	List<MgObdCar> findTopByDeviceNumberOrderByInsTimeDesc(String deviceNumber);
+	
 }

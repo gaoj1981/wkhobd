@@ -7,12 +7,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 import com.taoxeo.boot.security.AbstractWebSecurityConfig;
-import com.taoxeo.boot.security.CustomLoginFilter;
 import com.wkhmedical.security.DefaultAuthenticationFailureHandler;
 import com.wkhmedical.security.DefaultAuthenticationSuccessHandler;
 import com.wkhmedical.security.DefaultUserDetailsService;
@@ -59,7 +57,7 @@ public class WebSecurityConfig extends AbstractWebSecurityConfig {
 	 */
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/api/device/**", "/webjars/**", "/anonymous/**", "/images/**", "/static/**", "/favicon.ico", "/index.html", "/public/**", "/swagger-resources/**");
+		web.ignoring().antMatchers("/api/device/**", "/webjars/**", "/anonymous/**", "/images/**", "/static/**", "/favicon.ico", "/index.html", "/swagger-resources/**");
 	}
 
 	/* (non-Javadoc)
