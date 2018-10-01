@@ -19,7 +19,10 @@ public class BindUserDTO implements Serializable {
 
 	@ApiModelProperty(value = "人员ID")
 	private Long id;
-	
+
+	@ApiModelProperty(value = "区县ID")
+	private Integer areaId;
+
 	@ApiModelProperty(value = "人员分类：1：运营；2：维护；")
 	private Integer utype;
 
@@ -37,5 +40,8 @@ public class BindUserDTO implements Serializable {
 
 	@ApiModelProperty(value = "紧急联系电话")
 	private String urTel;
+
+	@ApiModelProperty(value = "是否为该区县默认负责人。0：否；1：是")
+	private Integer isDefault;
 
 }

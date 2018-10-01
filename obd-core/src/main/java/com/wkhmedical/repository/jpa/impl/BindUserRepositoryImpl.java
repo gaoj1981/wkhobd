@@ -19,6 +19,7 @@ import com.wkhmedical.dto.BindUserPage;
 import com.wkhmedical.po.BindUser;
 import com.wkhmedical.repository.jpa.BindUserRepository;
 import com.wkhmedical.repository.jpa.IBindUserRepository;
+import com.wkhmedical.util.BizUtil;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -42,8 +43,9 @@ public class BindUserRepositoryImpl implements IBindUserRepository {
 		StringBuffer sqlBuf = new StringBuffer("");
 		sqlBuf.append(" SELECT *");
 		sqlBuf.append(" FROM bind_user");
-		sqlBuf.append(" WHERE id = ?");
-		paramList.add(paramBody.getId());
+		sqlBuf.append(" WHERE delFlag = 0");
+		BizUtil.setSqlJoin(paramBody, "id", sqlBuf, paramList, " AND id = ?");
+		BizUtil.setSqlJoin(paramBody, "areaId", sqlBuf, paramList, " AND areaId = ?");
 		//
 		String orderByStr = " ORDER BY insTime DESC";
 		sqlBuf.append(orderByStr);

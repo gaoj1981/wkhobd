@@ -59,8 +59,8 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		sqlBuf.append(" bu1.urName AS prinUrName,bu1.urTel AS prinUrTel,");
 		sqlBuf.append(" bu2.uname AS maintName,bu2.tel AS maintTel,bu2.urName AS maintUrName,bu2.urTel AS maintUrTel");
 		sqlBuf.append(" FROM car_info ci");
-		sqlBuf.append(" LEFT JOIN bind_user bu1 ON ci.prinId = bu1.id");
-		sqlBuf.append(" LEFT JOIN bind_user bu2 ON ci.maintId = bu2.id");
+		sqlBuf.append(" LEFT JOIN bind_user bu1 ON ci.prinId = bu1.id AND bu1.utype = 1");
+		sqlBuf.append(" LEFT JOIN bind_user bu2 ON ci.maintId = bu2.id AND bu2.utype = 2");
 		sqlBuf.append(" WHERE ci.delFlag = 0");
 		BizUtil.setSqlJoin(paramBody, "areaId", sqlBuf, paramList, " AND ci.areaId = ?");
 		//
@@ -69,8 +69,7 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		//
 		int curPg = paramBody.getPaging();
 		int skip = (curPg - 1) * BizConstant.FIND_PAGE_NUM;
-		return hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(), paramList.toArray(), skip,
-				BizConstant.FIND_PAGE_NUM);
+		return hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(), paramList.toArray(), skip, BizConstant.FIND_PAGE_NUM);
 
 	}
 
@@ -79,8 +78,7 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = getSelectSql();
 		BizUtil.setSqlJoin(paramBody, "eid", sqlBuf, paramList, " AND ci.eid = ?");
-		List<CarInfoDTO> lstCarInfo = hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(),
-				paramList.toArray(), 1);
+		List<CarInfoDTO> lstCarInfo = hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(), paramList.toArray(), 1);
 		if (lstCarInfo != null && lstCarInfo.size() > 0) {
 			return lstCarInfo.get(0);
 		}
@@ -90,13 +88,41 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 	public Page<CarInfo> findPgCarInfo(CarInfoPage paramBody) {
 		int page = paramBody.getPaging();
 		page = page - 1;
-		if (page < 0)
-			page = 0;
+		if (page < 0) page = 0;
 		Pageable pageable = PageRequest.of(page, BizConstant.FIND_PAGE_NUM);
 		String[] objArr = new String[0];
 
-		return carInfoRepository.findPageByNativeSql("SELECT ci.* FROM car_info ci", "SELECT COUNT(1) FROM car_info ci",
-				objArr, pageable);
+		return carInfoRepository.findPageByNativeSql("SELECT ci.* FROM car_info ci", "SELECT COUNT(1) FROM car_info ci", objArr, pageable);
+	}
+
+	@Override
+	public void updateCarInfoBindUser(Long bindUserId, Integer utype, Integer areaId) {
+		String utypeStr = null;
+		if (utype == 1) {
+			utypeStr = "prinId";
+		}
+		else if (utype == 2) {
+			utypeStr = "maintId";
+		}
+		if (utypeStr != null && areaId != null) {
+			String sql = "UPDATE car_info SET " + utypeStr + "=" + bindUserId + " WHERE areaId=" + areaId;
+			jdbcQuery.getJdbcTemplate().execute(sql);
+		}
+	}
+
+	@Override
+	public void updateCarInfoBindUserNull(Long bindUserId, Integer utype) {
+		String utypeStr = null;
+		if (utype == 1) {
+			utypeStr = "prinId";
+		}
+		else if (utype == 2) {
+			utypeStr = "maintId";
+		}
+		if (utypeStr != null && bindUserId != null) {
+			String sql = "UPDATE car_info SET " + utypeStr + "=NULL" + " WHERE " + utypeStr + "=" + bindUserId;
+			jdbcQuery.getJdbcTemplate().execute(sql);
+		}
 	}
 
 	@Override

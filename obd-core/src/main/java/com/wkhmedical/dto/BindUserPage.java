@@ -25,6 +25,13 @@ public class BindUserPage implements Serializable {
 	@Min(1)
 	private Integer paging;
 
+	@ApiModelProperty(value = "主KEY")
 	private Long id;
+
+	@ApiModelProperty(value = "区县ID")
+	private Integer areaId;
+
+	@ApiModelProperty(value = "人员分类：1：运营；2：维护")
+	private Integer utype;
 
 }

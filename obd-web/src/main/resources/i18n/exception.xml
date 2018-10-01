@@ -54,4 +54,7 @@
 
 	<entry key="carinsur_already_exists">该车辆该保险已存在</entry>
 	<entry key="carinsur_insurnum_already_exists">该保单号：{0}已存在</entry>
+	
+	
+	<entry key="binduser_already_default">该分类人员已有默认设置</entry>
 </properties>

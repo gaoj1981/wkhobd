@@ -28,6 +28,8 @@ public class BindUser implements Serializable {
 	@Id
 	private Long id;
 
+	private Integer areaId;
+	
 	private Integer utype;
 
 	private String uname;
@@ -40,5 +42,7 @@ public class BindUser implements Serializable {
 
 	private String urTel;
 
+	private Integer isDefault;
+	
 	private Integer delFlag;
 }
