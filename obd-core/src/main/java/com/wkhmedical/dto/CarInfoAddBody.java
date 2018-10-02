@@ -39,7 +39,7 @@ public class CarInfoAddBody implements Serializable {
 	private String deviceNumber;
 
 	@ApiModelProperty(value = "车辆名称")
-	@Length(min = 1, max = 50, message = "车辆名称不能超过50个字符")
+	@Length(min = 0, max = 50, message = "车辆名称不能超过50个字符")
 	private String carName;
 
 	@ApiModelProperty(value = "百公里油耗")

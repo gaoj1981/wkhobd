@@ -45,7 +45,7 @@ public class CarMotController {
 		return carMotService.getInfo(paramBody);
 	}
 
-	@ApiOperation(value = "获取车辆年检分页列表")
+	@ApiOperation(value = "获取车辆年检分页列表（APP用）")
 	@PostMapping("/get.list")
 	public List<CarMotDTO> getCarMotData(@RequestBody @Validated({ValiPage.class}) CarMotBody paramBody) {
 		return carMotService.getList(paramBody);
@@ -57,7 +57,7 @@ public class CarMotController {
 		return carMotService.getPgList(paramBody);
 	}
 
-	@ApiOperation(value = "添加车辆年检")
+	@ApiOperation(value = "添加车辆年检（APP用）")
 	@PostMapping("/add")
 	public void carMotAdd(@RequestBody @Validated({ValiAdd.class}) CarMotBody paramBody, @CurrentUser TUserDetails user) {
 		carMotService.addInfo(paramBody);
