@@ -2,6 +2,7 @@ package com.wkhmedical.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -38,5 +39,7 @@ public class CarInsurPage implements Serializable {
 	private String insurNum;
 
 	@ApiModelProperty(value = "获取类型。0:未生效；1:已生效；2：已失效")
+	@Min(0)
+	@Max(2)
 	private Integer valiType;
 }
