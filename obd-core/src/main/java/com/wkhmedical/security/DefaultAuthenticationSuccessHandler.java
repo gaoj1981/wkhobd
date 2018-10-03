@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wkhmedical.util.WebUtil;
 
 import lombok.Setter;
@@ -23,7 +24,12 @@ public class DefaultAuthenticationSuccessHandler extends SavedRequestAwareAuthen
 		if (WebUtil.isAjaxRequest(request)) {
 			WebUtil.setJsonResponseConfig(response);
 			response.setStatus(HttpServletResponse.SC_OK);
+			JSONObject jso = new JSONObject();
+			jso.put("status", "ok");
+			jso.put("type", "account");
+			jso.put("currentAuthority", "admin");
 			PrintWriter out = response.getWriter();
+			out.append(jso.toJSONString());
 			out.flush();
 			out.close();
 			clearAuthenticationAttributes(request);
