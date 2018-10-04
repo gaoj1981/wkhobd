@@ -45,6 +45,7 @@ public class DefaultUserDetailsService implements UserDetailsService {
 		userDetails.setUsername(StringUtils.isNotBlank(user.getUserIdCard()) ? user.getUserIdCard() : user.getUserMobi());
 		userDetails.setPassword(user.getUserPwd());
 		userDetails.setSalt(user.getUserPwdSalt());
+		userDetails.setRealName(user.getUserName());
 		userDetails.setEnabled(true);
 		
 		return userDetails;
