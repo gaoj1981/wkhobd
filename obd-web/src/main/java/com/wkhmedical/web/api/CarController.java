@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,10 +20,7 @@ import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoEditBody;
 import com.wkhmedical.dto.CarInfoPage;
 import com.wkhmedical.dto.ObdCarDTO;
-import com.wkhmedical.dto.ValiPage;
-import com.wkhmedical.dto.WareRecordBody;
 import com.wkhmedical.po.CarInfo;
-import com.wkhmedical.po.WareRecord;
 import com.wkhmedical.security.TUserDetails;
 import com.wkhmedical.service.CarInfoService;
 import com.wkhmedical.service.ObdCarService;
@@ -66,7 +62,7 @@ public class CarController {
 
 	@ApiOperation(value = "获取车辆分页对象")
 	@PostMapping("/get.page")
-	public Page<CarInfo> getWareRecordPage(@RequestBody @Valid CarInfoPage paramBody) {
+	public Page<CarInfo> getCarPage(@RequestBody @Valid CarInfoPage paramBody) {
 		return carInfoService.getCarInfoPage(paramBody);
 	}
 

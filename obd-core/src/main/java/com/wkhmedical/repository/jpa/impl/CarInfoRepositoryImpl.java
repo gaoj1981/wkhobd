@@ -44,8 +44,8 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		sqlBuf.append(" bu1.urName AS prinUrName,bu1.urTel AS prinUrTel,");
 		sqlBuf.append(" bu2.uname AS maintName,bu2.tel AS maintTel,bu2.urName AS maintUrName,bu2.urTel AS maintUrTel");
 		sqlBuf.append(" FROM car_info ci");
-		sqlBuf.append(" LEFT JOIN bind_user bu1 ON ci.prinId = bu1.id");
-		sqlBuf.append(" LEFT JOIN bind_user bu2 ON ci.maintId = bu2.id");
+		sqlBuf.append(" LEFT JOIN bind_user bu1 ON ci.prinId = bu1.id AND bu1.utype = 1");
+		sqlBuf.append(" LEFT JOIN bind_user bu2 ON ci.maintId = bu2.id AND bu2.utype = 2");
 		sqlBuf.append(" WHERE ci.delFlag = 0");
 		return sqlBuf;
 	}
@@ -53,16 +53,9 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 	@Override
 	public List<CarInfoDTO> findCarInfoList(CarInfoPage paramBody) {
 		List<Object> paramList = new ArrayList<Object>();
-		StringBuffer sqlBuf = new StringBuffer("");
-		sqlBuf.append(" SELECT ci.*,");
-		sqlBuf.append(" bu1.uname AS prinName,bu1.job AS prinJob,bu1.tel AS prinTel,");
-		sqlBuf.append(" bu1.urName AS prinUrName,bu1.urTel AS prinUrTel,");
-		sqlBuf.append(" bu2.uname AS maintName,bu2.tel AS maintTel,bu2.urName AS maintUrName,bu2.urTel AS maintUrTel");
-		sqlBuf.append(" FROM car_info ci");
-		sqlBuf.append(" LEFT JOIN bind_user bu1 ON ci.prinId = bu1.id AND bu1.utype = 1");
-		sqlBuf.append(" LEFT JOIN bind_user bu2 ON ci.maintId = bu2.id AND bu2.utype = 2");
-		sqlBuf.append(" WHERE ci.delFlag = 0");
+		StringBuffer sqlBuf = getSelectSql();
 		BizUtil.setSqlJoin(paramBody, "areaId", sqlBuf, paramList, " AND ci.areaId = ?");
+		BizUtil.setSqlJoin(paramBody, "eidLike", sqlBuf, paramList, " AND ci.eid LIKE ?");
 		//
 		String orderByStr = " ORDER BY ci.insTime DESC";
 		sqlBuf.append(orderByStr);
@@ -86,13 +79,23 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 	}
 
 	public Page<CarInfo> findPgCarInfo(CarInfoPage paramBody) {
+		// 组装页数对象
 		int page = paramBody.getPaging();
 		page = page - 1;
 		if (page < 0) page = 0;
 		Pageable pageable = PageRequest.of(page, BizConstant.FIND_PAGE_NUM);
-		String[] objArr = new String[0];
-
-		return carInfoRepository.findPageByNativeSql("SELECT ci.* FROM car_info ci", "SELECT COUNT(1) FROM car_info ci", objArr, pageable);
+		// SQL主语句
+		String sql = "SELECT ci.* FROM car_info ci";
+		String sqlCount = "SELECT COUNT(1) FROM car_info ci";
+		// 组装where语句
+		List<Object> objList = new ArrayList<Object>();
+		StringBuffer sqlWhere = new StringBuffer(" WHERE ci.delFlag = 0");
+		List<String> sqlStrList = new ArrayList<String>();
+		sqlStrList.add(" AND ci.areaId = ?");
+		sqlStrList.add(" AND ci.eid LIKE ?");
+		BizUtil.setSqlWhere(paramBody, "areaId,eidLike", sqlWhere, objList, sqlStrList);
+		// 执行分页查询
+		return carInfoRepository.findPageByNativeSql(sql + sqlWhere, sqlCount + sqlWhere, objList.toArray(), pageable);
 	}
 
 	@Override
