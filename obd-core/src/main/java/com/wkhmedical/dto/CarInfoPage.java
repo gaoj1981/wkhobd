@@ -25,6 +25,9 @@ public class CarInfoPage implements Serializable {
 	@Min(1)
 	private Integer paging;
 
+	@ApiModelProperty(value = "区县ID")
 	private Integer areaId;
 
+	@ApiModelProperty(value = "车辆ID（支持模糊查询）")
+	private String eidLike;
 }

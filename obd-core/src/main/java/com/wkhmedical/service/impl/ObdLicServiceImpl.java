@@ -300,4 +300,22 @@ public class ObdLicServiceImpl implements ObdLicService {
 		return rtnDTO;
 	}
 
+	@Override
+	public Long[] getLicCountArr(LicStatus status) {
+		// 获取已使用/总授权量
+		if (status == null) {
+			Long[] rtnArr = new Long[2];
+			// 获取正常使用完成的授权
+			Long discardCount = licRepository.getCountByLicInfo(null, LicStatus.Discard, null);
+			// 获取总授权数
+			Long totalCount = licRepository.getCountByLicInfo(null, null, null);
+			rtnArr[0] = discardCount;
+			rtnArr[1] = totalCount;
+			return rtnArr;
+		}
+		else {
+			// 后续根据具体业务扩展
+			return null;
+		}
+	}
 }

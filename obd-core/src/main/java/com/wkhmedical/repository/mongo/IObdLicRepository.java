@@ -15,4 +15,13 @@ public interface IObdLicRepository {
 	 */
 	MgObdLic getLicInfoGtNow(String eid, LicStatus status, Integer type);
 
+	/**
+	 * 根据授权状态获取对应数量
+	 * 
+	 * @param did 设备ID
+	 * @param status 授权状态
+	 * @param type 类型
+	 * @return
+	 */
+	Long getCountByLicInfo(String eid, LicStatus status, Integer type);
 }

@@ -37,4 +37,22 @@ public class ObdLicRepositoryImpl implements IObdLicRepository {
 		return mongoSupport.findOne(query, MgObdLic.class);
 	}
 
+	@Override
+	public Long getCountByLicInfo(String eid, LicStatus status, Integer type) {
+		Criteria criteria = new Criteria();
+		if (eid != null) {
+			criteria.and("eid").is(eid);
+		}
+		if (status != null) {
+			criteria.and("status").is(status);
+		}
+		if (type != null) {
+			criteria.and("type").is(type);
+		}
+		Query query = new Query();
+		query.addCriteria(criteria);
+
+		return mongoSupport.count(query, MgObdLic.class);
+	}
+
 }

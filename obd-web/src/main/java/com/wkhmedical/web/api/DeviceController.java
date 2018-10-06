@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @RestController
 @Api(tags = "设备接口")
-@RequestMapping("/api/device")
+@RequestMapping("/api")
 public class DeviceController {
 
 	@Autowired
@@ -41,7 +42,7 @@ public class DeviceController {
 	 * @param licInfo 加密请求信息
 	 * @return 加密后授权信息
 	 */
-	@PostMapping("/{eid:[0-9a-zA-Z]+}/auth")
+	@PostMapping("/device/{eid:[0-9a-zA-Z]+}/auth")
 	public String getWare(@PathVariable String eid, @RequestBody @Valid String licStr) {
 		log.info("============BEGIN==============");
 		log.info("请求设备编号：" + eid);
@@ -61,4 +62,13 @@ public class DeviceController {
 		return rtnRsaStr;
 	}
 
+	/**
+	 * 获取授权已使用/总量
+	 * 
+	 * @return
+	 */
+	@GetMapping("/lic/count.sum")
+	public Long[] getLicCountSum() {
+		return obdLicService.getLicCountArr(null);
+	}
 }
