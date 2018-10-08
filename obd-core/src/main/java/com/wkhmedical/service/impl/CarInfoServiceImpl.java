@@ -77,9 +77,12 @@ public class CarInfoServiceImpl implements CarInfoService {
 
 		// 组装CarInfo
 		CarInfo carInfo = AssistUtil.coverBean(carInfoBody, CarInfo.class);
+		Integer areaId = carInfo.getAreaId();
 		Long id = BizUtil.genDbId();
 		carInfo.setId(id);
-		carInfo.setGroupId(carInfo.getAreaId() + "");// 目前需求暂将区间ID作为分组标准
+		carInfo.setGroupId(areaId + "");// 目前需求暂将区间ID作为分组标准
+		carInfo.setProvId(BizUtil.getProvId(areaId));
+		carInfo.setCityId(BizUtil.getCityId(areaId));
 		carInfo.setDelFlag(0);
 		// 车辆信息入库
 		carInfoRepository.save(carInfo);
