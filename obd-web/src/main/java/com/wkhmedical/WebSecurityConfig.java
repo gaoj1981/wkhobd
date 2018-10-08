@@ -57,7 +57,7 @@ public class WebSecurityConfig extends AbstractWebSecurityConfig {
 	 */
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/api/device/**", "/webjars/**", "/anonymous/**", "/images/**", "/v2/**", "/swagger**", "/static/**", "/favicon.ico", "/index.html", "/swagger-resources/**");
+		web.ignoring().antMatchers("/api/device/**", "/webjars/**", "/anonymous/**", "/images/**", "/static/**", "/favicon.ico", "/index.html", "/swagger-resources/**");
 	}
 
 	/* (non-Javadoc)
