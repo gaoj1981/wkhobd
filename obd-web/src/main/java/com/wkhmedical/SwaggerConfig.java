@@ -55,7 +55,7 @@ public class SwaggerConfig {
      */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("RESTful API 接口文档")
+                .title("WKH巡诊车项目接口文档")
                 .description("OpenApi")
                 .version("1.0")
                 .build();
