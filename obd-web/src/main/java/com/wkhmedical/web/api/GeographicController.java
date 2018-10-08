@@ -1,16 +1,15 @@
 package com.wkhmedical.web.api;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
-import org.apache.commons.io.FileUtils;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wkhmedical.util.BizUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,8 +27,8 @@ public class GeographicController {
 	public Object getAreas(@ApiParam(value = "城市ID", required = true) @PathVariable String cityId) throws IOException {
 		// TODO 需要Guava Cache
 		log.info("GeographicController->getAreas");
-		File file = ResourceUtils.getFile("classpath:geogr/area.json");
-		String content = FileUtils.readFileToString(file, "UTF-8");
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("geogr/area.json");
+		String content = BizUtil.getResourcesStr(inputStream);
 		JSONObject jso = JSONObject.parseObject(content);
 		return jso.get(cityId);
 	}
@@ -38,8 +37,8 @@ public class GeographicController {
 	@GetMapping("/city/{provId:[0-9]{0,6}}")
 	public Object getCity(@ApiParam(value = "省ID", required = true) @PathVariable String provId) throws IOException {
 		// TODO 需要Guava Cache
-		File file = ResourceUtils.getFile("classpath:geogr/city.json");
-		String content = FileUtils.readFileToString(file, "UTF-8");
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("geogr/city.json");
+		String content = BizUtil.getResourcesStr(inputStream);
 		JSONObject jso = JSONObject.parseObject(content);
 		return jso.get(provId);
 	}
@@ -48,8 +47,8 @@ public class GeographicController {
 	@GetMapping("/province")
 	public Object getProvince() throws IOException {
 		// TODO 需要Guava Cache
-		File file = ResourceUtils.getFile("classpath:geogr/province.json");
-		String content = FileUtils.readFileToString(file, "UTF-8");
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("geogr/province.json");
+		String content = BizUtil.getResourcesStr(inputStream);
 		return JSONObject.parse(content);
 	}
 
