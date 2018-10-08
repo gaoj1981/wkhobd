@@ -23,7 +23,7 @@ import lombok.extern.log4j.Log4j2;
 @RequestMapping("/api/geographic")
 public class GeographicController {
 
-	@ApiOperation(value = "根据城市ID获取区县列表（建议前端保留一份，减少网络请求）")
+	@ApiOperation(value = "根据城市ID获取区县列表（建议调用方留存，减少网络请求）")
 	@GetMapping("/area/{cityId:[0-9]{0,6}}")
 	public Object getAreas(@ApiParam(value = "城市ID", required = true) @PathVariable String cityId) throws IOException {
 		// TODO 需要Guava Cache
