@@ -38,7 +38,7 @@ public class WareRecordRepositoryImpl implements IWareRecordRepository {
 	private String findCount;
 
 	@Override
-	public List<WareRecordDTO> findWareRecordList(WareRecordBody paramBody) {
+	public List<WareRecordDTO> findWareRecordList(WareRecordBody paramBody, Integer page, Integer size) {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = new StringBuffer("");
 		sqlBuf.append(" SELECT wr.*,ci.eid");
@@ -56,20 +56,20 @@ public class WareRecordRepositoryImpl implements IWareRecordRepository {
 		String orderByStr = " ORDER BY insTime DESC";
 		sqlBuf.append(orderByStr);
 		//
-		int curPg = paramBody.getPaging();
-		int skip = (curPg - 1) * BizConstant.FIND_PAGE_NUM;
-		return hibernateSupport.findByNativeSql(WareRecordDTO.class, sqlBuf.toString(), paramList.toArray(), skip, BizConstant.FIND_PAGE_NUM);
+		Integer[] pgArr = BizUtil.getPgArr(page, size);
+		int skip = pgArr[0] * pgArr[1];
+		return hibernateSupport.findByNativeSql(WareRecordDTO.class, sqlBuf.toString(), paramList.toArray(), skip,
+				BizConstant.FIND_PAGE_NUM);
 	}
 
 	@Override
-	public Page<WareRecord> findPgWareRecord(WareRecordBody paramBody) {
-		int page = paramBody.getPaging();
-		page = page - 1;
-		if (page < 0) page = 0;
-		Pageable pageable = PageRequest.of(page, BizConstant.FIND_PAGE_NUM);
+	public Page<WareRecord> findPgWareRecord(WareRecordBody paramBody, Integer page, Integer size) {
+		Integer[] pgArr = BizUtil.getPgArr(page, size);
+		Pageable pageable = PageRequest.of(pgArr[0], pgArr[1]);
 		String[] objArr = new String[0];
 
-		return wareRecordRepository.findPageByNativeSql("SELECT * FROM ware_record", "SELECT COUNT(1) FROM ware_record", objArr, pageable);
+		return wareRecordRepository.findPageByNativeSql("SELECT * FROM ware_record", "SELECT COUNT(1) FROM ware_record",
+				objArr, pageable);
 	}
 
 	@Override
@@ -81,7 +81,8 @@ public class WareRecordRepositoryImpl implements IWareRecordRepository {
 		sqlBuf.append(" WHERE id = ?");
 		paramList.add(id);
 
-		List<WareRecord> lstWareRecord = hibernateSupport.findByNativeSql(WareRecord.class, sqlBuf.toString(), paramList.toArray());
+		List<WareRecord> lstWareRecord = hibernateSupport.findByNativeSql(WareRecord.class, sqlBuf.toString(),
+				paramList.toArray());
 		if (lstWareRecord != null && lstWareRecord.size() > 0) {
 			return lstWareRecord.get(0);
 		}

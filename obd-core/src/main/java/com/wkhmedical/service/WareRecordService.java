@@ -6,15 +6,16 @@ import org.springframework.data.domain.Page;
 
 import com.wkhmedical.dto.WareRecordBody;
 import com.wkhmedical.dto.WareRecordDTO;
+import com.wkhmedical.dto.WareRecordPage;
 import com.wkhmedical.po.WareRecord;
 
 public interface WareRecordService {
 
 	WareRecord getInfo(WareRecordBody paramBody);
 
-	List<WareRecordDTO> getList(WareRecordBody paramBody);
-	
-	Page<WareRecord> getPgList(WareRecordBody paramBody);
+	List<WareRecordDTO> getList(WareRecordPage paramBody);
+
+	Page<WareRecord> getPgList(WareRecordPage paramBody);
 
 	void addInfo(WareRecordBody infoBody);
 
@@ -23,4 +24,6 @@ public interface WareRecordService {
 	void deleteInfo(Long id);
 
 	void delInfo(Long id);
+
+	Long getCountSum();
 }

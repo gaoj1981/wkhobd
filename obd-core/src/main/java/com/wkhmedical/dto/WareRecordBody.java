@@ -7,7 +7,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -24,12 +23,6 @@ import lombok.Setter;
 public class WareRecordBody implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
-	@ApiModelProperty(value = "内存页码")
-	@NotNull(groups = { ValiPage.class })
-	@Pattern(regexp = "[0-9]+", message = "非法页数")
-	@Min(value = 1, groups = { ValiPage.class })
-	private Integer paging;
 
 	@ApiModelProperty(value = "")
 	@NotNull(groups = { ValiEdit.class })

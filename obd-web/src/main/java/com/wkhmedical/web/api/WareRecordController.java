@@ -2,6 +2,8 @@ package com.wkhmedical.web.api;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
@@ -16,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.taoxeo.boot.security.CurrentUser;
 import com.wkhmedical.dto.ValiAdd;
 import com.wkhmedical.dto.ValiEdit;
-import com.wkhmedical.dto.ValiPage;
 import com.wkhmedical.dto.WareRecordBody;
 import com.wkhmedical.dto.WareRecordDTO;
+import com.wkhmedical.dto.WareRecordPage;
 import com.wkhmedical.po.WareRecord;
 import com.wkhmedical.security.TUserDetails;
 import com.wkhmedical.service.WareRecordService;
@@ -47,25 +49,26 @@ public class WareRecordController {
 
 	@ApiOperation(value = "获取维修保养分页列表（APP用）")
 	@PostMapping("/get.list")
-	public List<WareRecordDTO> getWareRecordData(@RequestBody @Validated({ValiPage.class}) WareRecordBody paramBody) {
+	public List<WareRecordDTO> getWareRecordData(@RequestBody @Valid WareRecordPage paramBody) {
 		return wareRecordService.getList(paramBody);
 	}
 
 	@ApiOperation(value = "获取维修保养分页对象")
 	@PostMapping("/get.page")
-	public Page<WareRecord> getWareRecordPage(@RequestBody @Validated({ValiPage.class}) WareRecordBody paramBody) {
+	public Page<WareRecord> getWareRecordPage(@RequestBody @Valid WareRecordPage paramBody) {
 		return wareRecordService.getPgList(paramBody);
 	}
 
 	@ApiOperation(value = "添加维修保养（APP用）")
 	@PostMapping("/add")
-	public void wareRecordAdd(@RequestBody @Validated({ValiAdd.class}) WareRecordBody paramBody, @CurrentUser TUserDetails user) {
+	public void wareRecordAdd(@RequestBody @Validated({ ValiAdd.class }) WareRecordBody paramBody,
+			@CurrentUser TUserDetails user) {
 		wareRecordService.addInfo(paramBody);
 	}
 
 	@ApiOperation(value = "修改维修保养")
 	@PostMapping("/edit")
-	public void wareRecordEdit(@RequestBody @Validated({ValiEdit.class}) WareRecordBody paramBody) {
+	public void wareRecordEdit(@RequestBody @Validated({ ValiEdit.class }) WareRecordBody paramBody) {
 		wareRecordService.updateInfo(paramBody);
 	}
 
@@ -83,4 +86,16 @@ public class WareRecordController {
 		log.info("非物理删除。id：" + id);
 		return true;
 	}
+
+	/**
+	 * 获取维修保养总数
+	 * 
+	 * @return
+	 */
+	@ApiOperation(value = "获取维修保养总数")
+	@GetMapping("/count.sum")
+	public Long getCountSum() {
+		return wareRecordService.getCountSum();
+	}
+
 }

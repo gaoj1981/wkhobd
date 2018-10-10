@@ -15,6 +15,7 @@ import com.taoxeo.lang.BeanUtils;
 import com.taoxeo.lang.exception.BizRuntimeException;
 import com.wkhmedical.dto.WareRecordBody;
 import com.wkhmedical.dto.WareRecordDTO;
+import com.wkhmedical.dto.WareRecordPage;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.po.WareRecord;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
@@ -45,13 +46,15 @@ public class WareRecordServiceImpl implements WareRecordService {
 	}
 
 	@Override
-	public List<WareRecordDTO> getList(WareRecordBody paramBody) {
-		return wareRecordRepository.findWareRecordList(paramBody);
+	public List<WareRecordDTO> getList(WareRecordPage paramBody) {
+		WareRecordBody queryObj = paramBody.getQuery();
+		return wareRecordRepository.findWareRecordList(queryObj, paramBody.getPage(), paramBody.getSize());
 	}
 
 	@Override
-	public Page<WareRecord> getPgList(WareRecordBody paramBody) {
-		return wareRecordRepository.findPgWareRecord(paramBody);
+	public Page<WareRecord> getPgList(WareRecordPage paramBody) {
+		WareRecordBody queryObj = paramBody.getQuery();
+		return wareRecordRepository.findPgWareRecord(queryObj, paramBody.getPage(), paramBody.getSize());
 	}
 
 	@Override
@@ -98,8 +101,7 @@ public class WareRecordServiceImpl implements WareRecordService {
 	public void deleteInfo(Long id) {
 		try {
 			wareRecordRepository.deleteById(id);
-		}
-		catch (EmptyResultDataAccessException e) {
+		} catch (EmptyResultDataAccessException e) {
 			log.error("物理删除id不存在" + id);
 		}
 	}
@@ -114,4 +116,8 @@ public class WareRecordServiceImpl implements WareRecordService {
 		}
 	}
 
+	@Override
+	public Long getCountSum() {
+		return wareRecordRepository.count();
+	}
 }
