@@ -7,13 +7,13 @@ import org.springframework.data.domain.Page;
 import com.wkhmedical.dto.CarInfoAddBody;
 import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoEditBody;
-import com.wkhmedical.dto.CarInfoPage;
+import com.wkhmedical.dto.CarInfoPageSearch;
 import com.wkhmedical.po.CarInfo;
 
 public interface CarInfoService {
-	Page<CarInfo> getCarInfoPage(CarInfoPage paramBody);
+	Page<CarInfo> getCarInfoPage(CarInfoPageSearch paramBody);
 
-	List<CarInfoDTO> getCarInfoList(CarInfoPage paramBody);
+	List<CarInfoDTO> getCarInfoList(CarInfoPageSearch paramBody);
 
 	CarInfoDTO getCarInfo(String eid);
 
@@ -22,4 +22,6 @@ public interface CarInfoService {
 	void updateCarInfo(CarInfoEditBody carInfoBody);
 
 	void deleteCarInfo(String eid);
+
+	Long getCountSum();
 }

@@ -18,7 +18,7 @@ import com.taoxeo.boot.security.CurrentUser;
 import com.wkhmedical.dto.CarInfoAddBody;
 import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoEditBody;
-import com.wkhmedical.dto.CarInfoPage;
+import com.wkhmedical.dto.CarInfoPageSearch;
 import com.wkhmedical.dto.ObdCarDTO;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.security.TUserDetails;
@@ -56,13 +56,13 @@ public class CarController {
 
 	@ApiOperation(value = "获取车辆分页列表（APP用）")
 	@PostMapping("/get.list")
-	public List<CarInfoDTO> getCarData(@RequestBody @Valid CarInfoPage paramBody) {
+	public List<CarInfoDTO> getCarData(@RequestBody @Valid CarInfoPageSearch paramBody) {
 		return carInfoService.getCarInfoList(paramBody);
 	}
 
 	@ApiOperation(value = "获取车辆分页对象")
 	@PostMapping("/get.page")
-	public Page<CarInfo> getCarPage(@RequestBody @Valid CarInfoPage paramBody) {
+	public Page<CarInfo> getCarPage(@RequestBody @Valid CarInfoPageSearch paramBody) {
 		return carInfoService.getCarInfoPage(paramBody);
 	}
 
@@ -84,4 +84,16 @@ public class CarController {
 		carInfoService.deleteCarInfo(eid);
 		return true;
 	}
+
+	/**
+	 * 获取车辆总数
+	 * 
+	 * @return
+	 */
+	@ApiOperation(value = "获取车辆总数")
+	@GetMapping("/count.sum")
+	public Long getCountSum() {
+		return carInfoService.getCountSum();
+	}
+
 }

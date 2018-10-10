@@ -14,7 +14,8 @@ import com.taoxeo.lang.exception.BizRuntimeException;
 import com.wkhmedical.dto.CarInfoAddBody;
 import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoEditBody;
-import com.wkhmedical.dto.CarInfoPage;
+import com.wkhmedical.dto.CarInfoPageParam;
+import com.wkhmedical.dto.CarInfoPageSearch;
 import com.wkhmedical.dto.CarInfoParam;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
@@ -35,14 +36,16 @@ public class CarInfoServiceImpl implements CarInfoService {
 	ObdCarRepository obdCarRepository;
 
 	@Override
-	public Page<CarInfo> getCarInfoPage(CarInfoPage paramBody) {
-		Page<CarInfo> pgCarInfo = carInfoRepository.findPgCarInfo(paramBody);
+	public Page<CarInfo> getCarInfoPage(CarInfoPageSearch paramBody) {
+		CarInfoPageParam queryObj = paramBody.getQuery();
+		Page<CarInfo> pgCarInfo = carInfoRepository.findPgCarInfo(queryObj, paramBody.getPage(), paramBody.getSize());
 		return pgCarInfo;
 	}
 
 	@Override
-	public List<CarInfoDTO> getCarInfoList(CarInfoPage paramBody) {
-		return carInfoRepository.findCarInfoList(paramBody);
+	public List<CarInfoDTO> getCarInfoList(CarInfoPageSearch paramBody) {
+		CarInfoPageParam queryObj = paramBody.getQuery();
+		return carInfoRepository.findCarInfoList(queryObj, paramBody.getPage(), paramBody.getSize());
 	}
 
 	@Override
@@ -124,5 +127,10 @@ public class CarInfoServiceImpl implements CarInfoService {
 			carInfo.setDelFlag(1);
 			carInfoRepository.update(carInfo);
 		}
+	}
+
+	@Override
+	public Long getCountSum() {
+		return carInfoRepository.findCountSum();
 	}
 }

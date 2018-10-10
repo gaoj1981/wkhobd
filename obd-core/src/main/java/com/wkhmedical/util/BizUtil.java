@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.wkhmedical.config.ConfigProperties;
+import com.wkhmedical.constant.BizConstant;
 import com.wkhmedical.constant.Gender;
 import com.wkhmedical.dto.IdCardValidator;
 
@@ -212,4 +213,18 @@ public class BizUtil {
 		return content;
 	}
 
+	public static Integer[] getPgArr(Integer page, Integer size) {
+		Integer[] rtnArr = new Integer[2];
+		page = page - 1;
+		if (page < 0)
+			page = 0;
+		if (size == null) {
+			size = BizConstant.FIND_PAGE_NUM;
+		} else if (size > BizConstant.FIND_PAGE_MAXNUM) {
+			size = BizConstant.FIND_PAGE_MAXNUM;
+		}
+		rtnArr[0] = page;
+		rtnArr[1] = size;
+		return rtnArr;
+	}
 }

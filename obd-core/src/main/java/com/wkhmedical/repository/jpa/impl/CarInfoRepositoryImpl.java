@@ -15,7 +15,7 @@ import com.taoxeo.repository.HibernateSupport;
 import com.taoxeo.repository.JdbcQuery;
 import com.wkhmedical.constant.BizConstant;
 import com.wkhmedical.dto.CarInfoDTO;
-import com.wkhmedical.dto.CarInfoPage;
+import com.wkhmedical.dto.CarInfoPageParam;
 import com.wkhmedical.dto.CarInfoParam;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
@@ -51,7 +51,7 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 	}
 
 	@Override
-	public List<CarInfoDTO> findCarInfoList(CarInfoPage paramBody) {
+	public List<CarInfoDTO> findCarInfoList(CarInfoPageParam paramBody, Integer page, Integer size) {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = getSelectSql();
 		BizUtil.setSqlJoin(paramBody, "areaId", sqlBuf, paramList, " AND ci.areaId = ?");
@@ -60,10 +60,10 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		String orderByStr = " ORDER BY ci.insTime DESC";
 		sqlBuf.append(orderByStr);
 		//
-		int curPg = paramBody.getPaging();
-		int skip = (curPg - 1) * BizConstant.FIND_PAGE_NUM;
-		return hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(), paramList.toArray(), skip, BizConstant.FIND_PAGE_NUM);
-
+		Integer[] pgArr = BizUtil.getPgArr(page, size);
+		int skip = pgArr[0] * pgArr[1];
+		return hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(), paramList.toArray(), skip,
+				BizConstant.FIND_PAGE_NUM);
 	}
 
 	@Override
@@ -71,29 +71,30 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = getSelectSql();
 		BizUtil.setSqlJoin(paramBody, "eid", sqlBuf, paramList, " AND ci.eid = ?");
-		List<CarInfoDTO> lstCarInfo = hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(), paramList.toArray(), 1);
+		List<CarInfoDTO> lstCarInfo = hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(),
+				paramList.toArray(), 1);
 		if (lstCarInfo != null && lstCarInfo.size() > 0) {
 			return lstCarInfo.get(0);
 		}
 		return null;
 	}
 
-	public Page<CarInfo> findPgCarInfo(CarInfoPage paramBody) {
+	public Page<CarInfo> findPgCarInfo(CarInfoPageParam paramBody, Integer page, Integer size) {
 		// 组装页数对象
-		int page = paramBody.getPaging();
-		page = page - 1;
-		if (page < 0) page = 0;
-		Pageable pageable = PageRequest.of(page, BizConstant.FIND_PAGE_NUM);
+		Integer[] pgArr = BizUtil.getPgArr(page, size);
+		Pageable pageable = PageRequest.of(pgArr[0], pgArr[1]);
 		// SQL主语句
 		String sql = "SELECT ci.* FROM car_info ci";
 		String sqlCount = "SELECT COUNT(1) FROM car_info ci";
 		// 组装where语句
 		List<Object> objList = new ArrayList<Object>();
 		StringBuffer sqlWhere = new StringBuffer(" WHERE ci.delFlag = 0");
-		List<String> sqlStrList = new ArrayList<String>();
-		sqlStrList.add(" AND ci.areaId = ?");
-		sqlStrList.add(" AND ci.eid LIKE ?");
-		BizUtil.setSqlWhere(paramBody, "areaId,eidLike", sqlWhere, objList, sqlStrList);
+		if (paramBody != null) {
+			List<String> sqlStrList = new ArrayList<String>();
+			sqlStrList.add(" AND ci.areaId = ?");
+			sqlStrList.add(" AND ci.eid LIKE ?");
+			BizUtil.setSqlWhere(paramBody, "areaId,eidLike", sqlWhere, objList, sqlStrList);
+		}
 		// 执行分页查询
 		return carInfoRepository.findPageByNativeSql(sql + sqlWhere, sqlCount + sqlWhere, objList.toArray(), pageable);
 	}
@@ -103,8 +104,7 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		String utypeStr = null;
 		if (utype == 1) {
 			utypeStr = "prinId";
-		}
-		else if (utype == 2) {
+		} else if (utype == 2) {
 			utypeStr = "maintId";
 		}
 		if (utypeStr != null && areaId != null) {
@@ -118,8 +118,7 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		String utypeStr = null;
 		if (utype == 1) {
 			utypeStr = "prinId";
-		}
-		else if (utype == 2) {
+		} else if (utype == 2) {
 			utypeStr = "maintId";
 		}
 		if (utypeStr != null && bindUserId != null) {
@@ -134,6 +133,11 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		List<Map> count = jdbcQuery.find(findCarCount, Map.class, areaId);
 		log.info("jdbcQuery测试：车辆数为" + count.get(0));
 		return 0;
+	}
+
+	@Override
+	public Long findCountSum() {
+		return hibernateSupport.countByNativeSql("SELECT COUNT(1) FROM car_info", null);
 	}
 
 }

@@ -4,6 +4,7 @@ public class BizConstant {
 
 	// 每页查询出的数据库记录条数
 	public final static int FIND_PAGE_NUM = 20;
+	public final static int FIND_PAGE_MAXNUM = 50;
 
 	// 手机验证码类型；1：注册用；2：密码用
 	public final static Integer MOBI_VALITYPE_1 = 1;
