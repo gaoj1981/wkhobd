@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.taoxeo.boot.security.CurrentUser;
+import com.taoxeo.repository.Paging;
 import com.wkhmedical.dto.ValiAdd;
 import com.wkhmedical.dto.ValiEdit;
 import com.wkhmedical.dto.WareRecordBody;
 import com.wkhmedical.dto.WareRecordDTO;
-import com.wkhmedical.dto.WareRecordPage;
 import com.wkhmedical.po.WareRecord;
 import com.wkhmedical.security.TUserDetails;
 import com.wkhmedical.service.WareRecordService;
@@ -49,13 +49,13 @@ public class WareRecordController {
 
 	@ApiOperation(value = "获取维修保养分页列表（APP用）")
 	@PostMapping("/get.list")
-	public List<WareRecordDTO> getWareRecordData(@RequestBody @Valid WareRecordPage paramBody) {
+	public List<WareRecordDTO> getWareRecordData(@RequestBody @Valid Paging<WareRecordBody> paramBody) {
 		return wareRecordService.getList(paramBody);
 	}
 
 	@ApiOperation(value = "获取维修保养分页对象")
 	@PostMapping("/get.page")
-	public Page<WareRecord> getWareRecordPage(@RequestBody @Valid WareRecordPage paramBody) {
+	public Page<WareRecord> getWareRecordPage(@RequestBody @Valid Paging<WareRecordBody> paramBody) {
 		return wareRecordService.getPgList(paramBody);
 	}
 

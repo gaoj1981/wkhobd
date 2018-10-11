@@ -9,14 +9,13 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.taoxeo.repository.HibernateSupport;
 import com.taoxeo.repository.JdbcQuery;
-import com.wkhmedical.constant.BizConstant;
+import com.wkhmedical.dto.CarInsurBody;
 import com.wkhmedical.dto.CarInsurDTO;
-import com.wkhmedical.dto.CarInsurPage;
 import com.wkhmedical.po.CarInsur;
 import com.wkhmedical.repository.jpa.CarInsurRepository;
 import com.wkhmedical.repository.jpa.ICarInsurRepository;
@@ -39,7 +38,7 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 	private String findCount;
 
 	@Override
-	public List<CarInsurDTO> findCarInsurList(CarInsurPage paramBody) {
+	public List<CarInsurDTO> findCarInsurList(CarInsurBody paramBody, Pageable pageable) {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = new StringBuffer("");
 		sqlBuf.append(" SELECT ci.*");
@@ -56,23 +55,26 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 			if (valiType.intValue() == 0) {
 				sqlBuf.append(" AND ci.effectDate > ?");
 				paramList.add(dtNow);
-			}else if(valiType.intValue() == 1){
+			} else if (valiType.intValue() == 1) {
 				sqlBuf.append(" AND ci.effectDate < ? AND ci.expDate > ?");
 				paramList.add(dtNow);
 				paramList.add(dtNow);
-			}else if(valiType.intValue() == 2){
+			} else if (valiType.intValue() == 2) {
 				sqlBuf.append(" AND ci.expDate < ?");
 				paramList.add(dtNow);
 			}
 		}
 		//
-		String orderByStr = " ORDER BY ci.insTime DESC";
-		sqlBuf.append(orderByStr);
+		Sort sort = pageable.getSort();
+		String[] fnamesArr = new String[] {};
+		String[] onamesArr = new String[] {};
+		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY ci.insTime DESC");
+		sqlBuf.append(sqlOrder);
 		//
-		int curPg = paramBody.getPaging();
-		int skip = (curPg - 1) * BizConstant.FIND_PAGE_NUM;
-		return hibernateSupport.findByNativeSql(CarInsurDTO.class, sqlBuf.toString(), paramList.toArray(), skip,
-				BizConstant.FIND_PAGE_NUM);
+		int page = pageable.getPageNumber();
+		int size = pageable.getPageSize();
+		return hibernateSupport.findByNativeSql(CarInsurDTO.class, sqlBuf.toString(), paramList.toArray(), page * size,
+				size);
 	}
 
 	@Override
@@ -93,16 +95,25 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 	}
 
 	@Override
-	public Page<CarInsur> findPgCarInsur(CarInsurPage paramBody) {
-		int page = paramBody.getPaging();
-		page = page - 1;
-		if (page < 0)
-			page = 0;
-		Pageable pageable = PageRequest.of(page, BizConstant.FIND_PAGE_NUM);
-		String[] objArr = new String[0];
-
-		return carInsurRepository.findPageByNativeSql("SELECT * FROM car_insur", "SELECT COUNT(1) FROM car_insur",
-				objArr, pageable);
+	public Page<CarInsur> findPgCarInsur(CarInsurBody paramBody, Pageable pageable) {
+		// SQL主语句
+		String sql = "SELECT * FROM car_insur";
+		String sqlCount = "SELECT COUNT(1) FROM car_insur";
+		// 组装where语句
+		List<Object> objList = new ArrayList<Object>();
+		StringBuffer sqlWhere = new StringBuffer(" WHERE delFlag = 0");
+		if (paramBody != null) {
+			List<String> sqlStrList = new ArrayList<String>();
+			sqlStrList.add(" AND id = ?");
+			BizUtil.setSqlWhere(paramBody, "id", sqlWhere, objList, sqlStrList);
+		}
+		//
+		Sort sort = pageable.getSort();
+		String[] fnamesArr = new String[] {};
+		String[] onamesArr = new String[] {};
+		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY id DESC");
+		return carInsurRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere, objList.toArray(),
+				pageable);
 	}
 
 	@Override

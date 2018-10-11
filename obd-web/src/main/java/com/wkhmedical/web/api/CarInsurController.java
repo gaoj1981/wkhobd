@@ -15,10 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.taoxeo.boot.security.CurrentUser;
+import com.taoxeo.repository.Paging;
+import com.wkhmedical.dto.CarInsurBody;
 import com.wkhmedical.dto.CarInsurBodyAdd;
 import com.wkhmedical.dto.CarInsurBodyEdit;
 import com.wkhmedical.dto.CarInsurDTO;
-import com.wkhmedical.dto.CarInsurPage;
 import com.wkhmedical.dto.CarInsurParam;
 import com.wkhmedical.po.CarInsur;
 import com.wkhmedical.security.TUserDetails;
@@ -48,13 +49,13 @@ public class CarInsurController {
 
 	@ApiOperation(value = "获取车辆保险分页列表（APP用）")
 	@PostMapping("/get.list")
-	public List<CarInsurDTO> getCarInsurData(@RequestBody @Valid CarInsurPage paramBody) {
+	public List<CarInsurDTO> getCarInsurData(@RequestBody @Valid Paging<CarInsurBody> paramBody) {
 		return carInsurService.getList(paramBody);
 	}
 
 	@ApiOperation(value = "获取车辆保险分页对象")
 	@PostMapping("/get.page")
-	public Page<CarInsur> getCarInsurPage(@RequestBody @Valid CarInsurPage paramBody) {
+	public Page<CarInsur> getCarInsurPage(@RequestBody @Valid Paging<CarInsurBody> paramBody) {
 		return carInsurService.getPgList(paramBody);
 	}
 

@@ -13,10 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.taoxeo.lang.BeanUtils;
 import com.taoxeo.lang.exception.BizRuntimeException;
+import com.taoxeo.repository.Paging;
+import com.wkhmedical.dto.CarInsurBody;
 import com.wkhmedical.dto.CarInsurBodyAdd;
 import com.wkhmedical.dto.CarInsurBodyEdit;
 import com.wkhmedical.dto.CarInsurDTO;
-import com.wkhmedical.dto.CarInsurPage;
 import com.wkhmedical.dto.CarInsurParam;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.po.CarInsur;
@@ -48,13 +49,15 @@ public class CarInsurServiceImpl implements CarInsurService {
 	}
 
 	@Override
-	public List<CarInsurDTO> getList(CarInsurPage paramBody) {
-		return carInsurRepository.findCarInsurList(paramBody);
+	public List<CarInsurDTO> getList(Paging<CarInsurBody> paramBody) {
+		CarInsurBody queryObj = paramBody.getQuery();
+		return carInsurRepository.findCarInsurList(queryObj, paramBody.toPageable());
 	}
 
 	@Override
-	public Page<CarInsur> getPgList(CarInsurPage paramBody) {
-		return carInsurRepository.findPgCarInsur(paramBody);
+	public Page<CarInsur> getPgList(Paging<CarInsurBody> paramBody) {
+		CarInsurBody queryObj = paramBody.getQuery();
+		return carInsurRepository.findPgCarInsur(queryObj, paramBody.toPageable());
 	}
 
 	@Override

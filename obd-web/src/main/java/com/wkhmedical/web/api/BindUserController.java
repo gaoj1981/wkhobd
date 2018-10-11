@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.taoxeo.boot.security.CurrentUser;
+import com.taoxeo.repository.Paging;
 import com.wkhmedical.dto.BindUserDTO;
-import com.wkhmedical.dto.BindUserPage;
+import com.wkhmedical.dto.BindUserBody;
 import com.wkhmedical.dto.BindUserParam;
 import com.wkhmedical.dto.BindUserAddBody;
 import com.wkhmedical.dto.BindUserEditBody;
@@ -38,9 +39,9 @@ public class BindUserController {
 	@Autowired
 	BindUserService bindUserService;
 
-//	@ApiOperation(value = "添加相关人员")
+	// @ApiOperation(value = "添加相关人员")
 	@PostMapping("/add")
-	public void addBu(@CurrentUser TUserDetails user,@RequestBody @Valid BindUserAddBody addBody) {
+	public void addBu(@CurrentUser TUserDetails user, @RequestBody @Valid BindUserAddBody addBody) {
 		bindUserService.addInfo(addBody);
 	}
 
@@ -54,13 +55,13 @@ public class BindUserController {
 
 	@ApiOperation(value = "获取相关人员分页列表（APP用）")
 	@PostMapping("/get.list")
-	public List<BindUserDTO> getBindUserData(@RequestBody @Valid BindUserPage paramBody) {
+	public List<BindUserDTO> getBindUserData(@RequestBody @Valid Paging<BindUserBody> paramBody) {
 		return bindUserService.getList(paramBody);
 	}
 
 	@ApiOperation(value = "获取相关人员分页对象")
 	@PostMapping("/get.page")
-	public Page<BindUser> getBindUserPage(@RequestBody @Valid BindUserPage paramBody) {
+	public Page<BindUser> getBindUserPage(@RequestBody @Valid Paging<BindUserBody> paramBody) {
 		return bindUserService.getPgList(paramBody);
 	}
 

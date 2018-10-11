@@ -8,17 +8,16 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.taoxeo.repository.HibernateSupport;
 import com.taoxeo.repository.JdbcQuery;
-import com.wkhmedical.constant.BizConstant;
-import com.wkhmedical.dto.WareRecordDTO;
 import com.wkhmedical.dto.WareRecordBody;
+import com.wkhmedical.dto.WareRecordDTO;
 import com.wkhmedical.po.WareRecord;
-import com.wkhmedical.repository.jpa.WareRecordRepository;
 import com.wkhmedical.repository.jpa.IWareRecordRepository;
+import com.wkhmedical.repository.jpa.WareRecordRepository;
 import com.wkhmedical.util.BizUtil;
 
 import lombok.extern.log4j.Log4j2;
@@ -38,7 +37,7 @@ public class WareRecordRepositoryImpl implements IWareRecordRepository {
 	private String findCount;
 
 	@Override
-	public List<WareRecordDTO> findWareRecordList(WareRecordBody paramBody, Integer page, Integer size) {
+	public List<WareRecordDTO> findWareRecordList(WareRecordBody paramBody, Pageable pageable) {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = new StringBuffer("");
 		sqlBuf.append(" SELECT wr.*,ci.eid");
@@ -53,23 +52,38 @@ public class WareRecordRepositoryImpl implements IWareRecordRepository {
 		BizUtil.setSqlJoin(paramBody, "excDateMax", sqlBuf, paramList, " AND wr.excDate <= ?");
 		BizUtil.setSqlJoin(paramBody, "excDateMin", sqlBuf, paramList, " AND wr.excDate >= ?");
 		//
-		String orderByStr = " ORDER BY insTime DESC";
-		sqlBuf.append(orderByStr);
+		Sort sort = pageable.getSort();
+		String[] fnamesArr = new String[] {};
+		String[] onamesArr = new String[] {};
+		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY wr.insTime DESC");
+		sqlBuf.append(sqlOrder);
 		//
-		Integer[] pgArr = BizUtil.getPgArr(page, size);
-		int skip = pgArr[0] * pgArr[1];
-		return hibernateSupport.findByNativeSql(WareRecordDTO.class, sqlBuf.toString(), paramList.toArray(), skip,
-				BizConstant.FIND_PAGE_NUM);
+		int page = pageable.getPageNumber();
+		int size = pageable.getPageSize();
+		return hibernateSupport.findByNativeSql(WareRecordDTO.class, sqlBuf.toString(), paramList.toArray(),
+				page * size, size);
 	}
 
 	@Override
-	public Page<WareRecord> findPgWareRecord(WareRecordBody paramBody, Integer page, Integer size) {
-		Integer[] pgArr = BizUtil.getPgArr(page, size);
-		Pageable pageable = PageRequest.of(pgArr[0], pgArr[1]);
-		String[] objArr = new String[0];
-
-		return wareRecordRepository.findPageByNativeSql("SELECT * FROM ware_record", "SELECT COUNT(1) FROM ware_record",
-				objArr, pageable);
+	public Page<WareRecord> findPgWareRecord(WareRecordBody paramBody, Pageable pageable) {
+		// SQL主语句
+		String sql = "SELECT * FROM ware_record";
+		String sqlCount = "SELECT COUNT(1) FROM ware_record";
+		// 组装where语句
+		List<Object> objList = new ArrayList<Object>();
+		StringBuffer sqlWhere = new StringBuffer(" WHERE delFlag = 0");
+		if (paramBody != null) {
+			List<String> sqlStrList = new ArrayList<String>();
+			sqlStrList.add(" AND id = ?");
+			BizUtil.setSqlWhere(paramBody, "id", sqlWhere, objList, sqlStrList);
+		}
+		//
+		Sort sort = pageable.getSort();
+		String[] fnamesArr = new String[] {};
+		String[] onamesArr = new String[] {};
+		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY id DESC");
+		return wareRecordRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere,
+				objList.toArray(), pageable);
 	}
 
 	@Override

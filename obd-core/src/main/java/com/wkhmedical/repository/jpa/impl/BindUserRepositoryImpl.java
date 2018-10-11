@@ -8,14 +8,13 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.taoxeo.repository.HibernateSupport;
 import com.taoxeo.repository.JdbcQuery;
-import com.wkhmedical.constant.BizConstant;
+import com.wkhmedical.dto.BindUserBody;
 import com.wkhmedical.dto.BindUserDTO;
-import com.wkhmedical.dto.BindUserPage;
 import com.wkhmedical.po.BindUser;
 import com.wkhmedical.repository.jpa.BindUserRepository;
 import com.wkhmedical.repository.jpa.IBindUserRepository;
@@ -38,7 +37,7 @@ public class BindUserRepositoryImpl implements IBindUserRepository {
 	private String findCount;
 
 	@Override
-	public List<BindUserDTO> findBindUserList(BindUserPage paramBody) {
+	public List<BindUserDTO> findBindUserList(BindUserBody paramBody, Pageable pageable) {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = new StringBuffer("");
 		sqlBuf.append(" SELECT *");
@@ -47,26 +46,38 @@ public class BindUserRepositoryImpl implements IBindUserRepository {
 		BizUtil.setSqlJoin(paramBody, "id", sqlBuf, paramList, " AND id = ?");
 		BizUtil.setSqlJoin(paramBody, "areaId", sqlBuf, paramList, " AND areaId = ?");
 		//
-		String orderByStr = " ORDER BY insTime DESC";
-		sqlBuf.append(orderByStr);
+		Sort sort = pageable.getSort();
+		String[] fnamesArr = new String[] {};
+		String[] onamesArr = new String[] {};
+		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY insTime DESC");
+		sqlBuf.append(sqlOrder);
 		//
-		int curPg = paramBody.getPaging();
-		int skip = (curPg - 1) * BizConstant.FIND_PAGE_NUM;
-		return hibernateSupport.findByNativeSql(BindUserDTO.class, sqlBuf.toString(), paramList.toArray(), skip,
-				BizConstant.FIND_PAGE_NUM);
+		int page = pageable.getPageNumber();
+		int size = pageable.getPageSize();
+		return hibernateSupport.findByNativeSql(BindUserDTO.class, sqlBuf.toString(), paramList.toArray(), page * size,
+				size);
 	}
 
 	@Override
-	public Page<BindUser> findPgBindUser(BindUserPage paramBody) {
-		int page = paramBody.getPaging();
-		page = page - 1;
-		if (page < 0)
-			page = 0;
-		Pageable pageable = PageRequest.of(page, BizConstant.FIND_PAGE_NUM);
-		String[] objArr = new String[0];
-
-		return bindUserRepository.findPageByNativeSql("SELECT * FROM bind_user", "SELECT COUNT(1) FROM bind_user",
-				objArr, pageable);
+	public Page<BindUser> findPgBindUser(BindUserBody paramBody, Pageable pageable) {
+		// SQL主语句
+		String sql = "SELECT * FROM bind_user";
+		String sqlCount = "SELECT COUNT(1) FROM bind_user";
+		// 组装where语句
+		List<Object> objList = new ArrayList<Object>();
+		StringBuffer sqlWhere = new StringBuffer(" WHERE delFlag = 0");
+		if (paramBody != null) {
+			List<String> sqlStrList = new ArrayList<String>();
+			sqlStrList.add(" AND id = ?");
+			BizUtil.setSqlWhere(paramBody, "id", sqlWhere, objList, sqlStrList);
+		}
+		//
+		Sort sort = pageable.getSort();
+		String[] fnamesArr = new String[] {};
+		String[] onamesArr = new String[] {};
+		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY id DESC");
+		return bindUserRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere, objList.toArray(),
+				pageable);
 	}
 
 	@Override

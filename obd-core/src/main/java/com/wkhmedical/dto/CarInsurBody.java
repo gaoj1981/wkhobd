@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -14,17 +13,12 @@ import lombok.Setter;
 @ApiModel(value = "车辆保险对象", description = "用于检索车辆保险列表用")
 @Getter
 @Setter
-public class CarInsurPage implements Serializable {
+public class CarInsurBody implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	@ApiModelProperty(value = "内存页码", required = true)
-	@NotNull
-	@Min(1)
-	private Integer paging;
 
 	@ApiModelProperty(value = "主KEY")
 	private Long id;

@@ -8,12 +8,12 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.taoxeo.repository.HibernateSupport;
 import com.taoxeo.repository.JdbcQuery;
-import com.wkhmedical.constant.BizConstant;
 import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoPageParam;
 import com.wkhmedical.dto.CarInfoParam;
@@ -51,7 +51,7 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 	}
 
 	@Override
-	public List<CarInfoDTO> findCarInfoList(CarInfoPageParam paramBody, Integer page, Integer size) {
+	public List<CarInfoDTO> findCarInfoList(CarInfoPageParam paramBody, Pageable pageable) {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = getSelectSql();
 		BizUtil.setSqlJoin(paramBody, "areaId", sqlBuf, paramList, " AND ci.areaId = ?");
@@ -60,10 +60,31 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		String orderByStr = " ORDER BY ci.insTime DESC";
 		sqlBuf.append(orderByStr);
 		//
-		Integer[] pgArr = BizUtil.getPgArr(page, size);
-		int skip = pgArr[0] * pgArr[1];
-		return hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(), paramList.toArray(), skip,
-				BizConstant.FIND_PAGE_NUM);
+		int page = pageable.getPageNumber();
+		int size = pageable.getPageSize();
+		//
+		return hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(), paramList.toArray(), page * size,
+				size);
+	}
+
+	@Override
+	// 自定义Page<bean>备用
+	public Page<CarInfoDTO> findPageCarInfoDTO(CarInfoPageParam paramBody, Pageable pageable) {
+		List<Object> paramList = new ArrayList<Object>();
+		StringBuffer sqlBuf = getSelectSql();
+		BizUtil.setSqlJoin(paramBody, "areaId", sqlBuf, paramList, " AND ci.areaId = ?");
+		BizUtil.setSqlJoin(paramBody, "eidLike", sqlBuf, paramList, " AND ci.eid LIKE ?");
+		//
+		String orderByStr = " ORDER BY ci.insTime DESC";
+		sqlBuf.append(orderByStr);
+		//
+		int page = pageable.getPageNumber();
+		int size = pageable.getPageSize();
+		List<CarInfoDTO> lstRes = hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(),
+				paramList.toArray(), page * size, size);
+		PageImpl<CarInfoDTO> pageResult = new PageImpl<CarInfoDTO>(lstRes, pageable, lstRes.size());
+		//
+		return pageResult;
 	}
 
 	@Override
@@ -79,24 +100,27 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		return null;
 	}
 
-	public Page<CarInfo> findPgCarInfo(CarInfoPageParam paramBody, Integer page, Integer size) {
-		// 组装页数对象
-		Integer[] pgArr = BizUtil.getPgArr(page, size);
-		Pageable pageable = PageRequest.of(pgArr[0], pgArr[1]);
+	public Page<CarInfo> findPgCarInfo(CarInfoPageParam paramBody, Pageable pageable) {
 		// SQL主语句
-		String sql = "SELECT ci.* FROM car_info ci";
-		String sqlCount = "SELECT COUNT(1) FROM car_info ci";
+		String sql = "SELECT * FROM car_info";
+		String sqlCount = "SELECT COUNT(1) FROM car_info";
 		// 组装where语句
 		List<Object> objList = new ArrayList<Object>();
-		StringBuffer sqlWhere = new StringBuffer(" WHERE ci.delFlag = 0");
+		StringBuffer sqlWhere = new StringBuffer(" WHERE delFlag = 0");
 		if (paramBody != null) {
 			List<String> sqlStrList = new ArrayList<String>();
-			sqlStrList.add(" AND ci.areaId = ?");
-			sqlStrList.add(" AND ci.eid LIKE ?");
+			sqlStrList.add(" AND areaId = ?");
+			sqlStrList.add(" AND eid LIKE ?");
 			BizUtil.setSqlWhere(paramBody, "areaId,eidLike", sqlWhere, objList, sqlStrList);
 		}
+		//
+		Sort sort = pageable.getSort();
+		String[] fnamesArr = new String[] {};
+		String[] onamesArr = new String[] {};
+		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY insTime DESC");
 		// 执行分页查询
-		return carInfoRepository.findPageByNativeSql(sql + sqlWhere, sqlCount + sqlWhere, objList.toArray(), pageable);
+		return carInfoRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere, objList.toArray(),
+				pageable);
 	}
 
 	@Override

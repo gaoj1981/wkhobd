@@ -2,6 +2,8 @@ package com.wkhmedical.web.api;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
@@ -14,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.taoxeo.boot.security.CurrentUser;
+import com.taoxeo.repository.Paging;
 import com.wkhmedical.dto.CarMotBody;
 import com.wkhmedical.dto.CarMotDTO;
 import com.wkhmedical.dto.ValiAdd;
 import com.wkhmedical.dto.ValiEdit;
-import com.wkhmedical.dto.ValiPage;
 import com.wkhmedical.po.CarMot;
 import com.wkhmedical.security.TUserDetails;
 import com.wkhmedical.service.CarMotService;
@@ -47,25 +49,26 @@ public class CarMotController {
 
 	@ApiOperation(value = "获取车辆年检分页列表（APP用）")
 	@PostMapping("/get.list")
-	public List<CarMotDTO> getCarMotData(@RequestBody @Validated({ValiPage.class}) CarMotBody paramBody) {
+	public List<CarMotDTO> getCarMotData(@RequestBody @Valid Paging<CarMotBody> paramBody) {
 		return carMotService.getList(paramBody);
 	}
 
 	@ApiOperation(value = "获取车辆年检分页对象")
 	@PostMapping("/get.page")
-	public Page<CarMot> getCarMotPage(@RequestBody @Validated({ValiPage.class}) CarMotBody paramBody) {
+	public Page<CarMot> getCarMotPage(@RequestBody @Valid Paging<CarMotBody> paramBody) {
 		return carMotService.getPgList(paramBody);
 	}
 
 	@ApiOperation(value = "添加车辆年检（APP用）")
 	@PostMapping("/add")
-	public void carMotAdd(@RequestBody @Validated({ValiAdd.class}) CarMotBody paramBody, @CurrentUser TUserDetails user) {
+	public void carMotAdd(@RequestBody @Validated({ ValiAdd.class }) CarMotBody paramBody,
+			@CurrentUser TUserDetails user) {
 		carMotService.addInfo(paramBody);
 	}
 
 	@ApiOperation(value = "修改车辆年检")
 	@PostMapping("/edit")
-	public void carMotEdit(@RequestBody @Validated({ValiEdit.class}) CarMotBody paramBody) {
+	public void carMotEdit(@RequestBody @Validated({ ValiEdit.class }) CarMotBody paramBody) {
 		carMotService.updateInfo(paramBody);
 	}
 

@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -154,6 +156,36 @@ public class BizUtil {
 		}
 	}
 
+	public static String getSqlOrder(Sort sort, String[] fnamesArr, String[] onamesArr, String initOrders) {
+		if (sort == null || fnamesArr == null || onamesArr == null || fnamesArr.length != onamesArr.length) {
+			if (initOrders != null) {
+				return initOrders;
+			}
+			return "";
+		}
+		//
+		StringBuffer sqlOrder = new StringBuffer(" ORDER BY");
+		for (int i = 0; i < fnamesArr.length; i++) {
+			Order order = sort.getOrderFor(fnamesArr[i]);
+			if (order == null) {
+				continue;
+			}
+			if (i > 0) {
+				sqlOrder.append(",");
+			}
+			sqlOrder.append(" " + onamesArr[i] + " " + order.getDirection().name());
+		}
+		//
+		if (sqlOrder.length() > 10) {
+			return sqlOrder.toString();
+		} else {
+			if (initOrders != null) {
+				return initOrders;
+			}
+			return "";
+		}
+	}
+
 	/** * 根据属性名获取属性值 * */
 	public static Object getFieldValueByName(String fname, Object obj) {
 		try {
@@ -215,9 +247,13 @@ public class BizUtil {
 
 	public static Integer[] getPgArr(Integer page, Integer size) {
 		Integer[] rtnArr = new Integer[2];
-		page = page - 1;
-		if (page < 0)
+		if (page == null) {
 			page = 0;
+		} else {
+			page = page - 1;
+			if (page < 0)
+				page = 0;
+		}
 		if (size == null) {
 			size = BizConstant.FIND_PAGE_NUM;
 		} else if (size > BizConstant.FIND_PAGE_MAXNUM) {

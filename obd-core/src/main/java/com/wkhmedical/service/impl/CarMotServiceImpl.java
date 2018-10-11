@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.taoxeo.lang.BeanUtils;
 import com.taoxeo.lang.exception.BizRuntimeException;
+import com.taoxeo.repository.Paging;
 import com.wkhmedical.dto.CarMotBody;
 import com.wkhmedical.dto.CarMotDTO;
 import com.wkhmedical.po.CarInfo;
@@ -44,13 +45,15 @@ public class CarMotServiceImpl implements CarMotService {
 	}
 
 	@Override
-	public List<CarMotDTO> getList(CarMotBody paramBody) {
-		return carMotRepository.findCarMotList(paramBody);
+	public List<CarMotDTO> getList(Paging<CarMotBody> paramBody) {
+		CarMotBody queryObj = paramBody.getQuery();
+		return carMotRepository.findCarMotList(queryObj, paramBody.toPageable());
 	}
 
 	@Override
-	public Page<CarMot> getPgList(CarMotBody paramBody) {
-		return carMotRepository.findPgCarMot(paramBody);
+	public Page<CarMot> getPgList(Paging<CarMotBody> paramBody) {
+		CarMotBody queryObj = paramBody.getQuery();
+		return carMotRepository.findPgCarMot(queryObj, paramBody.toPageable());
 	}
 
 	@Override

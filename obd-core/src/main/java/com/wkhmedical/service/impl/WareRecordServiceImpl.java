@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.taoxeo.lang.BeanUtils;
 import com.taoxeo.lang.exception.BizRuntimeException;
+import com.taoxeo.repository.Paging;
 import com.wkhmedical.dto.WareRecordBody;
 import com.wkhmedical.dto.WareRecordDTO;
-import com.wkhmedical.dto.WareRecordPage;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.po.WareRecord;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
@@ -46,15 +46,15 @@ public class WareRecordServiceImpl implements WareRecordService {
 	}
 
 	@Override
-	public List<WareRecordDTO> getList(WareRecordPage paramBody) {
+	public List<WareRecordDTO> getList(Paging<WareRecordBody> paramBody) {
 		WareRecordBody queryObj = paramBody.getQuery();
-		return wareRecordRepository.findWareRecordList(queryObj, paramBody.getPage(), paramBody.getSize());
+		return wareRecordRepository.findWareRecordList(queryObj, paramBody.toPageable());
 	}
 
 	@Override
-	public Page<WareRecord> getPgList(WareRecordPage paramBody) {
+	public Page<WareRecord> getPgList(Paging<WareRecordBody> paramBody) {
 		WareRecordBody queryObj = paramBody.getQuery();
-		return wareRecordRepository.findPgWareRecord(queryObj, paramBody.getPage(), paramBody.getSize());
+		return wareRecordRepository.findPgWareRecord(queryObj, paramBody.toPageable());
 	}
 
 	@Override

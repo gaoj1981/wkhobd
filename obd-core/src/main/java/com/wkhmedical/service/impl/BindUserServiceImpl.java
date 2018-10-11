@@ -11,10 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.taoxeo.lang.BeanUtils;
 import com.taoxeo.lang.exception.BizRuntimeException;
+import com.taoxeo.repository.Paging;
 import com.wkhmedical.dto.BindUserAddBody;
+import com.wkhmedical.dto.BindUserBody;
 import com.wkhmedical.dto.BindUserDTO;
 import com.wkhmedical.dto.BindUserEditBody;
-import com.wkhmedical.dto.BindUserPage;
 import com.wkhmedical.dto.BindUserParam;
 import com.wkhmedical.po.BindUser;
 import com.wkhmedical.repository.jpa.BindUserRepository;
@@ -45,13 +46,15 @@ public class BindUserServiceImpl implements BindUserService {
 	}
 
 	@Override
-	public List<BindUserDTO> getList(BindUserPage paramBody) {
-		return bindUserRepository.findBindUserList(paramBody);
+	public List<BindUserDTO> getList(Paging<BindUserBody> paramBody) {
+		BindUserBody queryObj = paramBody.getQuery();
+		return bindUserRepository.findBindUserList(queryObj, paramBody.toPageable());
 	}
 
 	@Override
-	public Page<BindUser> getPgList(BindUserPage paramBody) {
-		return bindUserRepository.findPgBindUser(paramBody);
+	public Page<BindUser> getPgList(Paging<BindUserBody> paramBody) {
+		BindUserBody queryObj = paramBody.getQuery();
+		return bindUserRepository.findPgBindUser(queryObj, paramBody.toPageable());
 	}
 
 	@Override
