@@ -24,7 +24,7 @@ public class CarMotBody implements Serializable {
 
 	@ApiModelProperty(value = "主KEY")
 	@NotNull(groups = { ValiEdit.class })
-	private Long id;
+	private String id;
 	
 	@ApiModelProperty(value = "车辆ID")
 	@NotBlank(groups = { ValiAdd.class })

@@ -6,6 +6,6 @@ import com.taoxeo.repository.JpaRepository;
 import com.wkhmedical.po.CarMot;
 
 @Repository
-public interface CarMotRepository extends JpaRepository<CarMot, Long>, ICarMotRepository {
+public interface CarMotRepository extends JpaRepository<CarMot, String>, ICarMotRepository {
 	
 }

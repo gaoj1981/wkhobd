@@ -26,7 +26,7 @@ public class BindUser implements Serializable {
 	private static final long serialVersionUID = -8212087115733357084L;
 
 	@Id
-	private Long id;
+	private String id;
 
 	private Integer areaId;
 	

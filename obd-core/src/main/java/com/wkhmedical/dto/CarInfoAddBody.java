@@ -25,7 +25,7 @@ public class CarInfoAddBody implements Serializable {
 	private static final long serialVersionUID = -7039575575637524947L;
 
 	@ApiModelProperty(value = "车辆唯一标识，修改记录用")
-	private Long id;
+	private String id;
 
 	@ApiModelProperty(value = "车辆ID", required = true)
 	@NotBlank(message = "车辆ID必须")

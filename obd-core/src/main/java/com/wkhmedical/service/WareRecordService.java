@@ -21,9 +21,9 @@ public interface WareRecordService {
 
 	void updateInfo(WareRecordBody infoBody);
 
-	void deleteInfo(Long id);
+	void deleteInfo(String id);
 
-	void delInfo(Long id);
+	void delInfo(String id);
 
 	Long getCountSum();
 }

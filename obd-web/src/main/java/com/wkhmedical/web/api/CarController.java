@@ -45,7 +45,7 @@ public class CarController {
 
 	@ApiOperation(value = "获取车辆基本信息")
 	@GetMapping("/get")
-	public CarInfo getBaseInfo(@ApiParam(value = "id主Key", required = true) @RequestParam Long id) {
+	public CarInfo getBaseInfo(@ApiParam(value = "id主Key", required = true) @RequestParam String id) {
 		CarInfoParam paramBody = new CarInfoParam();
 		paramBody.setId(id);
 		return carInfoService.getInfo(paramBody);
@@ -90,7 +90,7 @@ public class CarController {
 
 	@ApiOperation(value = "删除车辆")
 	@DeleteMapping("/delete")
-	public boolean carInfoDel(@ApiParam(value = "id主KEY", required = true) @RequestParam String eid) {
+	public boolean carInfoDel(@ApiParam(value = "车辆ID", required = true) @RequestParam String eid) {
 		carInfoService.deleteCarInfo(eid);
 		return true;
 	}

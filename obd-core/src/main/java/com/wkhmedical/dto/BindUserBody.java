@@ -18,7 +18,7 @@ public class BindUserBody implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "主KEY")
-	private Long id;
+	private String id;
 
 	@ApiModelProperty(value = "区县ID")
 	private Integer areaId;

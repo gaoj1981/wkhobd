@@ -6,7 +6,7 @@ import com.taoxeo.repository.JpaRepository;
 import com.wkhmedical.po.BindUser;
 
 @Repository
-public interface BindUserRepository extends JpaRepository<BindUser, Long>, IBindUserRepository {
+public interface BindUserRepository extends JpaRepository<BindUser, String>, IBindUserRepository {
 
 	BindUser findByUtypeAndAreaIdAndIsDefault(Integer utype, Integer areaId, Integer isDefault);
 

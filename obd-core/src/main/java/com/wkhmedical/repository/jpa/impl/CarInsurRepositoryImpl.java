@@ -78,7 +78,7 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 	}
 
 	@Override
-	public CarInsur findByKey(Long id) {
+	public CarInsur findByKey(String id) {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = new StringBuffer("");
 		sqlBuf.append(" SELECT *");
@@ -117,7 +117,7 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 	}
 
 	@Override
-	public Integer findCount(Long id) {
+	public Integer findCount(String id) {
 		@SuppressWarnings("rawtypes")
 		List<Map> count = jdbcQuery.find(findCount, Map.class, id);
 		log.info("jdbcQuery测试" + count.get(0));

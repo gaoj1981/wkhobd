@@ -10,11 +10,11 @@ import com.wkhmedical.dto.CarMotBody;
 import com.wkhmedical.po.CarMot;
 
 public interface ICarMotRepository {
-	CarMot findByKey(Long id);
+	CarMot findByKey(String id);
 
 	List<CarMotDTO> findCarMotList(CarMotBody paramBody, Pageable pageable);
 
 	Page<CarMot> findPgCarMot(CarMotBody paramBody, Pageable pageable);
 
-	Integer findCount(Long id);
+	Integer findCount(String id);
 }

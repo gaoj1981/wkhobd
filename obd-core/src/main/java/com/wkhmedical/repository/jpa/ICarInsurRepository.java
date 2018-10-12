@@ -10,11 +10,11 @@ import com.wkhmedical.dto.CarInsurBody;
 import com.wkhmedical.po.CarInsur;
 
 public interface ICarInsurRepository {
-	CarInsur findByKey(Long id);
+	CarInsur findByKey(String id);
 
 	List<CarInsurDTO> findCarInsurList(CarInsurBody paramBody, Pageable pageable);
 
 	Page<CarInsur> findPgCarInsur(CarInsurBody paramBody, Pageable pageable);
 
-	Integer findCount(Long id);
+	Integer findCount(String id);
 }

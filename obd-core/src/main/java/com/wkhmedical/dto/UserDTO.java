@@ -19,7 +19,7 @@ import lombok.Setter;
 public class UserDTO {
 
 	/** The user id. */
-	private Long userId;
+	private String userId;
 
 	/** The user name. */
 	private String userName;

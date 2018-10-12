@@ -71,7 +71,7 @@ public class YunUserServiceImpl implements YunUserService {
 		else {
 			// 入库
 			YunUser userInfo = new YunUser();
-			userInfo.setId(BizUtil.genDbId());
+			userInfo.setId(BizUtil.genDbIdStr());
 			userInfo.setUserName(registerInfo.getUserName());
 			userInfo.setUserPwd(password.getPwd());
 			userInfo.setUserPwdSalt(password.getPwdSalt());

@@ -6,6 +6,6 @@ import com.taoxeo.repository.JpaRepository;
 import com.wkhmedical.po.WareRecord;
 
 @Repository
-public interface WareRecordRepository extends JpaRepository<WareRecord, Long>, IWareRecordRepository {
+public interface WareRecordRepository extends JpaRepository<WareRecord, String>, IWareRecordRepository {
 	
 }

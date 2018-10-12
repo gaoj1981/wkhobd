@@ -6,9 +6,9 @@ import com.taoxeo.repository.JpaRepository;
 import com.wkhmedical.po.CarInsur;
 
 @Repository
-public interface CarInsurRepository extends JpaRepository<CarInsur, Long>, ICarInsurRepository {
+public interface CarInsurRepository extends JpaRepository<CarInsur, String>, ICarInsurRepository {
 
-	CarInsur findByCidAndInsurType(Long cid, Integer insurType);
+	CarInsur findByCidAndInsurType(String cid, Integer insurType);
 	
 	CarInsur findByInsurNum(String insurNum);
 }

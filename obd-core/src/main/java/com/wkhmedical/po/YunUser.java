@@ -28,7 +28,7 @@ public class YunUser implements Serializable {
 	private static final long serialVersionUID = 1427381057257374891L;
 
 	@Id
-	private Long id;
+	private String id;
 
 	private String userName;
 

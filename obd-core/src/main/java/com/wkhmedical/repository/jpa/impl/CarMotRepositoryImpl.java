@@ -94,7 +94,7 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 	}
 
 	@Override
-	public CarMot findByKey(Long id) {
+	public CarMot findByKey(String id) {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = new StringBuffer("");
 		sqlBuf.append(" SELECT *");
@@ -110,7 +110,7 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 	}
 
 	@Override
-	public Integer findCount(Long id) {
+	public Integer findCount(String id) {
 		@SuppressWarnings("rawtypes")
 		List<Map> count = jdbcQuery.find(findCount, Map.class, id);
 		log.info("jdbcQuery测试" + count.get(0));

@@ -37,7 +37,7 @@ public class WareRecordServiceImpl implements WareRecordService {
 
 	@Override
 	public WareRecord getInfo(WareRecordBody paramBody) {
-		Long id = paramBody.getId();
+		String id = paramBody.getId();
 		Optional<WareRecord> optObj = wareRecordRepository.findById(id);
 		if (!optObj.isPresent()) {
 			throw new BizRuntimeException("info_not_exists", id + "");
@@ -67,7 +67,7 @@ public class WareRecordServiceImpl implements WareRecordService {
 		}
 		// 组装Bean
 		WareRecord wareRecord = AssistUtil.coverBean(infoBody, WareRecord.class);
-		wareRecord.setId(BizUtil.genDbId());
+		wareRecord.setId(BizUtil.genDbIdStr());
 		wareRecord.setCid(carInfo.getId());
 		// 入库
 		wareRecordRepository.save(wareRecord);
@@ -77,7 +77,7 @@ public class WareRecordServiceImpl implements WareRecordService {
 	@Transactional
 	public void updateInfo(WareRecordBody infoBody) {
 		// 判断待修改记录唯一性
-		Long id = infoBody.getId();
+		String id = infoBody.getId();
 		WareRecord wareRecordUpd = wareRecordRepository.findByKey(id);
 		if (wareRecordUpd == null) {
 			throw new BizRuntimeException("info_not_exists", id + "");
@@ -98,7 +98,7 @@ public class WareRecordServiceImpl implements WareRecordService {
 	}
 
 	@Override
-	public void deleteInfo(Long id) {
+	public void deleteInfo(String id) {
 		try {
 			wareRecordRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
@@ -107,7 +107,7 @@ public class WareRecordServiceImpl implements WareRecordService {
 	}
 
 	@Override
-	public void delInfo(Long id) {
+	public void delInfo(String id) {
 		Optional<WareRecord> optObj = wareRecordRepository.findById(id);
 		if (optObj.isPresent()) {
 			WareRecord wareRecordUpd = optObj.get();

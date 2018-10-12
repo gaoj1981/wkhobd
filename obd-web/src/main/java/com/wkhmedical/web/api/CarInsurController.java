@@ -41,7 +41,7 @@ public class CarInsurController {
 
 	@ApiOperation(value = "获取车辆保险基本信息")
 	@GetMapping("/get")
-	public CarInsur getCarInsur(@ApiParam(value = "id主Key", required = true) @RequestParam Long id) {
+	public CarInsur getCarInsur(@ApiParam(value = "id主Key", required = true) @RequestParam String id) {
 		CarInsurParam paramBody = new CarInsurParam();
 		paramBody.setId(id);
 		return carInsurService.getInfo(paramBody);
@@ -73,14 +73,14 @@ public class CarInsurController {
 
 	@ApiOperation(value = "删除车辆保险")
 	@DeleteMapping("/delete")
-	public boolean carInsurDelete(@ApiParam(value = "id主KEY", required = true) @RequestParam Long id) {
+	public boolean carInsurDelete(@ApiParam(value = "id主KEY", required = true) @RequestParam String id) {
 		carInsurService.deleteInfo(id);
 		return true;
 	}
 
 	@ApiOperation(value = "逻辑删车辆保险")
 	@DeleteMapping("/del")
-	public boolean carInsurDel(@ApiParam(value = "id主KEY", required = true) @RequestParam Long id) {
+	public boolean carInsurDel(@ApiParam(value = "id主KEY", required = true) @RequestParam String id) {
 		carInsurService.delInfo(id);
 		log.info("非物理删除。id：" + id);
 		return true;

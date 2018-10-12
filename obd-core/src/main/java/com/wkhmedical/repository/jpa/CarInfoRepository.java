@@ -6,7 +6,7 @@ import com.taoxeo.repository.JpaRepository;
 import com.wkhmedical.po.CarInfo;
 
 @Repository
-public interface CarInfoRepository extends JpaRepository<CarInfo, Long>, ICarInfoRepository {
+public interface CarInfoRepository extends JpaRepository<CarInfo, String>, ICarInfoRepository {
 
 	CarInfo findByEid(String eid);
 

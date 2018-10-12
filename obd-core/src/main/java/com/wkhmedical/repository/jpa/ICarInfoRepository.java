@@ -31,7 +31,7 @@ public interface ICarInfoRepository {
 
 	Long findCountSum();
 
-	void updateCarInfoBindUser(Long bindUserId, Integer utype, Integer areaId);
+	void updateCarInfoBindUser(String bindUserId, Integer utype, Integer areaId);
 
-	void updateCarInfoBindUserNull(Long bindUserId, Integer utype);
+	void updateCarInfoBindUserNull(String bindUserId, Integer utype);
 }

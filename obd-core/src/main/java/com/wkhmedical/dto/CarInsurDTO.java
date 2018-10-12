@@ -18,7 +18,7 @@ public class CarInsurDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "")
-	private Long id;
+	private String id;
 
 	@ApiModelProperty(value = "车辆ID（等同设备ID）")
 	private String eid;

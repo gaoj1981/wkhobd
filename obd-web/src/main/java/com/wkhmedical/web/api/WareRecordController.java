@@ -41,7 +41,7 @@ public class WareRecordController {
 
 	@ApiOperation(value = "获取维修保养基本信息")
 	@GetMapping("/get")
-	public WareRecord getWareRecord(@ApiParam(value = "id主Key", required = true) @RequestParam Long id) {
+	public WareRecord getWareRecord(@ApiParam(value = "id主Key", required = true) @RequestParam String id) {
 		WareRecordBody paramBody = new WareRecordBody();
 		paramBody.setId(id);
 		return wareRecordService.getInfo(paramBody);
@@ -74,14 +74,14 @@ public class WareRecordController {
 
 	@ApiOperation(value = "删除维修保养")
 	@DeleteMapping("/delete")
-	public boolean wareRecordDelete(@ApiParam(value = "id主KEY", required = true) @RequestParam Long id) {
+	public boolean wareRecordDelete(@ApiParam(value = "id主KEY", required = true) @RequestParam String id) {
 		wareRecordService.deleteInfo(id);
 		return true;
 	}
 
 	@ApiOperation(value = "逻辑删维修保养")
 	@DeleteMapping("/del")
-	public boolean wareRecordDel(@ApiParam(value = "id主KEY", required = true) @RequestParam Long id) {
+	public boolean wareRecordDel(@ApiParam(value = "id主KEY", required = true) @RequestParam String id) {
 		wareRecordService.delInfo(id);
 		log.info("非物理删除。id：" + id);
 		return true;

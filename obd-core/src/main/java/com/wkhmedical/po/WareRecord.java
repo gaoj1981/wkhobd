@@ -24,9 +24,9 @@ public class WareRecord implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private Long id;
+	private String id;
 	
-	private Long cid;
+	private String cid;
 	
 	private Integer excRes;
 	

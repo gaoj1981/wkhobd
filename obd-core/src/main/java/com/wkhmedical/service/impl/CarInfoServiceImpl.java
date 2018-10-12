@@ -51,7 +51,7 @@ public class CarInfoServiceImpl implements CarInfoService {
 
 	@Override
 	public CarInfo getInfo(CarInfoParam paramBody) {
-		Long id = paramBody.getId();
+		String id = paramBody.getId();
 		Optional<CarInfo> optObj = carInfoRepository.findById(id);
 		if (!optObj.isPresent()) {
 			throw new BizRuntimeException("info_not_exists", id + "");
@@ -92,7 +92,7 @@ public class CarInfoServiceImpl implements CarInfoService {
 		// 组装CarInfo
 		CarInfo carInfo = AssistUtil.coverBean(carInfoBody, CarInfo.class);
 		Integer areaId = carInfo.getAreaId();
-		Long id = BizUtil.genDbId();
+		String id = BizUtil.genDbIdStr();
 		carInfo.setId(id);
 		carInfo.setGroupId(areaId + "");// 目前需求暂将区间ID作为分组标准
 		carInfo.setProvId(BizUtil.getProvId(areaId));

@@ -40,7 +40,7 @@ public class CarInsurServiceImpl implements CarInsurService {
 
 	@Override
 	public CarInsur getInfo(CarInsurParam paramBody) {
-		Long id = paramBody.getId();
+		String id = paramBody.getId();
 		Optional<CarInsur> optObj = carInsurRepository.findById(id);
 		if (!optObj.isPresent()) {
 			throw new BizRuntimeException("info_not_exists", id + "");
@@ -77,7 +77,7 @@ public class CarInsurServiceImpl implements CarInsurService {
 		}
 		// 组装Bean
 		CarInsur carInsur = AssistUtil.coverBean(infoBody, CarInsur.class);
-		carInsur.setId(BizUtil.genDbId());
+		carInsur.setId(BizUtil.genDbIdStr());
 		carInsur.setCid(carInfo.getId());
 		// 入库
 		carInsurRepository.save(carInsur);
@@ -86,7 +86,7 @@ public class CarInsurServiceImpl implements CarInsurService {
 	@Override
 	@Transactional
 	public void updateInfo(CarInsurBodyEdit infoBody) {
-		Long id = infoBody.getId();
+		String id = infoBody.getId();
 		// 判断待修改记录唯一性
 		CarInsur carInsurUpd = carInsurRepository.findByKey(id);
 		if (carInsurUpd == null) {
@@ -108,7 +108,7 @@ public class CarInsurServiceImpl implements CarInsurService {
 	}
 
 	@Override
-	public void deleteInfo(Long id) {
+	public void deleteInfo(String id) {
 		try {
 			carInsurRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
@@ -118,7 +118,7 @@ public class CarInsurServiceImpl implements CarInsurService {
 	}
 
 	@Override
-	public void delInfo(Long id) {
+	public void delInfo(String id) {
 		Optional<CarInsur> optObj = carInsurRepository.findById(id);
 		if (optObj.isPresent()) {
 			CarInsur carInsurUpd = optObj.get();

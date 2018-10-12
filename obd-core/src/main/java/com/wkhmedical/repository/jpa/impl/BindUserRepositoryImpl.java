@@ -81,7 +81,7 @@ public class BindUserRepositoryImpl implements IBindUserRepository {
 	}
 
 	@Override
-	public Integer findCount(Long id) {
+	public Integer findCount(String id) {
 		@SuppressWarnings("rawtypes")
 		List<Map> count = jdbcQuery.find(findCount, Map.class, id);
 		log.info("jdbcQuery测试" + count.get(0));

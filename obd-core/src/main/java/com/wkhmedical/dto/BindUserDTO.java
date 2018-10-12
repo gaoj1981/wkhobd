@@ -18,7 +18,7 @@ public class BindUserDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "人员ID")
-	private Long id;
+	private String id;
 
 	@ApiModelProperty(value = "区县ID")
 	private Integer areaId;

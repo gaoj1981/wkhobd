@@ -36,7 +36,7 @@ public class CarMotServiceImpl implements CarMotService {
 
 	@Override
 	public CarMot getInfo(CarMotBody paramBody) {
-		Long id = paramBody.getId();
+		String id = paramBody.getId();
 		Optional<CarMot> optObj = carMotRepository.findById(id);
 		if (!optObj.isPresent()) {
 			throw new BizRuntimeException("info_not_exists", id);
@@ -66,7 +66,7 @@ public class CarMotServiceImpl implements CarMotService {
 		}
 		// 组装Bean
 		CarMot carMot = AssistUtil.coverBean(infoBody, CarMot.class);
-		carMot.setId(BizUtil.genDbId());
+		carMot.setId(BizUtil.genDbIdStr());
 		carMot.setCid(carInfo.getId());
 		// 入库
 		carMotRepository.save(carMot);
@@ -76,7 +76,7 @@ public class CarMotServiceImpl implements CarMotService {
 	@Transactional
 	public void updateInfo(CarMotBody infoBody) {
 		// 判断待修改记录唯一性
-		Long id = infoBody.getId();
+		String id = infoBody.getId();
 		CarMot carMotUpd = carMotRepository.findByKey(id);
 		if (carMotUpd == null) {
 			throw new BizRuntimeException("info_not_exists", id);
@@ -88,7 +88,7 @@ public class CarMotServiceImpl implements CarMotService {
 	}
 
 	@Override
-	public void deleteInfo(Long id) {
+	public void deleteInfo(String id) {
 		try {
 			carMotRepository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
@@ -97,7 +97,7 @@ public class CarMotServiceImpl implements CarMotService {
 	}
 
 	@Override
-	public void delInfo(Long id) {
+	public void delInfo(String id) {
 		Optional<CarMot> optObj = carMotRepository.findById(id);
 		if (!optObj.isPresent()) {
 			CarMot carMotUpd = optObj.get();

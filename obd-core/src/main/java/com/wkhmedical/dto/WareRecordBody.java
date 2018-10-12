@@ -26,7 +26,7 @@ public class WareRecordBody implements Serializable {
 
 	@ApiModelProperty(value = "")
 	@NotNull(groups = { ValiEdit.class })
-	private Long id;
+	private String id;
 
 	@ApiModelProperty(value = "设备ID（等同车辆ID）")
 	@NotBlank(groups = { ValiAdd.class })

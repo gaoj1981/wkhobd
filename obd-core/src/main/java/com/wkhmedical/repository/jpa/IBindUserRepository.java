@@ -15,5 +15,5 @@ public interface IBindUserRepository {
 	
 	Page<BindUser> findPgBindUser(BindUserBody paramBody, Pageable pageable);
 
-	Integer findCount(Long id);
+	Integer findCount(String id);
 }

@@ -23,7 +23,7 @@ public class BindUserEditBody implements Serializable {
 
 	@ApiModelProperty(value = "人员ID", required = true)
 	@NotNull
-	private Long id;
+	private String id;
 
 	@ApiModelProperty(value = "人员分类：1：运营；2：维护")
 	@Min(value = 1, message = "非法参数")

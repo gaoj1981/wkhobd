@@ -39,6 +39,12 @@ public class BizUtil {
 		return idWorker.nextId();
 	}
 
+	public static String genDbIdStr() {
+		SnowflakeIdWorker idWorker = new SnowflakeIdWorker(configProps.getDbWorkerId(),
+				configProps.getDbDatacenterId());
+		return idWorker.nextId() + "";
+	}
+
 	public static IdCardValidator getCertNoInfo(String certificateNo) {
 		IdCardValidator idCardValiInfo = new IdCardValidator();
 		idCardValiInfo.setIdCard(certificateNo);

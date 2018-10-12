@@ -30,7 +30,7 @@ public class CarInfo implements Serializable {
 	private static final long serialVersionUID = -7201913572709965510L;
 
 	@Id
-	private Long id;
+	private String id;
 
 	private String eid;
 

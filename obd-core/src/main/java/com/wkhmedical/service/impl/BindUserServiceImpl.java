@@ -37,7 +37,7 @@ public class BindUserServiceImpl implements BindUserService {
 
 	@Override
 	public BindUser getInfo(BindUserParam paramBody) {
-		Long id = paramBody.getId();
+		String id = paramBody.getId();
 		Optional<BindUser> optObj = bindUserRepository.findById(id);
 		if (!optObj.isPresent()) {
 			throw new BizRuntimeException("info_not_exists", id);
@@ -60,7 +60,7 @@ public class BindUserServiceImpl implements BindUserService {
 	@Override
 	@Transactional
 	public void addInfo(BindUserAddBody infoBody) {
-		Long id = BizUtil.genDbId();
+		String id = BizUtil.genDbIdStr();
 		// 校验默认
 		int isDefault = infoBody.getIsDefault();
 		int utype = infoBody.getUtype();
@@ -87,7 +87,7 @@ public class BindUserServiceImpl implements BindUserService {
 	@Transactional
 	public void updateInfo(BindUserEditBody infoBody) {
 		// id检查
-		Long id = infoBody.getId();
+		String id = infoBody.getId();
 		if (id == null) {
 			throw new BizRuntimeException("info_edit_id_must", id);
 		}
@@ -130,7 +130,7 @@ public class BindUserServiceImpl implements BindUserService {
 	}
 
 	@Override
-	public void deleteInfo(Long id) {
+	public void deleteInfo(String id) {
 		Optional<BindUser> optObj = bindUserRepository.findById(id);
 		if (optObj.isPresent()) {
 			BindUser bindUserUpd = optObj.get();
@@ -143,7 +143,7 @@ public class BindUserServiceImpl implements BindUserService {
 	}
 
 	@Override
-	public void delInfo(Long id) {
+	public void delInfo(String id) {
 		Optional<BindUser> optObj = bindUserRepository.findById(id);
 		if (!optObj.isPresent()) {
 			throw new BizRuntimeException("info_not_exists", id + "");

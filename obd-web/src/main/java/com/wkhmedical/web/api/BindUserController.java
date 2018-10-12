@@ -47,7 +47,7 @@ public class BindUserController {
 
 	@ApiOperation(value = "获取相关人员基本信息")
 	@GetMapping("/get")
-	public BindUser getBindUser(@ApiParam(value = "人员ID", required = true) @RequestParam Long id) {
+	public BindUser getBindUser(@ApiParam(value = "人员ID", required = true) @RequestParam String id) {
 		BindUserParam paramBody = new BindUserParam();
 		paramBody.setId(id);
 		return bindUserService.getInfo(paramBody);
@@ -67,7 +67,7 @@ public class BindUserController {
 
 	@ApiOperation(value = "删除相关人员")
 	@DeleteMapping("/delete")
-	public boolean bindUserDelete(@ApiParam(value = "id主KEY", required = true) @RequestParam Long id) {
+	public boolean bindUserDelete(@ApiParam(value = "id主KEY", required = true) @RequestParam String id) {
 		bindUserService.deleteInfo(id);
 		return true;
 	}
@@ -80,7 +80,7 @@ public class BindUserController {
 
 	@ApiOperation(value = "逻辑删相关人员")
 	@DeleteMapping("/del")
-	public boolean bindUserDel(@ApiParam(value = "id主KEY", required = true) @RequestParam Long id) {
+	public boolean bindUserDel(@ApiParam(value = "id主KEY", required = true) @RequestParam String id) {
 		bindUserService.delInfo(id);
 		log.info("非物理删除。id：" + id);
 		return true;

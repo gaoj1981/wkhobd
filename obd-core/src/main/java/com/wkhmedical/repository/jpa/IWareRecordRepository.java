@@ -10,11 +10,11 @@ import com.wkhmedical.dto.WareRecordDTO;
 import com.wkhmedical.po.WareRecord;
 
 public interface IWareRecordRepository {
-	WareRecord findByKey(Long id);
+	WareRecord findByKey(String id);
 
 	List<WareRecordDTO> findWareRecordList(WareRecordBody paramBody, Pageable pageable);
 
 	Page<WareRecord> findPgWareRecord(WareRecordBody paramBody, Pageable pageable);
 
-	Integer findCount(Long id);
+	Integer findCount(String id);
 }

@@ -124,7 +124,7 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 	}
 
 	@Override
-	public void updateCarInfoBindUser(Long bindUserId, Integer utype, Integer areaId) {
+	public void updateCarInfoBindUser(String bindUserId, Integer utype, Integer areaId) {
 		String utypeStr = null;
 		if (utype == 1) {
 			utypeStr = "prinId";
@@ -138,7 +138,7 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 	}
 
 	@Override
-	public void updateCarInfoBindUserNull(Long bindUserId, Integer utype) {
+	public void updateCarInfoBindUserNull(String bindUserId, Integer utype) {
 		String utypeStr = null;
 		if (utype == 1) {
 			utypeStr = "prinId";

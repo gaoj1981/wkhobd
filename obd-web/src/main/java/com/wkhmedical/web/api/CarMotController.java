@@ -41,7 +41,7 @@ public class CarMotController {
 
 	@ApiOperation(value = "获取车辆年检基本信息")
 	@GetMapping("/get")
-	public CarMot getCarMot(@ApiParam(value = "id主Key", required = true) @RequestParam Long id) {
+	public CarMot getCarMot(@ApiParam(value = "id主Key", required = true) @RequestParam String id) {
 		CarMotBody paramBody = new CarMotBody();
 		paramBody.setId(id);
 		return carMotService.getInfo(paramBody);
@@ -74,14 +74,14 @@ public class CarMotController {
 
 	@ApiOperation(value = "删除车辆年检")
 	@DeleteMapping("/delete")
-	public boolean carMotDelete(@ApiParam(value = "id主KEY", required = true) @RequestParam Long id) {
+	public boolean carMotDelete(@ApiParam(value = "id主KEY", required = true) @RequestParam String id) {
 		carMotService.deleteInfo(id);
 		return true;
 	}
 
 	@ApiOperation(value = "逻辑删车辆年检")
 	@DeleteMapping("/del")
-	public boolean carMotDel(@ApiParam(value = "id主KEY", required = true) @RequestParam Long id) {
+	public boolean carMotDel(@ApiParam(value = "id主KEY", required = true) @RequestParam String id) {
 		carMotService.delInfo(id);
 		log.info("非物理删除。id：" + id);
 		return true;
