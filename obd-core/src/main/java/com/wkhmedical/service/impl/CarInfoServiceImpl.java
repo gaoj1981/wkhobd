@@ -1,6 +1,7 @@
 package com.wkhmedical.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 
@@ -46,6 +47,16 @@ public class CarInfoServiceImpl implements CarInfoService {
 	public List<CarInfoDTO> getCarInfoList(Paging<CarInfoPageParam> paramBody) {
 		CarInfoPageParam queryObj = paramBody.getQuery();
 		return carInfoRepository.findCarInfoList(queryObj, paramBody.toPageable());
+	}
+
+	@Override
+	public CarInfo getInfo(CarInfoParam paramBody) {
+		Long id = paramBody.getId();
+		Optional<CarInfo> optObj = carInfoRepository.findById(id);
+		if (!optObj.isPresent()) {
+			throw new BizRuntimeException("info_not_exists", id + "");
+		}
+		return optObj.get();
 	}
 
 	@Override
