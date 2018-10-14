@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,6 +46,16 @@ public class BindUserRepositoryImpl implements IBindUserRepository {
 		sqlBuf.append(" WHERE delFlag = 0");
 		BizUtil.setSqlJoin(paramBody, "id", sqlBuf, paramList, " AND id = ?");
 		BizUtil.setSqlJoin(paramBody, "areaId", sqlBuf, paramList, " AND areaId = ?");
+		BizUtil.setSqlJoin(paramBody, "utype", sqlBuf, paramList, " AND utype = ?");
+		BizUtil.setSqlJoin(paramBody, "unameLike", sqlBuf, paramList, " AND ci.uname LIKE ?");
+		BizUtil.setSqlJoin(paramBody, "telLike", sqlBuf, paramList, " AND ci.tel LIKE ?");
+		// 同时支持姓名或电话模糊查询
+		String orUnameTel = paramBody.getOrUnameTel();
+		if (StringUtils.isNoneBlank(orUnameTel)) {
+			sqlBuf.append(" AND (tel LIKE ? OR uname LIKE ?)");
+			paramList.add("%" + orUnameTel + "%");
+			paramList.add("%" + orUnameTel + "%");
+		}
 		//
 		Sort sort = pageable.getSort();
 		String[] fnamesArr = new String[] {};
@@ -64,20 +75,32 @@ public class BindUserRepositoryImpl implements IBindUserRepository {
 		String sql = "SELECT * FROM bind_user";
 		String sqlCount = "SELECT COUNT(1) FROM bind_user";
 		// 组装where语句
-		List<Object> objList = new ArrayList<Object>();
+		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlWhere = new StringBuffer(" WHERE delFlag = 0");
 		if (paramBody != null) {
 			List<String> sqlStrList = new ArrayList<String>();
 			sqlStrList.add(" AND id = ?");
-			BizUtil.setSqlWhere(paramBody, "id", sqlWhere, objList, sqlStrList);
+			sqlStrList.add(" AND areaId = ?");
+			sqlStrList.add(" AND utype = ?");
+			sqlStrList.add(" AND uname LIKE ?");
+			sqlStrList.add(" AND tel LIKE ?");
+			BizUtil.setSqlWhere(paramBody, "id,areaId,utype,unameLike,telLike", sqlWhere, paramList, sqlStrList);
 		}
+		// 同时支持姓名或电话模糊查询
+		String orUnameTel = paramBody.getOrUnameTel();
+		if (StringUtils.isNoneBlank(orUnameTel)) {
+			sqlWhere.append(" AND (tel LIKE ? OR uname LIKE ?)");
+			paramList.add("%" + orUnameTel + "%");
+			paramList.add("%" + orUnameTel + "%");
+		}
+
 		//
 		Sort sort = pageable.getSort();
 		String[] fnamesArr = new String[] {};
 		String[] onamesArr = new String[] {};
 		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY id DESC");
-		return bindUserRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere, objList.toArray(),
-				pageable);
+		return bindUserRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere,
+				paramList.toArray(), pageable);
 	}
 
 	@Override

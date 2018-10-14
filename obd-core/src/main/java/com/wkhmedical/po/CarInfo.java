@@ -59,9 +59,9 @@ public class CarInfo implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private FuelType fuelType;
 
-	private Long prinId;
+	private String prinId;
 
-	private Long maintId;
+	private String maintId;
 
 	private Integer provId;
 

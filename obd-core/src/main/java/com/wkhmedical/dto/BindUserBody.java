@@ -26,4 +26,12 @@ public class BindUserBody implements Serializable {
 	@ApiModelProperty(value = "人员分类：1：运营；2：维护")
 	private Integer utype;
 
+	@ApiModelProperty(value = "人员姓名（支持模糊查询）")
+	private String unameLike;
+
+	@ApiModelProperty(value = "人员电话（支持模糊查询）")
+	private String telLike;
+
+	@ApiModelProperty(value = "人员姓名/电话（模糊OR查询）")
+	private String orUnameTel;
 }
