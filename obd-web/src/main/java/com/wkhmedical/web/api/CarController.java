@@ -90,8 +90,16 @@ public class CarController {
 
 	@ApiOperation(value = "删除车辆")
 	@DeleteMapping("/delete")
-	public boolean carInfoDel(@ApiParam(value = "车辆ID", required = true) @RequestParam String eid) {
+	public boolean carInfoDelete(@ApiParam(value = "车辆ID", required = true) @RequestParam String eid) {
 		carInfoService.deleteCarInfo(eid);
+		return true;
+	}
+
+	@ApiOperation(value = "逻辑删车辆")
+	@DeleteMapping("/del")
+	public boolean carInfoDel(@ApiParam(value = "id主KEY", required = true) @RequestParam String id) {
+		carInfoService.delInfo(id);
+		log.info("非物理删除。id：" + id);
 		return true;
 	}
 

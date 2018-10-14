@@ -141,6 +141,18 @@ public class CarInfoServiceImpl implements CarInfoService {
 	}
 
 	@Override
+	public void delInfo(String id) {
+		Optional<CarInfo> optObj = carInfoRepository.findById(id);
+		if (!optObj.isPresent()) {
+			throw new BizRuntimeException("info_not_exists", id);
+		}
+		log.info("逻辑删除");
+		CarInfo carInfo = optObj.get();
+		carInfo.setDelFlag(1);
+		carInfoRepository.update(carInfo);
+	}
+
+	@Override
 	public Long getCountSum() {
 		return carInfoRepository.findCountSum();
 	}

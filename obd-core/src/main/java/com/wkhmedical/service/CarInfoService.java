@@ -27,5 +27,7 @@ public interface CarInfoService {
 
 	void deleteCarInfo(String eid);
 
+	void delInfo(String id);
+	
 	Long getCountSum();
 }
