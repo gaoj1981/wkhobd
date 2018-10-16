@@ -62,10 +62,10 @@ public class BindUserServiceImpl implements BindUserService {
 	public void addInfo(BindUserAddBody infoBody) {
 		String id = BizUtil.genDbIdStr();
 		// 校验默认
-		int isDefault = infoBody.getIsDefault();
+		Integer isDefault = infoBody.getIsDefault();
 		int utype = infoBody.getUtype();
 		int areaId = infoBody.getAreaId();
-		if (isDefault == 1) {
+		if (isDefault != null && isDefault.intValue() == 1) {
 			BindUser buTmp = bindUserRepository.findByUtypeAndAreaIdAndIsDefault(utype, areaId, isDefault);
 			if (buTmp != null) {
 				// 已存在默认人员设置，则不允许添加默认人员

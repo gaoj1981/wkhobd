@@ -98,7 +98,7 @@ public class BindUserRepositoryImpl implements IBindUserRepository {
 		Sort sort = pageable.getSort();
 		String[] fnamesArr = new String[] {};
 		String[] onamesArr = new String[] {};
-		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY id DESC");
+		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY insTime DESC");
 		return bindUserRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere,
 				paramList.toArray(), pageable);
 	}
