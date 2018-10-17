@@ -85,4 +85,13 @@ public class BindUserController {
 		log.info("非物理删除。id：" + id);
 		return true;
 	}
+
+	@ApiOperation(value = "区县默认负责人设置")
+	@PostMapping("/edit.default")
+	public void editBindUserDefault(@ApiParam(value = "id主KEY", required = true) @RequestParam String id,
+			@ApiParam(value = "是否为默认负责人", required = true) @RequestParam Integer isDefault,
+			@ApiParam(value = "车辆是否全覆盖", required = true) @RequestParam Integer isCoverAll) {
+		bindUserService.updateDefault(id, isDefault, isCoverAll);
+	}
+
 }

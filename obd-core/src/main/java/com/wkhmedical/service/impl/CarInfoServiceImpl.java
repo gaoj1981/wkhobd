@@ -18,7 +18,9 @@ import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoEditBody;
 import com.wkhmedical.dto.CarInfoPageParam;
 import com.wkhmedical.dto.CarInfoParam;
+import com.wkhmedical.po.BindUser;
 import com.wkhmedical.po.CarInfo;
+import com.wkhmedical.repository.jpa.BindUserRepository;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
 import com.wkhmedical.repository.mongo.ObdCarRepository;
 import com.wkhmedical.service.CarInfoService;
@@ -33,6 +35,8 @@ public class CarInfoServiceImpl implements CarInfoService {
 
 	@Resource
 	CarInfoRepository carInfoRepository;
+	@Resource
+	BindUserRepository bindUserRepository;
 	@Resource
 	ObdCarRepository obdCarRepository;
 
@@ -89,14 +93,20 @@ public class CarInfoServiceImpl implements CarInfoService {
 			}
 		}
 
-		// 组装CarInfo
+		//
 		CarInfo carInfo = AssistUtil.coverBean(carInfoBody, CarInfo.class);
 		Integer areaId = carInfo.getAreaId();
+		// 获取车辆所在区县运营维护负责人
+		BindUser bu1 = bindUserRepository.findByUtypeAndAreaIdAndIsDefault(1, areaId, 1);
+		BindUser bu2 = bindUserRepository.findByUtypeAndAreaIdAndIsDefault(2, areaId, 1);
+		// 组装CarInfo
 		String id = BizUtil.genDbIdStr();
 		carInfo.setId(id);
 		carInfo.setGroupId(areaId + "");// 目前需求暂将区间ID作为分组标准
 		carInfo.setProvId(BizUtil.getProvId(areaId));
 		carInfo.setCityId(BizUtil.getCityId(areaId));
+		carInfo.setPrinId(bu1 != null ? bu1.getId() : null);
+		carInfo.setMaintId(bu2 != null ? bu2.getId() : null);
 		carInfo.setDelFlag(0);
 		// 车辆信息入库
 		carInfoRepository.save(carInfo);
@@ -148,6 +158,7 @@ public class CarInfoServiceImpl implements CarInfoService {
 		}
 		log.info("逻辑删除");
 		CarInfo carInfo = optObj.get();
+		carInfo.setEid(BizUtil.getDelBackupVal(carInfo.getEid()));
 		carInfo.setDelFlag(1);
 		carInfoRepository.update(carInfo);
 	}

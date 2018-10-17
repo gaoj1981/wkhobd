@@ -102,11 +102,36 @@ public class BindUserRepositoryImpl implements IBindUserRepository {
 	}
 
 	@Override
+	public BindUser findByKey(String id) {
+		List<Object> paramList = new ArrayList<Object>();
+		StringBuffer sqlBuf = new StringBuffer("");
+		sqlBuf.append(" SELECT *");
+		sqlBuf.append(" FROM bind_user");
+		sqlBuf.append(" WHERE id = ?");
+		paramList.add(id);
+
+		List<BindUser> lstBindUser = hibernateSupport.findByNativeSql(BindUser.class, sqlBuf.toString(), paramList.toArray());
+		if (lstBindUser != null && lstBindUser.size() > 0) {
+			return lstBindUser.get(0);
+		}
+		return null;
+	}
+
+	@Override
 	public Integer findCount(String id) {
 		@SuppressWarnings("rawtypes")
 		List<Map> count = jdbcQuery.find(findCount, Map.class, id);
 		log.info("jdbcQuery测试" + count.get(0));
 		return 0;
+	}
+
+	@Override
+	public void updateBindUserDefault(Integer areaId, Integer utype, Integer isDefault) {
+		if (utype == null || areaId == null || isDefault == null) return;
+		int defaultWhere = isDefault == 0 ? 1 : 0;
+		String sql = "UPDATE bind_user SET isDefault =" + isDefault + " WHERE areaId=" + areaId + " AND utype=" + utype + " AND isDefault="
+				+ defaultWhere;
+		jdbcQuery.getJdbcTemplate().execute(sql);
 	}
 
 }

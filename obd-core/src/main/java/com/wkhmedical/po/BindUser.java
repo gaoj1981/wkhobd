@@ -1,13 +1,19 @@
 package com.wkhmedical.po;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import com.wkhmedical.constant.Gender;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,10 +35,13 @@ public class BindUser implements Serializable {
 	private String id;
 
 	private Integer areaId;
-	
+
 	private Integer utype;
 
 	private String uname;
+
+	@Enumerated(EnumType.STRING)
+	private Gender sex;
 
 	private String job;
 
@@ -43,6 +52,12 @@ public class BindUser implements Serializable {
 	private String urTel;
 
 	private Integer isDefault;
-	
+
 	private Integer delFlag;
+
+	@Column(insertable = false, updatable = false)
+	private Date insTime;
+
+	@Column(insertable = false, updatable = false)
+	private Date updTime;
 }

@@ -17,7 +17,7 @@ public interface BindUserService {
 	BindUser getInfo(BindUserParam paramBody);
 
 	List<BindUserDTO> getList(Paging<BindUserBody> paramBody);
-	
+
 	Page<BindUser> getPgList(Paging<BindUserBody> paramBody);
 
 	void addInfo(BindUserAddBody infoBody);
@@ -27,4 +27,7 @@ public interface BindUserService {
 	void deleteInfo(String id);
 
 	void delInfo(String id);
+
+	void updateDefault(String id, Integer isDefault, Integer isCoverAll);
+
 }

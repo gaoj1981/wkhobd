@@ -38,11 +38,11 @@ public class BindUserServiceImpl implements BindUserService {
 	@Override
 	public BindUser getInfo(BindUserParam paramBody) {
 		String id = paramBody.getId();
-		Optional<BindUser> optObj = bindUserRepository.findById(id);
-		if (!optObj.isPresent()) {
+		BindUser bindUser = bindUserRepository.findByIdAndDelFlag(id, 0);
+		if (bindUser == null) {
 			throw new BizRuntimeException("info_not_exists", id);
 		}
-		return optObj.get();
+		return bindUser;
 	}
 
 	@Override
@@ -151,6 +151,28 @@ public class BindUserServiceImpl implements BindUserService {
 		log.info("逻辑删除");
 		BindUser bindUserUpd = optObj.get();
 		bindUserUpd.setDelFlag(1);
+		bindUserRepository.update(bindUserUpd);
+	}
+
+	@Override
+	@Transactional
+	public void updateDefault(String id, Integer isDefault, Integer isCoverAll) {
+		BindUser bindUserUpd = bindUserRepository.findByKey(id);
+		if (bindUserUpd == null) {
+			throw new BizRuntimeException("info_not_exists", id + "");
+		}
+		Integer utype = bindUserUpd.getUtype();
+		Integer areaId = bindUserUpd.getAreaId();
+		if (isCoverAll == 1) {
+			// 覆盖所有当前区县对应车辆负责人
+			carInfoRepository.updateCarInfoBindUser(id, utype, areaId);
+		}
+		// 取消之前默认负责人
+		if (isDefault == 1) {
+			bindUserRepository.updateBindUserDefault(areaId, utype, 0);
+		}
+		// 更新当前负责人默认状态
+		bindUserUpd.setIsDefault(isDefault);
 		bindUserRepository.update(bindUserUpd);
 	}
 
