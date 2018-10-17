@@ -53,7 +53,8 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 			if (valiType.intValue() == 1) {
 				sqlBuf.append(" AND cm.expDate > ?");
 				paramList.add(dtNow);
-			} else if (valiType.intValue() == 2) {
+			}
+			else if (valiType.intValue() == 2) {
 				sqlBuf.append(" AND cm.expDate < ?");
 				paramList.add(dtNow);
 			}
@@ -67,8 +68,7 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 		//
 		int page = pageable.getPageNumber();
 		int size = pageable.getPageSize();
-		return hibernateSupport.findByNativeSql(CarMotDTO.class, sqlBuf.toString(), paramList.toArray(), page * size,
-				size);
+		return hibernateSupport.findByNativeSql(CarMotDTO.class, sqlBuf.toString(), paramList.toArray(), page * size, size);
 	}
 
 	@Override
@@ -89,8 +89,7 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 		String[] fnamesArr = new String[] {};
 		String[] onamesArr = new String[] {};
 		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY id DESC");
-		return carMotRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere, objList.toArray(),
-				pageable);
+		return carMotRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere, objList.toArray(), pageable);
 	}
 
 	@Override

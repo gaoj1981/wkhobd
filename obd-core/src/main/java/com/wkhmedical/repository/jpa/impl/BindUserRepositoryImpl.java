@@ -65,8 +65,7 @@ public class BindUserRepositoryImpl implements IBindUserRepository {
 		//
 		int page = pageable.getPageNumber();
 		int size = pageable.getPageSize();
-		return hibernateSupport.findByNativeSql(BindUserDTO.class, sqlBuf.toString(), paramList.toArray(), page * size,
-				size);
+		return hibernateSupport.findByNativeSql(BindUserDTO.class, sqlBuf.toString(), paramList.toArray(), page * size, size);
 	}
 
 	@Override
@@ -99,8 +98,7 @@ public class BindUserRepositoryImpl implements IBindUserRepository {
 		String[] fnamesArr = new String[] {};
 		String[] onamesArr = new String[] {};
 		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY insTime DESC");
-		return bindUserRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere,
-				paramList.toArray(), pageable);
+		return bindUserRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere, paramList.toArray(), pageable);
 	}
 
 	@Override

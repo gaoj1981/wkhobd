@@ -55,11 +55,13 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 			if (valiType.intValue() == 0) {
 				sqlBuf.append(" AND ci.effectDate > ?");
 				paramList.add(dtNow);
-			} else if (valiType.intValue() == 1) {
+			}
+			else if (valiType.intValue() == 1) {
 				sqlBuf.append(" AND ci.effectDate < ? AND ci.expDate > ?");
 				paramList.add(dtNow);
 				paramList.add(dtNow);
-			} else if (valiType.intValue() == 2) {
+			}
+			else if (valiType.intValue() == 2) {
 				sqlBuf.append(" AND ci.expDate < ?");
 				paramList.add(dtNow);
 			}
@@ -73,8 +75,7 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 		//
 		int page = pageable.getPageNumber();
 		int size = pageable.getPageSize();
-		return hibernateSupport.findByNativeSql(CarInsurDTO.class, sqlBuf.toString(), paramList.toArray(), page * size,
-				size);
+		return hibernateSupport.findByNativeSql(CarInsurDTO.class, sqlBuf.toString(), paramList.toArray(), page * size, size);
 	}
 
 	@Override
@@ -86,8 +87,7 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 		sqlBuf.append(" WHERE id = ?");
 		paramList.add(id);
 
-		List<CarInsur> lstCarInsur = hibernateSupport.findByNativeSql(CarInsur.class, sqlBuf.toString(),
-				paramList.toArray());
+		List<CarInsur> lstCarInsur = hibernateSupport.findByNativeSql(CarInsur.class, sqlBuf.toString(), paramList.toArray());
 		if (lstCarInsur != null) {
 			return lstCarInsur.get(0);
 		}
@@ -112,8 +112,7 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 		String[] fnamesArr = new String[] {};
 		String[] onamesArr = new String[] {};
 		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY id DESC");
-		return carInsurRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere, objList.toArray(),
-				pageable);
+		return carInsurRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere, objList.toArray(), pageable);
 	}
 
 	@Override

@@ -60,8 +60,7 @@ public class WareRecordRepositoryImpl implements IWareRecordRepository {
 		//
 		int page = pageable.getPageNumber();
 		int size = pageable.getPageSize();
-		return hibernateSupport.findByNativeSql(WareRecordDTO.class, sqlBuf.toString(), paramList.toArray(),
-				page * size, size);
+		return hibernateSupport.findByNativeSql(WareRecordDTO.class, sqlBuf.toString(), paramList.toArray(), page * size, size);
 	}
 
 	@Override
@@ -82,8 +81,7 @@ public class WareRecordRepositoryImpl implements IWareRecordRepository {
 		String[] fnamesArr = new String[] {};
 		String[] onamesArr = new String[] {};
 		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY id DESC");
-		return wareRecordRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere,
-				objList.toArray(), pageable);
+		return wareRecordRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere, objList.toArray(), pageable);
 	}
 
 	@Override
@@ -95,8 +93,7 @@ public class WareRecordRepositoryImpl implements IWareRecordRepository {
 		sqlBuf.append(" WHERE id = ?");
 		paramList.add(id);
 
-		List<WareRecord> lstWareRecord = hibernateSupport.findByNativeSql(WareRecord.class, sqlBuf.toString(),
-				paramList.toArray());
+		List<WareRecord> lstWareRecord = hibernateSupport.findByNativeSql(WareRecord.class, sqlBuf.toString(), paramList.toArray());
 		if (lstWareRecord != null && lstWareRecord.size() > 0) {
 			return lstWareRecord.get(0);
 		}

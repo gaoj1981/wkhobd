@@ -63,8 +63,7 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		int page = pageable.getPageNumber();
 		int size = pageable.getPageSize();
 		//
-		return hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(), paramList.toArray(), page * size,
-				size);
+		return hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(), paramList.toArray(), page * size, size);
 	}
 
 	@Override
@@ -80,8 +79,7 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		//
 		int page = pageable.getPageNumber();
 		int size = pageable.getPageSize();
-		List<CarInfoDTO> lstRes = hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(),
-				paramList.toArray(), page * size, size);
+		List<CarInfoDTO> lstRes = hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(), paramList.toArray(), page * size, size);
 		PageImpl<CarInfoDTO> pageResult = new PageImpl<CarInfoDTO>(lstRes, pageable, lstRes.size());
 		//
 		return pageResult;
@@ -92,8 +90,7 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = getSelectSql();
 		BizUtil.setSqlJoin(paramBody, "eid", sqlBuf, paramList, " AND ci.eid = ?");
-		List<CarInfoDTO> lstCarInfo = hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(),
-				paramList.toArray(), 1);
+		List<CarInfoDTO> lstCarInfo = hibernateSupport.findByNativeSql(CarInfoDTO.class, sqlBuf.toString(), paramList.toArray(), 1);
 		if (lstCarInfo != null && lstCarInfo.size() > 0) {
 			return lstCarInfo.get(0);
 		}
@@ -119,8 +116,7 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		String[] onamesArr = new String[] {};
 		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY insTime DESC");
 		// 执行分页查询
-		return carInfoRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere, objList.toArray(),
-				pageable);
+		return carInfoRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere, objList.toArray(), pageable);
 	}
 
 	@Override
@@ -128,7 +124,8 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		String utypeStr = null;
 		if (utype == 1) {
 			utypeStr = "prinId";
-		} else if (utype == 2) {
+		}
+		else if (utype == 2) {
 			utypeStr = "maintId";
 		}
 		if (utypeStr != null && areaId != null) {
@@ -142,7 +139,8 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		String utypeStr = null;
 		if (utype == 1) {
 			utypeStr = "prinId";
-		} else if (utype == 2) {
+		}
+		else if (utype == 2) {
 			utypeStr = "maintId";
 		}
 		if (utypeStr != null && bindUserId != null) {
