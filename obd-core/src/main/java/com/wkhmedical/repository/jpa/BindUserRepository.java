@@ -1,5 +1,7 @@
 package com.wkhmedical.repository.jpa;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.taoxeo.repository.JpaRepository;
@@ -12,4 +14,5 @@ public interface BindUserRepository extends JpaRepository<BindUser, String>, IBi
 
 	BindUser findByUtypeAndAreaIdAndIsDefault(Integer utype, Integer areaId, Integer isDefault);
 
+	List<BindUser> findByAreaIdAndIsDefault(Integer areaId, Integer isDefault);
 }

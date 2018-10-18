@@ -39,7 +39,7 @@ public class BindUserController {
 	@Autowired
 	BindUserService bindUserService;
 
-	// @ApiOperation(value = "添加相关人员")
+	@ApiOperation(value = "添加相关人员")
 	@PostMapping("/add")
 	public void addBu(@CurrentUser TUserDetails user, @RequestBody @Valid BindUserAddBody addBody) {
 		bindUserService.addInfo(addBody);
@@ -92,6 +92,12 @@ public class BindUserController {
 			@ApiParam(value = "是否为默认负责人", required = true) @RequestParam Integer isDefault,
 			@ApiParam(value = "车辆是否全覆盖", required = true) @RequestParam Integer isCoverAll) {
 		bindUserService.updateDefault(id, isDefault, isCoverAll);
+	}
+
+	@ApiOperation(value = "获取当前区域的默认负责人")
+	@GetMapping("/get.default")
+	public List<BindUser> getBindUserDefault(@RequestParam Integer areaId) {
+		return bindUserService.getBindUserDefault(areaId);
 	}
 
 }

@@ -30,4 +30,6 @@ public interface BindUserService {
 
 	void updateDefault(String id, Integer isDefault, Integer isCoverAll);
 
+	List<BindUser> getBindUserDefault(Integer areaId);
+
 }

@@ -176,4 +176,9 @@ public class BindUserServiceImpl implements BindUserService {
 		bindUserRepository.update(bindUserUpd);
 	}
 
+	@Override
+	public List<BindUser> getBindUserDefault(Integer areaId) {
+		return bindUserRepository.findByAreaIdAndIsDefault(areaId, 1);
+	}
+
 }
