@@ -96,8 +96,9 @@ public class BindUserController {
 
 	@ApiOperation(value = "获取当前区域的默认负责人")
 	@GetMapping("/get.default")
-	public List<BindUser> getBindUserDefault(@RequestParam Integer areaId) {
-		return bindUserService.getBindUserDefault(areaId);
+	public List<BindUser> getBindUserDefault(@ApiParam(value = "区县ID", required = true) @RequestParam Integer areaId,
+			@ApiParam(value = "车辆ID") @RequestParam String eid) {
+		return bindUserService.getBindUserDefault(areaId, eid);
 	}
 
 }

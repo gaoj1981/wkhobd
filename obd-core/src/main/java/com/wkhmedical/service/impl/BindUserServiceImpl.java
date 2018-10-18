@@ -1,10 +1,12 @@
 package com.wkhmedical.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import com.wkhmedical.dto.BindUserDTO;
 import com.wkhmedical.dto.BindUserEditBody;
 import com.wkhmedical.dto.BindUserParam;
 import com.wkhmedical.po.BindUser;
+import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.repository.jpa.BindUserRepository;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
 import com.wkhmedical.service.BindUserService;
@@ -159,7 +162,7 @@ public class BindUserServiceImpl implements BindUserService {
 	public void updateDefault(String id, Integer isDefault, Integer isCoverAll) {
 		BindUser bindUserUpd = bindUserRepository.findByKey(id);
 		if (bindUserUpd == null) {
-			throw new BizRuntimeException("info_not_exists", id + "");
+			throw new BizRuntimeException("info_not_exists", id);
 		}
 		Integer utype = bindUserUpd.getUtype();
 		Integer areaId = bindUserUpd.getAreaId();
@@ -177,8 +180,48 @@ public class BindUserServiceImpl implements BindUserService {
 	}
 
 	@Override
-	public List<BindUser> getBindUserDefault(Integer areaId) {
-		return bindUserRepository.findByAreaIdAndIsDefault(areaId, 1);
+	public List<BindUser> getBindUserDefault(Integer areaId, String eid) {
+		if (StringUtils.isBlank(eid)) {
+			// 不关联车辆ID情况，直接返回区县对应的默认负责人
+			return bindUserRepository.findByAreaIdAndIsDefault(areaId, 1);
+		}
+		else {
+			//
+			List<BindUser> rtnList = new ArrayList<BindUser>();
+			BindUser prinUser = null;
+			BindUser maintUser = null;
+			// 车辆区县变化时，动态获取对应的负责人
+			CarInfo carInfo = carInfoRepository.findByEid(eid);
+			if (carInfo == null) {
+				throw new BizRuntimeException("info_not_exists", eid);
+			}
+			String prinId = carInfo.getPrinId();
+			String maintId = carInfo.getMaintId();
+			int carAreaId = carInfo.getAreaId();
+			// 车辆所在区县一致情况
+			if (carAreaId == areaId.intValue()) {
+				if (StringUtils.isBlank(prinId)) {
+					prinUser = bindUserRepository.findByUtypeAndAreaIdAndIsDefault(1, areaId, 1);
+				}
+				else {
+					prinUser = bindUserRepository.findByKey(prinId);
+				}
+				if (StringUtils.isBlank(maintId)) {
+					maintUser = bindUserRepository.findByUtypeAndAreaIdAndIsDefault(2, areaId, 1);
+				}
+				else {
+					maintUser = bindUserRepository.findByKey(maintId);
+				}
+			}
+			// 车辆所在区县变更情况
+			else {
+				prinUser = bindUserRepository.findByUtypeAndAreaIdAndIsDefault(1, areaId, 1);
+				maintUser = bindUserRepository.findByUtypeAndAreaIdAndIsDefault(2, areaId, 1);
+			}
+			if (prinUser != null) rtnList.add(prinUser);
+			if (maintUser != null) rtnList.add(maintUser);
+			return rtnList;
+		}
 	}
 
 }
