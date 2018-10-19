@@ -34,4 +34,23 @@ public class BindUserBody implements Serializable {
 
 	@ApiModelProperty(value = "人员姓名/电话（模糊OR查询）")
 	private String orUnameTel;
+
+	@ApiModelProperty(value = "是否默认")
+	private Integer isDefault;
+
+	@ApiModelProperty(value = "性别查询数组 All|M|F|N")
+	private String[] sexSel;
+
+	@ApiModelProperty(value = "日期查询区分。1：添加时间；2：最后修改时间")
+	private Integer timeSel;
+
+	@ApiModelProperty(value = "查询开始日期")
+	private String timeStart;
+
+	@ApiModelProperty(value = "查询结束日期")
+	private String timeEnd;
+
+	@ApiModelProperty(value = "所属部门数组")
+	private Integer[] utypeSel;
+
 }

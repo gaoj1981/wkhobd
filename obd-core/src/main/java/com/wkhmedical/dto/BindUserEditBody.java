@@ -6,6 +6,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.wkhmedical.constant.Gender;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -30,11 +32,17 @@ public class BindUserEditBody implements Serializable {
 	@Max(value = 2, message = "非法参数")
 	private Integer utype;
 
+	@ApiModelProperty(value = "区县ID")
+	private Integer areaId;
+
 	@ApiModelProperty(value = "姓名")
 	private String uname;
 
 	@ApiModelProperty(value = "职位")
 	private String job;
+
+	@ApiModelProperty(value = "性别")
+	private Gender sex;
 
 	@ApiModelProperty(value = "电话")
 	private String tel;

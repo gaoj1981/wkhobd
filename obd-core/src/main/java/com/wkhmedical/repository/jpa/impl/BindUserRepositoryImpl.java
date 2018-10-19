@@ -19,6 +19,7 @@ import com.wkhmedical.dto.BindUserDTO;
 import com.wkhmedical.po.BindUser;
 import com.wkhmedical.repository.jpa.BindUserRepository;
 import com.wkhmedical.repository.jpa.IBindUserRepository;
+import com.wkhmedical.util.AssistUtil;
 import com.wkhmedical.util.BizUtil;
 
 import lombok.extern.log4j.Log4j2;
@@ -81,9 +82,10 @@ public class BindUserRepositoryImpl implements IBindUserRepository {
 			sqlStrList.add(" AND id = ?");
 			sqlStrList.add(" AND areaId = ?");
 			sqlStrList.add(" AND utype = ?");
+			sqlStrList.add(" AND isDefault = ?");
 			sqlStrList.add(" AND uname LIKE ?");
 			sqlStrList.add(" AND tel LIKE ?");
-			BizUtil.setSqlWhere(paramBody, "id,areaId,utype,unameLike,telLike", sqlWhere, paramList, sqlStrList);
+			BizUtil.setSqlWhere(paramBody, "id,areaId,utype,isDefault,unameLike,telLike", sqlWhere, paramList, sqlStrList);
 		}
 		// 同时支持姓名或电话模糊查询
 		String orUnameTel = paramBody.getOrUnameTel();
@@ -91,6 +93,55 @@ public class BindUserRepositoryImpl implements IBindUserRepository {
 			sqlWhere.append(" AND (tel LIKE ? OR uname LIKE ?)");
 			paramList.add("%" + orUnameTel + "%");
 			paramList.add("%" + orUnameTel + "%");
+		}
+		// utype多IN查询
+		Integer[] utypeArr = paramBody.getUtypeSel();
+		if (utypeArr != null && utypeArr.length > 0) {
+			sqlWhere.append(" AND utype IN (");
+			int i = 0;
+			for (int utypeTmp : utypeArr) {
+				if (i == 0) {
+					sqlWhere.append(utypeTmp);
+				}
+				else {
+					sqlWhere.append("," + utypeTmp);
+				}
+				i++;
+			}
+			sqlWhere.append(")");
+		}
+		// sex多IN查询
+		String[] sexArr = paramBody.getSexSel();
+		if (sexArr != null && sexArr.length > 0) {
+			if (!AssistUtil.isArrContains(sexArr, "All")) {
+				sqlWhere.append(" AND sex IN (");
+				int i = 0;
+				for (String sexTmp : sexArr) {
+					if (i == 0) {
+						sqlWhere.append("?");
+					}
+					else {
+						sqlWhere.append(",?");
+					}
+					paramList.add(sexTmp);
+					i++;
+				}
+				sqlWhere.append(")");
+			}
+		}
+		// 日期查询
+		Integer timeSel = paramBody.getTimeSel();
+		if (timeSel != null) {
+			if (timeSel.intValue() == 1) {
+				sqlWhere.append(" AND insTime >=? AND insTime<=?");
+				paramList.add(paramBody.getTimeStart());
+				paramList.add(paramBody.getTimeEnd() + " 23:59:59");
+			}
+			else if (timeSel.intValue() == 2) {
+				sqlWhere.append(" AND updTime >=? AND updTime<=?");
+				paramList.add(paramBody.getTimeStart());
+				paramList.add(paramBody.getTimeEnd() + " 23:59:59");
+			}
 		}
 
 		//

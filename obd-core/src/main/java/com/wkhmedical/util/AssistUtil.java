@@ -24,11 +24,19 @@ public class AssistUtil {
 				if (!(sourceField.get(sourceBean) == null)) {
 					targetField.set(targetBean, sourceField.get(sourceBean));
 				}
-			} catch (IllegalArgumentException | IllegalAccessException e) {
+			}
+			catch (IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
 		}
 		return targetBean;
+	}
+
+	public static boolean isArrContains(String[] arr, String value) {
+		for (String s : arr) {
+			if (s.equals(value)) return true;
+		}
+		return false;
 	}
 
 	public static void main(String[] args) {

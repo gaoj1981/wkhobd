@@ -64,9 +64,9 @@ public class CarInfoEditBody implements Serializable {
 	private FuelType fuelType;
 
 	@ApiModelProperty(value = "运营负责人ID")
-	private Long prinId;
+	private String prinId;
 
 	@ApiModelProperty(value = "维护负责人ID")
-	private Long maintId;
+	private String maintId;
 
 }
