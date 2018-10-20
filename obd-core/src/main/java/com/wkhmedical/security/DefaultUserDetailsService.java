@@ -47,7 +47,7 @@ public class DefaultUserDetailsService implements UserDetailsService {
 		userDetails.setSalt(user.getUserPwdSalt());
 		userDetails.setRealName(user.getUserName());
 		userDetails.setEnabled(true);
-		
+//		userDetails.addAuthorities(AuthorityUtils.createAuthorityList(new String[] { "ROLE_ADMIN" }));
 		return userDetails;
 	}
 
