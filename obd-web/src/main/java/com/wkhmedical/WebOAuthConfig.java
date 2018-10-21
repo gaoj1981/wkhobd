@@ -11,9 +11,11 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 import com.taoxeo.boot.security.oauth2.AbstractAuthorizationServerConfig;
 import com.taoxeo.boot.security.oauth2.AbstractResourceServerConfiguration;
+import com.wkhmedical.security.SecurityRoleFilter;
 
 /**
  * The Class WebOAuthConfig.
@@ -90,6 +92,7 @@ public class WebOAuthConfig {
 				.authorizeRequests()
 				.antMatchers("/api/**","/obd/**", "/public/**").access("hasRole('ROLE_USER') or hasRole('ROLE_WXUSER') or #oauth2.isOAuth()");
 			// @formatter:on
+			 http.addFilterAfter(new SecurityRoleFilter(), FilterSecurityInterceptor.class);
 		}
 	}
 }
