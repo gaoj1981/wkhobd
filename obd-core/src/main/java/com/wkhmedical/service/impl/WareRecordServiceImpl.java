@@ -101,7 +101,8 @@ public class WareRecordServiceImpl implements WareRecordService {
 	public void deleteInfo(String id) {
 		try {
 			wareRecordRepository.deleteById(id);
-		} catch (EmptyResultDataAccessException e) {
+		}
+		catch (EmptyResultDataAccessException e) {
 			log.error("物理删除id不存在" + id);
 		}
 	}

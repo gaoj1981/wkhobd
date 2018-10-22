@@ -78,7 +78,7 @@ public class CarInsurServiceImpl implements CarInsurService {
 		// 组装Bean
 		CarInsur carInsur = AssistUtil.coverBean(infoBody, CarInsur.class);
 		carInsur.setId(BizUtil.genDbIdStr());
-		carInsur.setEid(carInfo.getId());
+		carInsur.setCid(carInfo.getId());
 		// 入库
 		carInsurRepository.save(carInsur);
 	}

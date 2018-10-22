@@ -27,7 +27,7 @@ public class CarMot implements Serializable {
 	@Id
 	private String id;
 
-	private String eid;
+	private String cid;
 
 	private Date motDate;
 

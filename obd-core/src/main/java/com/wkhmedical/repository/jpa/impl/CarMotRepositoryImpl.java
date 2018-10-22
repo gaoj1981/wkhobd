@@ -43,7 +43,7 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 		StringBuffer sqlBuf = new StringBuffer("");
 		sqlBuf.append(" SELECT cm.*");
 		sqlBuf.append(" FROM car_mot cm");
-		sqlBuf.append(" LEFT JOIN car_info ci ON ci.id=cm.eid");
+		sqlBuf.append(" LEFT JOIN car_info ci ON ci.id=cm.cid");
 		sqlBuf.append(" WHERE cm.delFlag = 0");
 		BizUtil.setSqlJoin(paramBody, "id", sqlBuf, paramList, " AND cm.id = ?");
 		BizUtil.setSqlJoin(paramBody, "eid", sqlBuf, paramList, " AND ci.eid = ?");
@@ -83,8 +83,7 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 		if (paramBody != null) {
 			List<String> sqlStrList = new ArrayList<String>();
 			sqlStrList.add(" AND id = ?");
-			sqlStrList.add(" AND eid LIKE ?");
-			BizUtil.setSqlWhere(paramBody, "id,eidLike", sqlWhere, objList, sqlStrList);
+			BizUtil.setSqlWhere(paramBody, "id", sqlWhere, objList, sqlStrList);
 		}
 		//
 		Sort sort = pageable.getSort();

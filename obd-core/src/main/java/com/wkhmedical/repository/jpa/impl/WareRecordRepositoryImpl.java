@@ -40,7 +40,7 @@ public class WareRecordRepositoryImpl implements IWareRecordRepository {
 	public List<WareRecordDTO> findWareRecordList(WareRecordBody paramBody, Pageable pageable) {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = new StringBuffer("");
-		sqlBuf.append(" SELECT wr.*,ci.eid");
+		sqlBuf.append(" SELECT wr.*");
 		sqlBuf.append(" FROM ware_record wr");
 		sqlBuf.append(" LEFT JOIN car_info ci ON ci.id=wr.cid");
 		sqlBuf.append(" WHERE wr.delFlag = 0");

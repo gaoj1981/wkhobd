@@ -3,6 +3,7 @@ package com.wkhmedical.po;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -41,5 +42,10 @@ public class WareRecord implements Serializable {
 	private String excTel;
 	
 	private Integer delFlag;
-	
+
+	@Column(insertable = false, updatable = false)
+	private Date insTime;
+
+	@Column(insertable = false, updatable = false)
+	private Date updTime;
 }

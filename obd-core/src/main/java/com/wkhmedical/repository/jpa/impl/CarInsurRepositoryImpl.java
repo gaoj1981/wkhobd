@@ -41,9 +41,9 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 	public List<CarInsurDTO> findCarInsurList(CarInsurBody paramBody, Pageable pageable) {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = new StringBuffer("");
-		sqlBuf.append(" SELECT ci.*");
+		sqlBuf.append(" SELECT ci.*,car.eid");
 		sqlBuf.append(" FROM car_insur ci");
-		sqlBuf.append(" LEFT JOIN car_info car ON car.id=ci.eid");
+		sqlBuf.append(" LEFT JOIN car_info car ON car.id=ci.cid");
 		sqlBuf.append(" WHERE ci.delFlag = 0");
 		BizUtil.setSqlJoin(paramBody, "id", sqlBuf, paramList, " AND ci.id = ?");
 		BizUtil.setSqlJoin(paramBody, "eid", sqlBuf, paramList, " AND car.eid = ?");

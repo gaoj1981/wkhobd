@@ -67,7 +67,7 @@ public class CarMotServiceImpl implements CarMotService {
 		// 组装Bean
 		CarMot carMot = AssistUtil.coverBean(infoBody, CarMot.class);
 		carMot.setId(BizUtil.genDbIdStr());
-		carMot.setEid(carInfo.getId());
+		carMot.setCid(carInfo.getId());
 		// 入库
 		carMotRepository.save(carMot);
 	}
@@ -100,7 +100,7 @@ public class CarMotServiceImpl implements CarMotService {
 	@Override
 	public void delInfo(String id) {
 		Optional<CarMot> optObj = carMotRepository.findById(id);
-		if (!optObj.isPresent()) {
+		if (optObj.isPresent()) {
 			CarMot carMotUpd = optObj.get();
 			carMotUpd.setDelFlag(1);
 			carMotRepository.update(carMotUpd);
