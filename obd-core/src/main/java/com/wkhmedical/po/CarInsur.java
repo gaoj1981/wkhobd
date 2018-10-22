@@ -3,6 +3,7 @@ package com.wkhmedical.po;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -25,27 +26,32 @@ public class CarInsur implements Serializable {
 
 	@Id
 	private String id;
-	
-	private String cid;
-	
+
+	private String eid;
+
 	private String insurNum;
-	
+
 	private String insurLtd;
-	
+
 	private String servTel;
-	
+
 	private Date effectDate;
-	
+
 	private Date expDate;
-	
+
 	private Integer insurType;
-	
+
 	private String salesName;
-	
+
 	private String salesTel;
-	
+
 	private String insurImgs;
-	
+
 	private Integer delFlag;
-	
+
+	@Column(insertable = false, updatable = false)
+	private Date insTime;
+
+	@Column(insertable = false, updatable = false)
+	private Date updTime;
 }

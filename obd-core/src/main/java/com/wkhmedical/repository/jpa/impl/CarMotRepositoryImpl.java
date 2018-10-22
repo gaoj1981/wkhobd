@@ -41,12 +41,13 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 	public List<CarMotDTO> findCarMotList(CarMotBody paramBody, Pageable pageable) {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = new StringBuffer("");
-		sqlBuf.append(" SELECT cm.*,ci.eid");
+		sqlBuf.append(" SELECT cm.*");
 		sqlBuf.append(" FROM car_mot cm");
-		sqlBuf.append(" LEFT JOIN car_info ci ON ci.id=cm.cid");
+		sqlBuf.append(" LEFT JOIN car_info ci ON ci.id=cm.eid");
 		sqlBuf.append(" WHERE cm.delFlag = 0");
 		BizUtil.setSqlJoin(paramBody, "id", sqlBuf, paramList, " AND cm.id = ?");
 		BizUtil.setSqlJoin(paramBody, "eid", sqlBuf, paramList, " AND ci.eid = ?");
+		BizUtil.setSqlJoin(paramBody, "eidLike", sqlBuf, paramList, " AND ci.eid LIKE ?");
 		Integer valiType = (Integer) BizUtil.getFieldValueByName("valiType", paramBody);
 		if (valiType != null) {
 			Date dtNow = new Date();
@@ -82,7 +83,8 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 		if (paramBody != null) {
 			List<String> sqlStrList = new ArrayList<String>();
 			sqlStrList.add(" AND id = ?");
-			BizUtil.setSqlWhere(paramBody, "id", sqlWhere, objList, sqlStrList);
+			sqlStrList.add(" AND eid LIKE ?");
+			BizUtil.setSqlWhere(paramBody, "id,eidLike", sqlWhere, objList, sqlStrList);
 		}
 		//
 		Sort sort = pageable.getSort();

@@ -25,22 +25,22 @@ public class CarMotBody implements Serializable {
 	@ApiModelProperty(value = "主KEY")
 	@NotNull(groups = { ValiEdit.class })
 	private String id;
-	
+
 	@ApiModelProperty(value = "车辆ID")
 	@NotBlank(groups = { ValiAdd.class })
 	private String eid;
-	
+
 	@ApiModelProperty(value = "年检日期")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date motDate;
-	
+
 	@ApiModelProperty(value = "有效截止日期")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date expDate;
-	
+
 	@ApiModelProperty(value = "经办单位")
 	private String dealLtd;
-	
+
 	@ApiModelProperty(value = "年检备份")
 	private String motImgs;
 
@@ -48,4 +48,8 @@ public class CarMotBody implements Serializable {
 	@Min(1)
 	@Max(2)
 	private Integer valiType;
+
+	@ApiModelProperty(value = "车辆ID（支持模糊查询）")
+	private String eidLike;
+
 }

@@ -67,7 +67,7 @@ public class CarMotServiceImpl implements CarMotService {
 		// 组装Bean
 		CarMot carMot = AssistUtil.coverBean(infoBody, CarMot.class);
 		carMot.setId(BizUtil.genDbIdStr());
-		carMot.setCid(carInfo.getId());
+		carMot.setEid(carInfo.getId());
 		// 入库
 		carMotRepository.save(carMot);
 	}
@@ -91,7 +91,8 @@ public class CarMotServiceImpl implements CarMotService {
 	public void deleteInfo(String id) {
 		try {
 			carMotRepository.deleteById(id);
-		} catch (EmptyResultDataAccessException e) {
+		}
+		catch (EmptyResultDataAccessException e) {
 			log.error("物理删除id不存在" + id);
 		}
 	}

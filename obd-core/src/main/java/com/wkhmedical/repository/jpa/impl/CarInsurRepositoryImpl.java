@@ -43,7 +43,7 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 		StringBuffer sqlBuf = new StringBuffer("");
 		sqlBuf.append(" SELECT ci.*");
 		sqlBuf.append(" FROM car_insur ci");
-		sqlBuf.append(" LEFT JOIN car_info car ON car.id=ci.cid");
+		sqlBuf.append(" LEFT JOIN car_info car ON car.id=ci.eid");
 		sqlBuf.append(" WHERE ci.delFlag = 0");
 		BizUtil.setSqlJoin(paramBody, "id", sqlBuf, paramList, " AND ci.id = ?");
 		BizUtil.setSqlJoin(paramBody, "eid", sqlBuf, paramList, " AND car.eid = ?");

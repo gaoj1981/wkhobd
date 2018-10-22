@@ -78,7 +78,7 @@ public class CarInsurServiceImpl implements CarInsurService {
 		// 组装Bean
 		CarInsur carInsur = AssistUtil.coverBean(infoBody, CarInsur.class);
 		carInsur.setId(BizUtil.genDbIdStr());
-		carInsur.setCid(carInfo.getId());
+		carInsur.setEid(carInfo.getId());
 		// 入库
 		carInsurRepository.save(carInsur);
 	}
@@ -111,7 +111,8 @@ public class CarInsurServiceImpl implements CarInsurService {
 	public void deleteInfo(String id) {
 		try {
 			carInsurRepository.deleteById(id);
-		} catch (EmptyResultDataAccessException e) {
+		}
+		catch (EmptyResultDataAccessException e) {
 			log.error("物理删除id不存在" + id);
 		}
 

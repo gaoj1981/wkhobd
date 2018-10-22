@@ -3,6 +3,7 @@ package com.wkhmedical.po;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -25,17 +26,22 @@ public class CarMot implements Serializable {
 
 	@Id
 	private String id;
-	
-	private String cid;
-	
+
+	private String eid;
+
 	private Date motDate;
-	
+
 	private Date expDate;
-	
+
 	private String dealLtd;
-	
+
 	private String motImgs;
-	
+
 	private Integer delFlag;
-	
+
+	@Column(insertable = false, updatable = false)
+	private Date insTime;
+
+	@Column(insertable = false, updatable = false)
+	private Date updTime;
 }
