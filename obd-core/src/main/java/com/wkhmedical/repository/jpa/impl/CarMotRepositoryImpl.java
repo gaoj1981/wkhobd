@@ -129,6 +129,7 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 			}
 		}
 		String countSql = sqlBuf.toString();
+		countSql = "SELECT COUNT(1) " + countSql.substring(countSql.indexOf("FROM"));
 		//
 		Sort sort = pageable.getSort();
 		String[] fnamesArr = new String[] {};
