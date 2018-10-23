@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018 TaoXeo. All rights reserved.
  */
-package com.taoxeo.test;
+package com.wkhmedical.test;
 
 
 import org.junit.runner.RunWith;

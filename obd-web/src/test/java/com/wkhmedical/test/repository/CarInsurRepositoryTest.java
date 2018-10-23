@@ -1,4 +1,4 @@
-package com.taoxeo.test.repository;
+package com.wkhmedical.test.repository;
 
 import javax.annotation.Resource;
 
@@ -8,9 +8,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.taoxeo.boot.util.JsonUtils;
-import com.taoxeo.test.BaseTest;
 import com.wkhmedical.po.CarInsur;
 import com.wkhmedical.repository.jpa.CarInsurRepository;
+import com.wkhmedical.test.BaseTest;
 
 public class CarInsurRepositoryTest extends BaseTest {
 	@Resource
