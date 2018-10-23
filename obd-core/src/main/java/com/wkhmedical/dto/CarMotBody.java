@@ -52,4 +52,7 @@ public class CarMotBody implements Serializable {
 	@ApiModelProperty(value = "车辆ID（支持模糊查询）")
 	private String eidLike;
 
+	@ApiModelProperty(value = "区县ID")
+	private Integer areaId;
+
 }

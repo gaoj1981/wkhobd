@@ -55,7 +55,7 @@ public class CarMotController {
 
 	@ApiOperation(value = "获取车辆年检分页对象")
 	@PostMapping("/get.page")
-	public Page<CarMot> getCarMotPage(@RequestBody @Valid Paging<CarMotBody> paramBody) {
+	public Page<CarMotDTO> getCarMotPage(@RequestBody @Valid Paging<CarMotBody> paramBody) {
 		return carMotService.getPgList(paramBody);
 	}
 

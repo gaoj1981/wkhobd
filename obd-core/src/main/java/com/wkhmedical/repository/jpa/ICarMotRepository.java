@@ -16,5 +16,7 @@ public interface ICarMotRepository {
 
 	Page<CarMot> findPgCarMot(CarMotBody paramBody, Pageable pageable);
 
+	Page<CarMotDTO> findPgCarMotDTO(CarMotBody paramBody, Pageable pageable);
+
 	Integer findCount(String id);
 }

@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
@@ -16,6 +17,7 @@ import com.taoxeo.repository.HibernateSupport;
 import com.taoxeo.repository.JdbcQuery;
 import com.wkhmedical.dto.CarMotBody;
 import com.wkhmedical.dto.CarMotDTO;
+import com.wkhmedical.dto.SearchSqlParam;
 import com.wkhmedical.po.CarMot;
 import com.wkhmedical.repository.jpa.CarMotRepository;
 import com.wkhmedical.repository.jpa.ICarMotRepository;
@@ -39,37 +41,12 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 
 	@Override
 	public List<CarMotDTO> findCarMotList(CarMotBody paramBody, Pageable pageable) {
-		List<Object> paramList = new ArrayList<Object>();
-		StringBuffer sqlBuf = new StringBuffer("");
-		sqlBuf.append(" SELECT cm.*");
-		sqlBuf.append(" FROM car_mot cm");
-		sqlBuf.append(" LEFT JOIN car_info ci ON ci.id=cm.cid");
-		sqlBuf.append(" WHERE cm.delFlag = 0");
-		BizUtil.setSqlJoin(paramBody, "id", sqlBuf, paramList, " AND cm.id = ?");
-		BizUtil.setSqlJoin(paramBody, "eid", sqlBuf, paramList, " AND ci.eid = ?");
-		BizUtil.setSqlJoin(paramBody, "eidLike", sqlBuf, paramList, " AND ci.eid LIKE ?");
-		Integer valiType = (Integer) BizUtil.getFieldValueByName("valiType", paramBody);
-		if (valiType != null) {
-			Date dtNow = new Date();
-			if (valiType.intValue() == 1) {
-				sqlBuf.append(" AND cm.expDate > ?");
-				paramList.add(dtNow);
-			}
-			else if (valiType.intValue() == 2) {
-				sqlBuf.append(" AND cm.expDate < ?");
-				paramList.add(dtNow);
-			}
-		}
-		//
-		Sort sort = pageable.getSort();
-		String[] fnamesArr = new String[] {};
-		String[] onamesArr = new String[] {};
-		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY cm.insTime DESC");
-		sqlBuf.append(sqlOrder);
+		// 获取组装后的搜索条件SQL对象
+		SearchSqlParam sqlParam = getDTOSql(paramBody, pageable);
 		//
 		int page = pageable.getPageNumber();
 		int size = pageable.getPageSize();
-		return hibernateSupport.findByNativeSql(CarMotDTO.class, sqlBuf.toString(), paramList.toArray(), page * size, size);
+		return hibernateSupport.findByNativeSql(CarMotDTO.class, sqlParam.getSql(), sqlParam.getParamList().toArray(), page * size, size);
 	}
 
 	@Override
@@ -91,6 +68,17 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 		String[] onamesArr = new String[] {};
 		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY id DESC");
 		return carMotRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere, objList.toArray(), pageable);
+	}
+
+	@Override
+	public Page<CarMotDTO> findPgCarMotDTO(CarMotBody paramBody, Pageable pageable) {
+		List<CarMotDTO> lstRes = findCarMotList(paramBody, pageable);
+		SearchSqlParam sqlParam = getDTOSql(paramBody, pageable);
+		String countSql = sqlParam.getCountSql();
+		long total = hibernateSupport.countByNativeSql(countSql, sqlParam.getParamList().toArray());
+		PageImpl<CarMotDTO> pageResult = new PageImpl<CarMotDTO>(lstRes, pageable, total);
+		//
+		return pageResult;
 	}
 
 	@Override
@@ -117,4 +105,41 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 		return 0;
 	}
 
+	private static SearchSqlParam getDTOSql(CarMotBody paramBody, Pageable pageable) {
+		List<Object> paramList = new ArrayList<Object>();
+		StringBuffer sqlBuf = new StringBuffer("");
+		sqlBuf.append(" SELECT cm.*,ci.eid,ci.areaId,ci.provId,ci.cityId");
+		sqlBuf.append(" FROM car_mot cm");
+		sqlBuf.append(" LEFT JOIN car_info ci ON ci.id=cm.cid");
+		sqlBuf.append(" WHERE cm.delFlag = 0");
+		BizUtil.setSqlJoin(paramBody, "id", sqlBuf, paramList, " AND cm.id = ?");
+		BizUtil.setSqlJoin(paramBody, "eid", sqlBuf, paramList, " AND ci.eid = ?");
+		BizUtil.setSqlJoin(paramBody, "areaId", sqlBuf, paramList, " AND ci.areaId = ?");
+		BizUtil.setSqlJoin(paramBody, "eidLike", sqlBuf, paramList, " AND ci.eid LIKE ?");
+		Integer valiType = (Integer) BizUtil.getFieldValueByName("valiType", paramBody);
+		if (valiType != null) {
+			Date dtNow = new Date();
+			if (valiType.intValue() == 1) {
+				sqlBuf.append(" AND cm.expDate > ?");
+				paramList.add(dtNow);
+			}
+			else if (valiType.intValue() == 2) {
+				sqlBuf.append(" AND cm.expDate < ?");
+				paramList.add(dtNow);
+			}
+		}
+		String countSql = sqlBuf.toString();
+		//
+		Sort sort = pageable.getSort();
+		String[] fnamesArr = new String[] {};
+		String[] onamesArr = new String[] {};
+		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY cm.insTime DESC");
+		sqlBuf.append(sqlOrder);
+		// 返回组装后的查询SQL
+		SearchSqlParam sqlParam = new SearchSqlParam();
+		sqlParam.setSql(sqlBuf.toString());
+		sqlParam.setParamList(paramList);
+		sqlParam.setCountSql(countSql);
+		return sqlParam;
+	}
 }

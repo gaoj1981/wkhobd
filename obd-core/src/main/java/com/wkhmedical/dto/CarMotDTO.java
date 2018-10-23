@@ -26,15 +26,24 @@ public class CarMotDTO implements Serializable {
 	@ApiModelProperty(value = "年检日期")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date motDate;
-	
+
 	@ApiModelProperty(value = "有效截止日期")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date expDate;
-	
+
 	@ApiModelProperty(value = "经办单位")
 	private String dealLtd;
-	
+
 	@ApiModelProperty(value = "年检备份")
 	private String motImgs;
-	
+
+	@ApiModelProperty(value = "车辆所属区域")
+	private String areaId;
+
+	@ApiModelProperty(value = "车辆所属省份")
+	private String provId;
+
+	@ApiModelProperty(value = "车辆所属城市")
+	private String cityId;
+
 }

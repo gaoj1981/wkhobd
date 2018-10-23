@@ -51,9 +51,9 @@ public class CarMotServiceImpl implements CarMotService {
 	}
 
 	@Override
-	public Page<CarMot> getPgList(Paging<CarMotBody> paramBody) {
+	public Page<CarMotDTO> getPgList(Paging<CarMotBody> paramBody) {
 		CarMotBody queryObj = paramBody.getQuery();
-		return carMotRepository.findPgCarMot(queryObj, paramBody.toPageable());
+		return carMotRepository.findPgCarMotDTO(queryObj, paramBody.toPageable());
 	}
 
 	@Override
