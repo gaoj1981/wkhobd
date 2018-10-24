@@ -73,8 +73,8 @@ public class SysController {
 
 	@ApiOperation(value = "获取当前用户权限")
 	@GetMapping("/get.current_role")
-	public Set getCurRole(@CurrentUser TUserDetails user) {
-		Set authSet = AuthorityUtils.authorityListToSet(user.getAuthorities());
+	public Set<String> getCurRole(@CurrentUser TUserDetails user) {
+		Set<String> authSet = AuthorityUtils.authorityListToSet(user.getAuthorities());
 		return authSet;
 	}
 }
