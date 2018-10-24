@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -67,5 +69,12 @@ public class SysController {
 		rtnUser.setAddress("白宫 666 号");
 		rtnUser.setPhone("010-12345678");
 		return rtnUser;
+	}
+
+	@ApiOperation(value = "获取当前用户权限")
+	@GetMapping("/get.current_role")
+	public Set getCurRole(@CurrentUser TUserDetails user) {
+		Set authSet = AuthorityUtils.authorityListToSet(user.getAuthorities());
+		return authSet;
 	}
 }

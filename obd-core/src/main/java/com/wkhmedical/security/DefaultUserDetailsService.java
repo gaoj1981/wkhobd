@@ -5,6 +5,7 @@ package com.wkhmedical.security;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,14 +25,17 @@ public class DefaultUserDetailsService implements UserDetailsService {
 
 	@Autowired
 	YunUserRepository userRepository;
-	
-	/* (non-Javadoc)
-	 * @see org.springframework.security.core.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.springframework.security.core.userdetails.UserDetailsService#loadUserByUsername(java.lang
+	 * .String)
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		TUserDetails userDetails = new TUserDetails();
-		//TODO
+		// TODO
 
 		// 正常登录模式
 		YunUser user = userRepository.findByUserIdCardOrUserMobi(username, username);
@@ -47,7 +51,11 @@ public class DefaultUserDetailsService implements UserDetailsService {
 		userDetails.setSalt(user.getUserPwdSalt());
 		userDetails.setRealName(user.getUserName());
 		userDetails.setEnabled(true);
-//		userDetails.addAuthorities(AuthorityUtils.createAuthorityList(new String[] { "ROLE_ADMIN" }));
+		if ("13300000000".equals(username)) {
+			userDetails.addAuthorities(AuthorityUtils.createAuthorityList(new String[] { "admin" }));
+		}else{
+			userDetails.addAuthorities(AuthorityUtils.createAuthorityList(new String[] { "user" }));
+		}
 		return userDetails;
 	}
 
