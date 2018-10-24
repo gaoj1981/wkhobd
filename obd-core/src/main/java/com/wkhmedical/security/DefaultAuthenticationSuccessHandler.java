@@ -21,15 +21,15 @@ public class DefaultAuthenticationSuccessHandler extends SavedRequestAwareAuthen
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 			throws ServletException, IOException {
+		// 临时设置权限
+		TUserDetails userDetail = (TUserDetails) authentication.getPrincipal();
+		String uname = userDetail.getUsername();
 		if (WebUtil.isAjaxRequest(request)) {
 			WebUtil.setJsonResponseConfig(response);
 			response.setStatus(HttpServletResponse.SC_OK);
 			JSONObject jso = new JSONObject();
 			jso.put("status", "ok");
 			jso.put("type", "account");
-			// 临时设置权限
-			TUserDetails userDetail = (TUserDetails) authentication.getPrincipal();
-			String uname = userDetail.getUsername();
 			if ("123111111".equals(uname)) {
 				jso.put("currentAuthority", "admin");
 			}
@@ -43,7 +43,12 @@ public class DefaultAuthenticationSuccessHandler extends SavedRequestAwareAuthen
 			clearAuthenticationAttributes(request);
 		}
 		else {
-			super.onAuthenticationSuccess(request, response, authentication);
+			if ("123111111".equals(uname)) {
+				super.onAuthenticationSuccess(request, response, authentication);
+			}
+			else {
+				response.sendRedirect("/logout");
+			}
 		}
 	}
 
