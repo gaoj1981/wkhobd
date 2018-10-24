@@ -54,6 +54,10 @@ public class WebOAuthConfig {
 					  .and().withClient("obdada3108b0ee")
 					  .secret("57DCE5A6cbc0f48f4376E3F057746577a7c28059f8F=")
 					  .authorizedGrantTypes("client_credentials")
+					  .scopes("app")
+					  .and().withClient("apidata310b0ee")
+					  .secret("59DCE5A6cbc0g48f4376E3F057746577a7g28059f9F=")
+					  .authorizedGrantTypes("client_credentials")
 					  .scopes("app");
 		}
 	}
