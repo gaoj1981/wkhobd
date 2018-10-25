@@ -24,7 +24,7 @@ public class ThirdController {
 	@ApiOperation(value = "获取上传文件的存储空间")
 	@GetMapping("oss_policy")
 	public Map<String, String> getOssPolicy() throws UnsupportedEncodingException {
-		return ossService.postPolicy("poster");
+		return ossService.postPolicy();
 	}
 
 }
