@@ -1,5 +1,6 @@
 package com.wkhmedical.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,27 @@ public class CarMotServiceImpl implements CarMotService {
 	}
 
 	@Override
+	public CarMotDTO getExInfo(CarMotBody paramBody) {
+		CarMotDTO rtnDTO = new CarMotDTO();
+		String id = paramBody.getId();
+		Optional<CarMot> optObj = carMotRepository.findById(id);
+		if (!optObj.isPresent()) {
+			throw new BizRuntimeException("info_not_exists", id);
+		}
+		CarMot carMot = optObj.get();
+		// 获取车辆对象
+		Optional<CarInfo> optCar = carInfoRepository.findById(carMot.getCid());
+		if (!optCar.isPresent()) {
+			throw new BizRuntimeException("carmot_nocar_exists");
+		}
+		CarInfo carInfo = optCar.get();
+		// 合并年检对象
+		BeanUtils.merageProperty(rtnDTO, carMot);
+		BeanUtils.merageProperty(rtnDTO, carInfo);
+		return rtnDTO;
+	}
+
+	@Override
 	public List<CarMotDTO> getList(Paging<CarMotBody> paramBody) {
 		CarMotBody queryObj = paramBody.getQuery();
 		return carMotRepository.findCarMotList(queryObj, paramBody.toPageable());
@@ -64,10 +86,13 @@ public class CarMotServiceImpl implements CarMotService {
 		if (carInfo == null) {
 			throw new BizRuntimeException("carinfo_not_exists", eid);
 		}
-		//校验是否已在有效期
-		String maxExpDate = carMotRepository.findMaxExpDate(carInfo.getId());
-		if(maxExpDate!=null){
-			
+		// 校验是否已在有效期
+		Date maxExpDate = carMotRepository.findMaxExpDate(carInfo.getId());
+		if (maxExpDate != null) {
+			Date expDate = infoBody.getExpDate();
+			if (maxExpDate.compareTo(expDate) > 0) {
+				throw new BizRuntimeException("carmot_exists_expired");
+			}
 		}
 		// 组装Bean
 		CarMot carMot = AssistUtil.coverBean(infoBody, CarMot.class);

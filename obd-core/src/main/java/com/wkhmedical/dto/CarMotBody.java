@@ -23,7 +23,7 @@ public class CarMotBody implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "主KEY")
-	@NotNull(groups = { ValiEdit.class })
+	@NotBlank(groups = { ValiEdit.class })
 	private String id;
 
 	@ApiModelProperty(value = "车辆ID")
@@ -31,6 +31,7 @@ public class CarMotBody implements Serializable {
 	private String eid;
 
 	@ApiModelProperty(value = "年检日期")
+	@NotNull(groups = { ValiAdd.class })
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date motDate;
 

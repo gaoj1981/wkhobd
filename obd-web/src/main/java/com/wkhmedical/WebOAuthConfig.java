@@ -79,7 +79,7 @@ public class WebOAuthConfig {
 				.requestMatchers().antMatchers("/api/**","/obd/**","/ws","/stomp", "/public/**")
 			.and()
 				.authorizeRequests()
-				.antMatchers("/api/**","/obd/**", "/public/**").access("hasRole('ROLE_USER') or hasRole('ROLE_WXUSER') or #oauth2.isOAuth()");
+				.antMatchers("/api/**","/obd/**", "/public/**").access("hasRole('ROLE_USER') or hasRole('ROLE_WXUSER')");
 			// @formatter:on
 			http.addFilterAfter(new SecurityRoleFilter(), FilterSecurityInterceptor.class);
 		}

@@ -144,12 +144,14 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 		return sqlParam;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public String findMaxExpDate(String cid) {
-		List<String> lstMaxExpDate = hibernateSupport.findByNativeSql(String.class, "SELECT MAX(expDate) FROM car_mot WHERE cid=?",
+	public Date findMaxExpDate(String cid) {
+		List<Map> lstMaxExpDate = hibernateSupport.findByNativeSql(Map.class, "SELECT MAX(expDate) AS maxDate FROM car_mot WHERE cid=?",
 				new String[] { cid }, 1);
 		if (lstMaxExpDate != null) {
-			return lstMaxExpDate.get(0);
+			Map<String, Object> rtnMap = lstMaxExpDate.get(0);
+			return (Date) rtnMap.get("maxDate");
 		}
 		return null;
 	}

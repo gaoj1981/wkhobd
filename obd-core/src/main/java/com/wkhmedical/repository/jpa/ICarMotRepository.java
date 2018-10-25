@@ -1,12 +1,13 @@
 package com.wkhmedical.repository.jpa;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.wkhmedical.dto.CarMotDTO;
 import com.wkhmedical.dto.CarMotBody;
+import com.wkhmedical.dto.CarMotDTO;
 import com.wkhmedical.po.CarMot;
 
 public interface ICarMotRepository {
@@ -20,5 +21,5 @@ public interface ICarMotRepository {
 
 	Integer findCount(String id);
 
-	String findMaxExpDate(String cid);
+	Date findMaxExpDate(String cid);
 }

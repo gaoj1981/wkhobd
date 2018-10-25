@@ -13,8 +13,10 @@ public interface CarMotService {
 
 	CarMot getInfo(CarMotBody paramBody);
 
+	CarMotDTO getExInfo(CarMotBody paramBody);
+
 	List<CarMotDTO> getList(Paging<CarMotBody> paramBody);
-	
+
 	Page<CarMotDTO> getPgList(Paging<CarMotBody> paramBody);
 
 	void addInfo(CarMotBody infoBody);

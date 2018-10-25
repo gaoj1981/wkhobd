@@ -47,6 +47,14 @@ public class CarMotController {
 		return carMotService.getInfo(paramBody);
 	}
 
+	@ApiOperation(value = "获取车辆年检固定信息")
+	@GetMapping("/get.info")
+	public CarMotDTO getCarMotInfo(@ApiParam(value = "id主Key", required = true) @RequestParam String id) {
+		CarMotBody paramBody = new CarMotBody();
+		paramBody.setId(id);
+		return carMotService.getExInfo(paramBody);
+	}
+
 	@ApiOperation(value = "获取车辆年检分页列表（APP用）")
 	@PostMapping("/get.list")
 	public List<CarMotDTO> getCarMotData(@RequestBody @Valid Paging<CarMotBody> paramBody) {
@@ -61,8 +69,7 @@ public class CarMotController {
 
 	@ApiOperation(value = "添加车辆年检（APP用）")
 	@PostMapping("/add")
-	public void carMotAdd(@RequestBody @Validated({ ValiAdd.class }) CarMotBody paramBody,
-			@CurrentUser TUserDetails user) {
+	public void carMotAdd(@RequestBody @Validated({ ValiAdd.class }) CarMotBody paramBody, @CurrentUser TUserDetails user) {
 		carMotService.addInfo(paramBody);
 	}
 
