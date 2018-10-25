@@ -19,4 +19,6 @@ public interface ICarMotRepository {
 	Page<CarMotDTO> findPgCarMotDTO(CarMotBody paramBody, Pageable pageable);
 
 	Integer findCount(String id);
+
+	String findMaxExpDate(String cid);
 }

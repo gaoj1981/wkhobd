@@ -64,6 +64,11 @@ public class CarMotServiceImpl implements CarMotService {
 		if (carInfo == null) {
 			throw new BizRuntimeException("carinfo_not_exists", eid);
 		}
+		//校验是否已在有效期
+		String maxExpDate = carMotRepository.findMaxExpDate(carInfo.getId());
+		if(maxExpDate!=null){
+			
+		}
 		// 组装Bean
 		CarMot carMot = AssistUtil.coverBean(infoBody, CarMot.class);
 		carMot.setId(BizUtil.genDbIdStr());

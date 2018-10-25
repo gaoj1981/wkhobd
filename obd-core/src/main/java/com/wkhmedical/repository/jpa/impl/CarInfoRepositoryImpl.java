@@ -159,7 +159,7 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 
 	@Override
 	public Long findCountSum() {
-		return hibernateSupport.countByNativeSql("SELECT COUNT(1) FROM car_info", null);
+		return hibernateSupport.countByNativeSql("SELECT COUNT(1) FROM car_info WHERE delFlag=0", null);
 	}
 
 }

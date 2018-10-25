@@ -143,4 +143,15 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 		sqlParam.setCountSql(countSql);
 		return sqlParam;
 	}
+
+	@Override
+	public String findMaxExpDate(String cid) {
+		List<String> lstMaxExpDate = hibernateSupport.findByNativeSql(String.class, "SELECT MAX(expDate) FROM car_mot WHERE cid=?",
+				new String[] { cid }, 1);
+		if (lstMaxExpDate != null) {
+			return lstMaxExpDate.get(0);
+		}
+		return null;
+	}
+
 }

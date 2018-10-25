@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -40,26 +39,6 @@ public class WebOAuthConfig {
 	@ConditionalOnWebApplication
 	@EnableAuthorizationServer
 	protected static class AuthorizationServerConfig extends AbstractAuthorizationServerConfig {
-		
-		/* (non-Javadoc)
-		 * @see org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter#configure(org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer)
-		 */
-		@Override
-		public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-			clients.inMemory() // 使用in-memory存储
-					  .withClient("c3a14543425cbb")
-					  .secret("CZbx1vbRkybpdkUObTRN9ktPRDwNOUmv1iG7IyJjOVE=")
-					  .authorizedGrantTypes("client_credentials","password")
-					  .scopes("app")
-					  .and().withClient("obdada3108b0ee")
-					  .secret("57DCE5A6cbc0f48f4376E3F057746577a7c28059f8F=")
-					  .authorizedGrantTypes("client_credentials")
-					  .scopes("app")
-					  .and().withClient("apidata310b0ee")
-					  .secret("59DCE5A6cbc0g48f4376E3F057746577a7g28059f9F=")
-					  .authorizedGrantTypes("client_credentials")
-					  .scopes("app");
-		}
 	}
 
 	/**
@@ -73,8 +52,11 @@ public class WebOAuthConfig {
 	@EnableResourceServer
 	protected static class ResourceServerConfiguration extends AbstractResourceServerConfiguration {
 
-		/* (non-Javadoc)
-		 * @see com.taoxeo.boot.security.oauth2.AbstractResourceServerConfiguration#configure(org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer)
+		/*
+		 * (non-Javadoc)
+		 * @see com.taoxeo.boot.security.oauth2.AbstractResourceServerConfiguration#configure(org.
+		 * springframework.security.oauth2.config.annotation.web.configurers.
+		 * ResourceServerSecurityConfigurer)
 		 */
 		@Override
 		public void configure(ResourceServerSecurityConfigurer resources) {
@@ -82,8 +64,11 @@ public class WebOAuthConfig {
 			resources.resourceId(RESOURCE_ID).stateless(false);
 		}
 
-		/* (non-Javadoc)
-		 * @see org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter#configure(org.springframework.security.config.annotation.web.builders.HttpSecurity)
+		/*
+		 * (non-Javadoc)
+		 * @see org.springframework.security.oauth2.config.annotation.web.configuration.
+		 * ResourceServerConfigurerAdapter#configure(org.springframework.security.config.annotation.
+		 * web.builders.HttpSecurity)
 		 */
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
@@ -96,7 +81,7 @@ public class WebOAuthConfig {
 				.authorizeRequests()
 				.antMatchers("/api/**","/obd/**", "/public/**").access("hasRole('ROLE_USER') or hasRole('ROLE_WXUSER') or #oauth2.isOAuth()");
 			// @formatter:on
-			 http.addFilterAfter(new SecurityRoleFilter(), FilterSecurityInterceptor.class);
+			http.addFilterAfter(new SecurityRoleFilter(), FilterSecurityInterceptor.class);
 		}
 	}
 }
