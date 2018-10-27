@@ -56,4 +56,18 @@ public class CarMotBody implements Serializable {
 	@ApiModelProperty(value = "区县ID")
 	private Integer areaId;
 
+	@ApiModelProperty(value = "日期查询区分。1：添加时间；2：最后修改时间；3：年检有效期；4：年检执行日期；")
+	private Integer timeSel;
+
+	@ApiModelProperty(value = "查询开始日期")
+	private String timeStart;
+
+	@ApiModelProperty(value = "查询结束日期")
+	private String timeEnd;
+
+	@ApiModelProperty(value = "年检到期范围。1:30天内到期；2：60天内到期；3：90天内到期；4：已过期")
+	@Min(0)
+	@Max(4)
+	private Integer expDayFlag;
+
 }

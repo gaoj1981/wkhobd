@@ -60,9 +60,9 @@ public class CarMotServiceImpl implements CarMotService {
 			throw new BizRuntimeException("carmot_nocar_exists");
 		}
 		CarInfo carInfo = optCar.get();
-		// 合并年检对象
-		BeanUtils.merageProperty(rtnDTO, carMot);
+		// 合并年检对象（此处开发需注意同名属性覆盖）
 		BeanUtils.merageProperty(rtnDTO, carInfo);
+		BeanUtils.merageProperty(rtnDTO, carMot);
 		return rtnDTO;
 	}
 
@@ -75,7 +75,14 @@ public class CarMotServiceImpl implements CarMotService {
 	@Override
 	public Page<CarMotDTO> getPgList(Paging<CarMotBody> paramBody) {
 		CarMotBody queryObj = paramBody.getQuery();
-		return carMotRepository.findPgCarMotDTO(queryObj, paramBody.toPageable());
+		// 判断是否只查询过期类型
+		Integer expDayFlag = queryObj.getExpDayFlag();
+		if (expDayFlag != null && expDayFlag.intValue() >= 1) {
+			return carMotRepository.findByExpDay(expDayFlag);
+		}
+		else {
+			return carMotRepository.findPgCarMotDTO(queryObj, paramBody.toPageable());
+		}
 	}
 
 	@Override

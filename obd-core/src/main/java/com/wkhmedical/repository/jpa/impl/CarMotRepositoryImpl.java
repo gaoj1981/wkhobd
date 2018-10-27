@@ -128,6 +128,27 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 				paramList.add(dtNow);
 			}
 		}
+		// 日期查询
+		Integer timeSel = paramBody.getTimeSel();
+		if (timeSel != null) {
+			String dateName = "insTime";
+			if (timeSel.intValue() == 1) {
+				dateName = "insTime";
+			}
+			else if (timeSel.intValue() == 2) {
+				dateName = "updTime";
+			}
+			else if (timeSel.intValue() == 3) {
+				dateName = "expDate";
+			}
+			else if (timeSel.intValue() == 4) {
+				dateName = "motDate";
+			}
+			sqlBuf.append(" AND " + dateName + ">=? AND " + dateName + "<=?");
+			paramList.add(paramBody.getTimeStart());
+			paramList.add(paramBody.getTimeEnd() + " 23:59:59");
+		}
+
 		String countSql = sqlBuf.toString();
 		countSql = "SELECT COUNT(1) " + countSql.substring(countSql.indexOf("FROM"));
 		//
@@ -152,6 +173,16 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 		if (lstMaxExpDate != null) {
 			Map<String, Object> rtnMap = lstMaxExpDate.get(0);
 			return (Date) rtnMap.get("maxDate");
+		}
+		return null;
+	}
+
+	@Override
+	public Page<CarMotDTO> findByExpDay(Integer expDayFlag) {
+		int expDayVal = expDayFlag.intValue();
+		String sql = null;
+		if (expDayFlag == 4){
+			System.out.println(sql+expDayVal);
 		}
 		return null;
 	}
