@@ -18,11 +18,14 @@ import com.wkhmedical.dto.CarMotBody;
 import com.wkhmedical.dto.CarMotDTO;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.po.CarMot;
+import com.wkhmedical.po.CarMotCopy;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
+import com.wkhmedical.repository.jpa.CarMotCopyRepository;
 import com.wkhmedical.repository.jpa.CarMotRepository;
 import com.wkhmedical.service.CarMotService;
 import com.wkhmedical.util.AssistUtil;
 import com.wkhmedical.util.BizUtil;
+import com.wkhmedical.util.DateUtil;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -32,6 +35,8 @@ public class CarMotServiceImpl implements CarMotService {
 
 	@Resource
 	CarMotRepository carMotRepository;
+	@Resource
+	CarMotCopyRepository carMotCopyRepository;
 	@Resource
 	CarInfoRepository carInfoRepository;
 
@@ -78,7 +83,25 @@ public class CarMotServiceImpl implements CarMotService {
 		// 判断是否只查询过期类型
 		Integer expDayFlag = queryObj.getExpDayFlag();
 		if (expDayFlag != null && expDayFlag.intValue() >= 1) {
-			return carMotRepository.findByExpDay(expDayFlag);
+			int dayFlag = expDayFlag.intValue();
+			//
+			Date dtNow = new Date();
+			String expDateMin = DateUtil.formatDate(dtNow, "yyyy-MM-dd");
+			String expDateMax = DateUtil.formatDate(dtNow, "yyyy-MM-dd");
+			if (dayFlag == 1) {
+				expDateMax = DateUtil.formatDate(DateUtil.getDateAddDay(dtNow, 30), "yyyy-MM-dd");
+			}
+			else if (dayFlag == 2) {
+				expDateMax = DateUtil.formatDate(DateUtil.getDateAddDay(dtNow, 60), "yyyy-MM-dd");
+			}
+			else if (dayFlag == 3) {
+				expDateMax = DateUtil.formatDate(DateUtil.getDateAddDay(dtNow, 90), "yyyy-MM-dd");
+			}
+			else if (dayFlag == 4) {
+				expDateMax = DateUtil.formatDate(dtNow, "yyyy-MM-dd");
+				expDateMin = null;
+			}
+			return carMotCopyRepository.findByExpDay(expDateMin, expDateMax, paramBody.toPageable());
 		}
 		else {
 			return carMotRepository.findPgCarMotDTO(queryObj, paramBody.toPageable());
@@ -86,6 +109,7 @@ public class CarMotServiceImpl implements CarMotService {
 	}
 
 	@Override
+	@Transactional
 	public void addInfo(CarMotBody infoBody) {
 		// 校验eid
 		String eid = infoBody.getEid();
@@ -103,10 +127,20 @@ public class CarMotServiceImpl implements CarMotService {
 		}
 		// 组装Bean
 		CarMot carMot = AssistUtil.coverBean(infoBody, CarMot.class);
-		carMot.setId(BizUtil.genDbIdStr());
+		String idKey = BizUtil.genDbIdStr();
+		carMot.setId(idKey);
 		carMot.setCid(carInfo.getId());
 		// 入库
 		carMotRepository.save(carMot);
+		// 拷贝年检最大有效记录
+		Date dtNow = new Date();
+		// step1:删除当前最大有效记录
+		carMotCopyRepository.deleteByCid(carInfo.getId());
+		// step2:同步年检最大有效记录
+		CarMotCopy carMotCopy = new CarMotCopy();
+		BeanUtils.merageProperty(carMotCopy, carMot);
+		carMotCopy.setInsTime(dtNow);
+		carMotCopyRepository.save(carMotCopy);
 	}
 
 	@Override
@@ -115,13 +149,50 @@ public class CarMotServiceImpl implements CarMotService {
 		// 判断待修改记录唯一性
 		String id = infoBody.getId();
 		CarMot carMotUpd = carMotRepository.findByKey(id);
-		if (carMotUpd == null) {
+		if (carMotUpd == null || carMotUpd.getDelFlag().intValue() == 1) {
 			throw new BizRuntimeException("info_not_exists", id);
+		}
+		// 判断是否同步最大值记录
+		boolean isNeedCopy = false;
+		// 年检有效期判断
+		String cid = carMotUpd.getCid();
+		Date expDate = carMotUpd.getExpDate();
+		Date maxExpDate = carMotRepository.findMaxExpDate(cid);
+		Date pageExpDate = infoBody.getExpDate();
+		if (expDate.compareTo(maxExpDate) == 0) {
+			// 当前修改记录是最大记录
+			if (maxExpDate.compareTo(pageExpDate) > 0) {
+				List<CarMot> lstObjs = carMotRepository.findByCidAndExpDateGreaterThanAndExpDateLessThanOrderByExpDateDesc(cid, pageExpDate,
+						maxExpDate);
+				if (lstObjs != null && lstObjs.size() > 0) {
+					CarMot carMotMin = lstObjs.get(0);
+					throw new BizRuntimeException("carmot_expdate_over_min", DateUtil.formatDate(carMotMin.getExpDate(), "yyyyMM"));
+				}
+				isNeedCopy = true;
+			}
+			else if (maxExpDate.compareTo(pageExpDate) < 0) {
+				isNeedCopy = true;
+			}
+		}
+		else {
+			// 当前修改记录非最大记录
+			if (maxExpDate.compareTo(pageExpDate) < 0) {
+				throw new BizRuntimeException("carmot_expdate_over_max", maxExpDate);
+			}
 		}
 		// merge修改body与原记录对象
 		BeanUtils.merageProperty(carMotUpd, infoBody);
 		// 更新库记录
 		carMotRepository.update(carMotUpd);
+		// 同步年检最大记录
+		if (isNeedCopy) {
+			// step1:删除当前最大有效记录
+			carMotCopyRepository.deleteByCid(carMotUpd.getCid());
+			// step2:同步年检最大有效记录
+			CarMotCopy carMotCopy = new CarMotCopy();
+			BeanUtils.merageProperty(carMotCopy, carMotUpd);
+			carMotCopyRepository.save(carMotCopy);
+		}
 	}
 
 	@Override

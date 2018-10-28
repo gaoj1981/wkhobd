@@ -36,6 +36,7 @@ public class CarMotBody implements Serializable {
 	private Date motDate;
 
 	@ApiModelProperty(value = "有效截止日期")
+	@NotNull(groups = { ValiAdd.class, ValiEdit.class })
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date expDate;
 

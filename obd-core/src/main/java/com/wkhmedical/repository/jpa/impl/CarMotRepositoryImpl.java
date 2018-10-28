@@ -168,8 +168,8 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Date findMaxExpDate(String cid) {
-		List<Map> lstMaxExpDate = hibernateSupport.findByNativeSql(Map.class, "SELECT MAX(expDate) AS maxDate FROM car_mot WHERE cid=?",
-				new String[] { cid }, 1);
+		List<Map> lstMaxExpDate = hibernateSupport.findByNativeSql(Map.class,
+				"SELECT MAX(expDate) AS maxDate FROM car_mot WHERE delFlag = 0 AND cid=?", new String[] { cid }, 1);
 		if (lstMaxExpDate != null) {
 			Map<String, Object> rtnMap = lstMaxExpDate.get(0);
 			return (Date) rtnMap.get("maxDate");
@@ -181,8 +181,8 @@ public class CarMotRepositoryImpl implements ICarMotRepository {
 	public Page<CarMotDTO> findByExpDay(Integer expDayFlag) {
 		int expDayVal = expDayFlag.intValue();
 		String sql = null;
-		if (expDayFlag == 4){
-			System.out.println(sql+expDayVal);
+		if (expDayFlag == 4) {
+			System.out.println(sql + expDayVal);
 		}
 		return null;
 	}

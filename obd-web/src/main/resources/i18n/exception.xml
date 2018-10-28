@@ -59,4 +59,6 @@
 	
 	<entry key="carmot_exists_expired">已存在晚于该车年检有效期的记录</entry>
 	<entry key="carmot_nocar_exists">该年检对应的车辆不存在</entry>
+	<entry key="carmot_expdate_over_max">该车年检有效期需小于{0}</entry>
+	<entry key="carmot_expdate_over_min">该车年检有效期需大于{0}</entry>
 </properties>
