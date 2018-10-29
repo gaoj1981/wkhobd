@@ -162,8 +162,8 @@ public class CarMotServiceImpl implements CarMotService {
 		if (expDate.compareTo(maxExpDate) == 0) {
 			// 当前修改记录是最大记录
 			if (maxExpDate.compareTo(pageExpDate) > 0) {
-				List<CarMot> lstObjs = carMotRepository.findByCidAndExpDateGreaterThanAndExpDateLessThanOrderByExpDateDesc(cid, pageExpDate,
-						maxExpDate);
+				List<CarMot> lstObjs = carMotRepository.findByCidAndDelFlagAndExpDateGreaterThanAndExpDateLessThanOrderByExpDateDesc(cid, 0,
+						pageExpDate, maxExpDate);
 				if (lstObjs != null && lstObjs.size() > 0) {
 					CarMot carMotMin = lstObjs.get(0);
 					throw new BizRuntimeException("carmot_expdate_over_min", DateUtil.formatDate(carMotMin.getExpDate(), "yyyyMM"));
@@ -212,6 +212,21 @@ public class CarMotServiceImpl implements CarMotService {
 			CarMot carMotUpd = optObj.get();
 			carMotUpd.setDelFlag(1);
 			carMotRepository.update(carMotUpd);
+			// 同步年检最大记录
+			Optional<CarMotCopy> carMotCopyOpt = carMotCopyRepository.findById(id);
+			if (carMotCopyOpt.isPresent()) {
+				CarMotCopy carMotCopy = carMotCopyOpt.get();
+				// step1:删除当前最大有效记录
+				carMotCopyRepository.delete(carMotCopy);
+				List<CarMot> lstObjs = carMotRepository.findByCidAndDelFlagOrderByExpDateDesc(carMotUpd.getCid(), 0);
+				if (lstObjs != null && lstObjs.size() > 0) {
+					CarMot carMot = lstObjs.get(0);
+					// step2:同步年检最大有效记录
+					carMotCopy = new CarMotCopy();
+					BeanUtils.merageProperty(carMotCopy, carMot);
+					carMotCopyRepository.save(carMotCopy);
+				}
+			}
 		}
 	}
 

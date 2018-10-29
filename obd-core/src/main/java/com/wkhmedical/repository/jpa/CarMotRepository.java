@@ -10,5 +10,7 @@ import com.wkhmedical.po.CarMot;
 
 @Repository
 public interface CarMotRepository extends JpaRepository<CarMot, String>, ICarMotRepository {
-	List<CarMot> findByCidAndExpDateGreaterThanAndExpDateLessThanOrderByExpDateDesc(String cid, Date dt1, Date dt2);
+	List<CarMot> findByCidAndDelFlagAndExpDateGreaterThanAndExpDateLessThanOrderByExpDateDesc(String cid, Integer delFlag, Date dt1, Date dt2);
+
+	List<CarMot> findByCidAndDelFlagOrderByExpDateDesc(String cid, Integer delFlag);
 }
