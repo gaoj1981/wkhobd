@@ -4,9 +4,6 @@
 package com.wkhmedical.dto;
 
 import java.io.Serializable;
-import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -31,10 +28,9 @@ public class EquipExcelDTO implements Serializable {
 	private String xhNum;
 	private String factoryId;
 	private String factory;
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date birthDate;
+	private String birthDate;
 	private String version;
-	private Long countNum;
+	private String countNum;
 	private String note;
 
 }

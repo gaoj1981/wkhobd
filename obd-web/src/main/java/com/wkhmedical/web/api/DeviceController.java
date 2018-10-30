@@ -3,6 +3,7 @@
  */
 package com.wkhmedical.web.api;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -28,6 +29,7 @@ import com.wkhmedical.dto.EquipExcelDTO;
 import com.wkhmedical.dto.ObdLicDTO;
 import com.wkhmedical.dto.UploadResult;
 import com.wkhmedical.security.TUserDetails;
+import com.wkhmedical.service.EquipInfoService;
 import com.wkhmedical.service.ObdLicService;
 import com.wkhmedical.util.FileUtil;
 import com.wkhmedical.util.RSAUtil;
@@ -48,6 +50,9 @@ public class DeviceController {
 
 	@Resource
 	ConfigProperties configProps;
+
+	@Autowired
+	EquipInfoService equipInfoService;
 
 	/**
 	 * 获取设备授权信息.
@@ -117,10 +122,10 @@ public class DeviceController {
 
 	@ApiOperation(value = "解析和检验设备Excel")
 	@PostMapping("/device/excel.analysis")
-	public EquipExcelDTO excelAnalysis(@ApiParam(value = "excel文件路径", required = true) @RequestParam String excelPath,
+	public List<EquipExcelDTO> excelAnalysis(@ApiParam(value = "excel文件路径", required = true) @RequestParam String excelPath,
 			@ApiParam(value = "区县ID", required = true) @RequestParam Integer areaId) {
 		System.out.println(areaId + excelPath);
-		return null;
+		return equipInfoService.getExcelList(excelPath, areaId);
 	}
 
 }

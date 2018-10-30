@@ -1,5 +1,7 @@
 package com.wkhmedical.service.impl;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.taoxeo.lang.BeanUtils;
 import com.taoxeo.lang.exception.BizRuntimeException;
 import com.taoxeo.repository.Paging;
+import com.wkhmedical.dto.EquipExcelDTO;
 import com.wkhmedical.dto.EquipInfoBody;
 import com.wkhmedical.dto.EquipInfoDTO;
 import com.wkhmedical.po.EquipInfo;
@@ -20,6 +23,7 @@ import com.wkhmedical.repository.jpa.EquipInfoRepository;
 import com.wkhmedical.service.EquipInfoService;
 import com.wkhmedical.util.AssistUtil;
 import com.wkhmedical.util.BizUtil;
+import com.wkhmedical.util.ExcelUtil;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -35,7 +39,7 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 		String id = paramBody.getId();
 		Optional<EquipInfo> optObj = equipInfoRepository.findById(id);
 		if (!optObj.isPresent()) {
-			throw new BizRuntimeException("info_not_exists", id + "");
+			throw new BizRuntimeException("info_not_exists", id);
 		}
 		return optObj.get();
 	}
@@ -68,7 +72,7 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 		String id = infoBody.getId();
 		EquipInfo equipInfoUpd = equipInfoRepository.findByKey(id);
 		if (equipInfoUpd == null) {
-			throw new BizRuntimeException("info_not_exists", id + "");
+			throw new BizRuntimeException("info_not_exists", id);
 		}
 		// merge修改body与原记录对象
 		BeanUtils.merageProperty(equipInfoUpd, infoBody);
@@ -80,7 +84,8 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 	public void deleteInfo(String id) {
 		try {
 			equipInfoRepository.deleteById(id);
-		} catch (EmptyResultDataAccessException e) {
+		}
+		catch (EmptyResultDataAccessException e) {
 			log.error("物理删除id不存在" + id);
 		}
 	}
@@ -98,5 +103,113 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 	@Override
 	public Long getCountSum() {
 		return equipInfoRepository.count();
+	}
+
+	@Override
+	public List<EquipExcelDTO> getExcelList(String excelPath, Integer areaId) {
+		List<EquipExcelDTO> rtnList = new ArrayList<EquipExcelDTO>();
+		// 判断区县ID是否合法
+		// TODO 需要Guava Cache
+		// 读取Excel数据
+		File file = new File(BizUtil.getUploadPath() + excelPath);
+		try {
+			List<String[]> lstStrArrs = ExcelUtil.readExcel(file, null);
+			// 解析Excel内容
+			int type = 0;// 分类。0：主料；1：辅料
+			int rowNum = 1;// 当前行数
+			int colNum = 1;// 当前列数
+			EquipExcelDTO equipExcel = null;
+			// 循环行
+			for (String[] strArr : lstStrArrs) {
+				colNum = 1;
+				if (rowNum == 1) {
+					if (type == 0) {
+						// 获取设备名称，即车辆名称
+						for (String str : strArr) {
+							log.info("车辆设备名：" + str);
+							break;
+						}
+					}
+				}
+				else if (rowNum == 2) {
+					// 标题栏不做处理
+				}
+				else {
+					equipExcel = new EquipExcelDTO();
+					equipExcel.setType(type);
+					// 循环列
+					for (String str : strArr) {
+						if (ExcelUtil.sheetSplit.equals(str)) {
+							// 开启新的sheet内容
+							type = 1;
+							rowNum = 0;
+							break;
+						}
+
+						if (type == 0) {
+							switch (colNum) {
+							case 1:
+								equipExcel.setName(str);
+								break;
+							case 2:
+								equipExcel.setFactory(str);
+								break;
+							case 3:
+								equipExcel.setXhNum(str);
+								break;
+							case 4:
+								equipExcel.setBhNum(str);
+								break;
+							case 5:
+								equipExcel.setVersion(str);
+								break;
+							case 6:
+								equipExcel.setBirthDate(str);
+								break;
+							case 7:
+								equipExcel.setNote(str);
+								break;
+							default:
+								break;
+							}
+						}
+						else if (type == 1) {
+							switch (colNum) {
+							case 1:
+								equipExcel.setName(str);
+								break;
+							case 2:
+								equipExcel.setFactory(str);
+								break;
+							case 3:
+								equipExcel.setXhNum(str);
+								break;
+							case 4:
+								equipExcel.setBhNum(str);
+								break;
+							case 5:
+								equipExcel.setCountNum(str);
+								break;
+							case 6:
+								equipExcel.setNote(str);
+								break;
+							default:
+								break;
+							}
+						}
+						colNum++;
+					}
+					// 此判断防止换新Sheet时，添加空记录到列表中
+					if (rowNum > 0) {
+						rtnList.add(equipExcel);
+					}
+				}
+				rowNum++;
+			}
+		}
+		catch (Exception e) {
+			throw new BizRuntimeException("file_analysis_error");
+		}
+		return rtnList;
 	}
 }

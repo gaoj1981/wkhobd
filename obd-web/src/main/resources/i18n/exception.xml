@@ -21,6 +21,7 @@
 	<entry key="45009">接口调用超过限额</entry>
 
 	<!-- 业务错误信息模板 -->
+	<entry key="file_analysis_error">文件解析异常</entry>
 	<entry key="public_captcha_error">图形验证码错误</entry>
 	<entry key="public_mobivali_error">手机验证码错误</entry>
 	<entry key="public_apiparam_blank">缺少必要接口参数。请检查：{0}</entry>
