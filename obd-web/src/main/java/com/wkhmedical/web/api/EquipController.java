@@ -7,20 +7,24 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.taoxeo.boot.security.CurrentUser;
 import com.wkhmedical.constant.BizConstant;
+import com.wkhmedical.dto.EquipExcelDTO;
 import com.wkhmedical.dto.UploadResult;
 import com.wkhmedical.security.TUserDetails;
 import com.wkhmedical.util.FileUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -56,6 +60,13 @@ public class EquipController {
 			rtnRes.setErrMsg(BizConstant.ERR_UNKNOWN);
 		}
 		return rtnRes;
+	}
+
+	@ApiOperation(value = "解析和检验设备Excel")
+	@GetMapping("/excel.analysis")
+	public EquipExcelDTO excelAnalysis(@ApiParam(value = "excel文件路径", required = true) @RequestParam String excelPath,
+			@ApiParam(value = "区县ID", required = true) @RequestParam Integer areaId) {
+		return null;
 	}
 
 }
