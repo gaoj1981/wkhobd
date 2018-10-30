@@ -25,5 +25,6 @@ public class ConfigProperties {
 	private String rsaPrivate;
 	private String rsaPublic;
 
-	
+	private String uploadPath;
+
 }

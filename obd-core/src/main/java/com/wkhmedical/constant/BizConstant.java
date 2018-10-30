@@ -1,6 +1,8 @@
 package com.wkhmedical.constant;
 
 public class BizConstant {
+	// 异常
+	public final static String ERR_UNKNOWN = "发生未知异常";
 
 	// 每页查询出的数据库记录条数
 	public final static int FIND_PAGE_NUM = 20;
