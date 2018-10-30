@@ -116,9 +116,10 @@ public class DeviceController {
 	}
 
 	@ApiOperation(value = "解析和检验设备Excel")
-	@GetMapping("/device/excel.analysis")
+	@PostMapping("/device/excel.analysis")
 	public EquipExcelDTO excelAnalysis(@ApiParam(value = "excel文件路径", required = true) @RequestParam String excelPath,
 			@ApiParam(value = "区县ID", required = true) @RequestParam Integer areaId) {
+		System.out.println(areaId + excelPath);
 		return null;
 	}
 
