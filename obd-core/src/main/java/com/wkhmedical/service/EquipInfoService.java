@@ -28,5 +28,5 @@ public interface EquipInfoService {
 
 	Long getCountSum();
 
-	List<EquipExcelDTO> getExcelList(String excelPath, Integer areaId);
+	EquipExcelDTO getExcelList(String excelPath, Integer areaId);
 }

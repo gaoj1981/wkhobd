@@ -4,6 +4,9 @@
 package com.wkhmedical.dto;
 
 import java.io.Serializable;
+import java.util.List;
+
+import com.wkhmedical.po.MgEquipExcel;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -19,18 +22,8 @@ public class EquipExcelDTO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String id;
-	private String eid;
-	private Integer type;
-	private String equipId;
-	private String name;
-	private String bhNum;
-	private String xhNum;
-	private String factoryId;
-	private String factory;
-	private String birthDate;
-	private String version;
-	private String countNum;
-	private String note;
-
+	private Integer total;
+	private Integer sucNum;
+	private Integer errNum;
+	private List<MgEquipExcel> lstData;
 }

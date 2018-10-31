@@ -28,6 +28,26 @@ public class EquipConstant {
 		equipMainArr[15] = "加密狗";
 	}
 
+	public static String[] equipMainIconArr = new String[16];
+	static {
+		equipMainIconArr[0] = "car";
+		equipMainIconArr[1] = "laptop";
+		equipMainIconArr[2] = "desktop";
+		equipMainIconArr[3] = "dashboard";
+		equipMainIconArr[4] = "cluster";
+		equipMainIconArr[5] = "bg-colors";
+		equipMainIconArr[6] = "deployment-unit";
+		equipMainIconArr[7] = "highlight";
+		equipMainIconArr[8] = "gateway";
+		equipMainIconArr[9] = "heart";
+		equipMainIconArr[10] = "bold";
+		equipMainIconArr[11] = "fork";
+		equipMainIconArr[12] = "branches";
+		equipMainIconArr[13] = "experiment";
+		equipMainIconArr[14] = "reconciliation";
+		equipMainIconArr[15] = "lock";
+	}
+
 	public static String[] equipAssistArr = new String[18];
 	static {
 		equipAssistArr[0] = "急救包";
@@ -48,5 +68,27 @@ public class EquipConstant {
 		equipAssistArr[15] = "尿液分析-串口线";
 		equipAssistArr[16] = "插线板";
 		equipAssistArr[17] = "B超-鼠标";
+	}
+
+	public static String[] equipAssistIconArr = new String[18];
+	static {
+		equipAssistIconArr[0] = "alert";
+		equipAssistIconArr[1] = "build";
+		equipAssistIconArr[2] = "idcard";
+		equipAssistIconArr[3] = "barcode";
+		equipAssistIconArr[4] = "printer";
+		equipAssistIconArr[5] = "usb";
+		equipAssistIconArr[6] = "share-alt";
+		equipAssistIconArr[7] = "project";
+		equipAssistIconArr[8] = "pushpin";
+		equipAssistIconArr[9] = "to-top";
+		equipAssistIconArr[10] = "gold";
+		equipAssistIconArr[11] = "wifi";
+		equipAssistIconArr[12] = "hourglass";
+		equipAssistIconArr[13] = "link";
+		equipAssistIconArr[14] = "disconnect";
+		equipAssistIconArr[15] = "stock";
+		equipAssistIconArr[16] = "api";
+		equipAssistIconArr[17] = "robot";
 	}
 }

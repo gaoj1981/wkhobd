@@ -17,6 +17,9 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.taoxeo.lang.exception.BizRuntimeException;
+import com.wkhmedical.exception.FilelException;
+
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -41,11 +44,11 @@ public class ExcelUtil {
 		// 检查文件
 		if (file != null) {
 			checkFile(file);
-			workbook = getWorkBook(file);
+			workbook = getWorkbook(file);
 		}
 		else if (multiFile != null) {
 			checkFile(multiFile);
-			workbook = getWorkBook(multiFile);
+			workbook = getWorkbook(multiFile);
 		}
 		// 创建返回对象，把每行中的值作为一个数组，所有行作为一个集合返回
 		List<String[]> list = new ArrayList<String[]>();
@@ -107,7 +110,7 @@ public class ExcelUtil {
 		}
 	}
 
-	public static Workbook getWorkBook(MultipartFile file) {
+	public static Workbook getWorkbook(MultipartFile file) {
 		// 获得文件名
 		String fileName = file.getOriginalFilename();
 		// 创建Workbook工作薄对象，表示整个excel
@@ -138,17 +141,16 @@ public class ExcelUtil {
 	 * 
 	 * @throws Exception
 	 */
-	public static void checkFile(File file) throws IOException {
+	public static void checkFile(File file) {
 		// 判断文件是否存在
 		if (null == file || !file.exists()) {
 			log.error("文件不存在！");
-			throw new FileNotFoundException("文件不存在！");
+			throw new FilelException("file_excel_not_exists");
 		}
 		// 获得文件名
 		String fileName = file.getName();
 		if (!(file.isFile() && (fileName.endsWith(xls) || fileName.endsWith(xlsx)))) {
-			log.error(fileName + "不是excel文件");
-			throw new IOException(fileName + "不是excel文件");
+			throw new FilelException("file_not_excel", fileName);
 		}
 	}
 
@@ -160,7 +162,7 @@ public class ExcelUtil {
 	 * @return
 	 * @throws IOException
 	 */
-	public static Workbook getWorkBook(File file) throws IOException {
+	public static Workbook getWorkbook(File file) throws IOException {
 		Workbook wb = null;
 		FileInputStream in = new FileInputStream(file);
 		if (file.getName().endsWith(xls)) { // Excel 2003
@@ -208,4 +210,43 @@ public class ExcelUtil {
 		}
 		return cellValue;
 	}
+
+	public static boolean checkFileValid(File file, int sheetNum, int[] rowNumArr, int[] colNumArr) {
+		checkFile(file);
+		if (sheetNum < 0 || rowNumArr.length != sheetNum || colNumArr.length != sheetNum) {
+			throw new FilelException("file_analysis_param_error");
+		}
+		Workbook wb = null;
+		try {
+			wb = getWorkbook(file);
+		}
+		catch (Exception e) {
+			throw new BizRuntimeException("file_analysis_error");
+		}
+		int stNum = wb.getNumberOfSheets();
+		if (stNum != sheetNum) {
+			throw new FilelException("file_excel_sheet_num_error");
+		}
+		for (int stNumTmp = 0; stNumTmp < stNum; stNumTmp++) {
+			// 获得当前sheet工作表
+			Sheet sheet = wb.getSheetAt(stNumTmp);
+			if (sheet == null) {
+				throw new FilelException("file_analysis_error");
+			}
+			else {
+				// 总行数校验
+				int rowNum = sheet.getLastRowNum();
+				if (rowNum > rowNumArr[stNumTmp]) {
+					throw new FilelException("file_excel_sheet_rownum_error", stNumTmp + 1, rowNumArr[stNumTmp]);
+				}
+				// 总列数校验
+				int colNum = sheet.getRow(0).getPhysicalNumberOfCells();
+				if (colNum != colNumArr[stNumTmp]) {
+					throw new FilelException("file_excel_sheet_colnum_error", stNumTmp + 1);
+				}
+			}
+		}
+		return true;
+	}
+
 }

@@ -20,8 +20,15 @@
 	<entry key="41030">page不正确</entry>
 	<entry key="45009">接口调用超过限额</entry>
 
-	<!-- 业务错误信息模板 -->
+	<entry key="file_analysis_param_error">文件解析参数有误</entry>
 	<entry key="file_analysis_error">文件解析异常</entry>
+	<entry key="file_not_excel">{0}不是excel文件</entry>
+	<entry key="file_excel_not_exists">文件不存在</entry>
+	<entry key="file_excel_sheet_num_error">Excel文件Sheet数有误</entry>
+	<entry key="file_excel_sheet_colnum_error">Excel文件Sheet{0}中列数有误</entry>
+	<entry key="file_excel_sheet_rownum_error">Excel文件Sheet{0}中行数超过最大{1}行</entry>
+	
+	<!-- 业务错误信息模板 -->
 	<entry key="public_captcha_error">图形验证码错误</entry>
 	<entry key="public_mobivali_error">手机验证码错误</entry>
 	<entry key="public_apiparam_blank">缺少必要接口参数。请检查：{0}</entry>

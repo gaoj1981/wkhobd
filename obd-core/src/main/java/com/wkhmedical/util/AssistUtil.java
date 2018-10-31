@@ -39,6 +39,13 @@ public class AssistUtil {
 		return false;
 	}
 
+	public static int getArrContainsIndex(String[] arr, String value) {
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i].equals(value)) return i;
+		}
+		return -1;
+	}
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 

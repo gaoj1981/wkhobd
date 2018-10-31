@@ -3,7 +3,6 @@
  */
 package com.wkhmedical.web.api;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -122,7 +121,7 @@ public class DeviceController {
 
 	@ApiOperation(value = "解析和检验设备Excel")
 	@PostMapping("/device/excel.analysis")
-	public List<EquipExcelDTO> excelAnalysis(@ApiParam(value = "excel文件路径", required = true) @RequestParam String excelPath,
+	public EquipExcelDTO excelAnalysis(@ApiParam(value = "excel文件路径", required = true) @RequestParam String excelPath,
 			@ApiParam(value = "区县ID", required = true) @RequestParam Integer areaId) {
 		System.out.println(areaId + excelPath);
 		return equipInfoService.getExcelList(excelPath, areaId);
