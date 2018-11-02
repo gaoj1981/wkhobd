@@ -53,7 +53,8 @@ public class FileUtil {
 		try {
 			String uploadPath = BizUtil.getUploadPath();
 			String dtNow = DateUtil.getNowDateByFormat("yyyy/MM/dd/HH");
-			String filePureName = DateUtil.getStrTimes() + BizUtil.genDbId();
+			SnowflakeIdWorker idWorker = new SnowflakeIdWorker(BizUtil.getDbWorkerId(), BizUtil.getDbDatacenterId());
+			String filePureName = DateUtil.getStrTimes() + BizUtil.genDbId(idWorker);
 			String fileName = filePureName + "." + getFileEnd(file);
 			String fileDir = "/" + dtNow + "/";
 			File localFile = new File(uploadPath + fileDir + fileName);

@@ -23,6 +23,7 @@ import com.wkhmedical.repository.jpa.WareRecordRepository;
 import com.wkhmedical.service.WareRecordService;
 import com.wkhmedical.util.AssistUtil;
 import com.wkhmedical.util.BizUtil;
+import com.wkhmedical.util.SnowflakeIdWorker;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -67,7 +68,8 @@ public class WareRecordServiceImpl implements WareRecordService {
 		}
 		// 组装Bean
 		WareRecord wareRecord = AssistUtil.coverBean(infoBody, WareRecord.class);
-		wareRecord.setId(BizUtil.genDbIdStr());
+		SnowflakeIdWorker idWorker = new SnowflakeIdWorker(BizUtil.getDbWorkerId(), BizUtil.getDbDatacenterId());
+		wareRecord.setId(BizUtil.genDbIdStr(idWorker));
 		wareRecord.setCid(carInfo.getId());
 		// 入库
 		wareRecordRepository.save(wareRecord);

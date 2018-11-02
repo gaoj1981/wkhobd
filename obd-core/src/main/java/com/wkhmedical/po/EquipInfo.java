@@ -25,7 +25,7 @@ public class EquipInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private Long id;
+	private String id;
 	
 	private String eid;
 	private Integer type;

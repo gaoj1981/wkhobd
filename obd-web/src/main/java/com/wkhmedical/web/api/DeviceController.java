@@ -127,4 +127,12 @@ public class DeviceController {
 		return equipInfoService.getExcelList(excelPath, areaId);
 	}
 
+	@ApiOperation(value = "导入设备Excel数据")
+	@PostMapping("/device/excel.import")
+	public boolean excelImport(@ApiParam(value = "excel文件路径", required = true) @RequestParam String excelPath,
+			@ApiParam(value = "区县ID", required = true) @RequestParam Integer areaId,
+			@ApiParam(value = "设备唯一ID", required = true) @RequestParam String eid) {
+		return equipInfoService.importEquipExcel(excelPath, areaId, eid);
+	}
+
 }

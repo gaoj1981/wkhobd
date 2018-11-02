@@ -20,8 +20,10 @@ import com.wkhmedical.constant.EquipConstant;
 import com.wkhmedical.dto.EquipExcelDTO;
 import com.wkhmedical.dto.EquipInfoBody;
 import com.wkhmedical.dto.EquipInfoDTO;
+import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.po.EquipInfo;
 import com.wkhmedical.po.MgEquipExcel;
+import com.wkhmedical.repository.jpa.CarInfoRepository;
 import com.wkhmedical.repository.jpa.EquipInfoRepository;
 import com.wkhmedical.repository.mongo.EquipExcelRepository;
 import com.wkhmedical.service.EquipInfoService;
@@ -29,6 +31,7 @@ import com.wkhmedical.util.AssistUtil;
 import com.wkhmedical.util.BizUtil;
 import com.wkhmedical.util.DateUtil;
 import com.wkhmedical.util.ExcelUtil;
+import com.wkhmedical.util.SnowflakeIdWorker;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -41,6 +44,9 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 
 	@Resource
 	EquipExcelRepository equipExcelRepository;
+
+	@Resource
+	CarInfoRepository carInfoRepository;
 
 	@Override
 	public EquipInfo getInfo(EquipInfoBody paramBody) {
@@ -68,7 +74,8 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 	public void addInfo(EquipInfoBody infoBody) {
 		// 组装Bean
 		EquipInfo equipInfo = AssistUtil.coverBean(infoBody, EquipInfo.class);
-		equipInfo.setId(BizUtil.genDbId());
+		SnowflakeIdWorker idWorker = new SnowflakeIdWorker(BizUtil.getDbWorkerId(), BizUtil.getDbDatacenterId());
+		equipInfo.setId(BizUtil.genDbIdStr(idWorker));
 		// 入库
 		equipInfoRepository.save(equipInfo);
 	}
@@ -124,6 +131,10 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 		// 校验Excel
 		ExcelUtil.checkFileValid(file, 2, new int[] { 18, 20 }, new int[] { 7, 6 });
 		// 读取Excel数据
+		String errType = null;
+		boolean isLockDog = false;
+		boolean isHaveEid = false;
+		String lockdogId = "";
 		String equipName = "";
 		try {
 			List<String[]> lstStrArrs = ExcelUtil.readExcel(file, null);
@@ -186,6 +197,10 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 										icon = EquipConstant.equipMainIconArr[containsIndex];
 									}
 								}
+								if (EquipConstant.equipMainArr[15].equals(str)) {
+									// 加密狗判断
+									isLockDog = true;
+								}
 								equipExcel.setIcon(icon);
 								equipExcel.setName(str);
 								break;
@@ -207,6 +222,20 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 								if (str.length() > 100) {
 									delFlag = 1;
 									description += "编号不能超过100个字符（" + rowNum + "行，" + colNum + "列）；";
+								}
+								if (isLockDog) {
+									isLockDog = false;
+									// 加密狗判断
+									if (StringUtils.isBlank(str)) {
+										errType = "file_excel_biz_lockdog_need";
+										throw new BizRuntimeException(errType);
+									}
+									else if (str.length() > 18) {
+										errType = "file_excel_biz_lockdog_eid_max";
+										throw new BizRuntimeException(errType);
+									}
+									lockdogId = str;
+									isHaveEid = true;
 								}
 								equipExcel.setBhNum(str);
 								break;
@@ -322,15 +351,83 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 				}
 				rowNum++;
 			}
-			equipExcelRepository.saveAll(rtnList);
-			rtnDTO.setTotal(rtnList.size());
-			rtnDTO.setErrNum(errNum);
-			rtnDTO.setSucNum(rtnList.size() - errNum);
-			rtnDTO.setLstData(rtnList);
-			return rtnDTO;
+			// 校验加密狗合法性
+			if (isHaveEid) {
+				// excel数据临时保存
+				equipExcelRepository.saveAll(rtnList);
+				rtnDTO.setTotal(rtnList.size());
+				rtnDTO.setErrNum(errNum);
+				rtnDTO.setSucNum(rtnList.size() - errNum);
+				rtnDTO.setLstData(rtnList);
+				rtnDTO.setEid(lockdogId);
+				return rtnDTO;
+			}
+			else {
+				errType = "file_excel_biz_lockdog_need";
+				throw new BizRuntimeException(errType);
+			}
 		}
 		catch (Exception e) {
-			throw new BizRuntimeException("file_analysis_error");
+			e.printStackTrace();
+			if (errType != null) {
+				throw new BizRuntimeException(errType);
+			}
+			else {
+				throw new BizRuntimeException("file_analysis_error");
+			}
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.EquipInfoService#importEquipExcel(java.lang.String,
+	 * java.lang.Integer)
+	 */
+	@Override
+	@Transactional
+	public boolean importEquipExcel(String excelPath, Integer areaId, String eid) {
+		List<EquipInfo> lstBatch = new ArrayList<EquipInfo>();
+		//
+		CarInfo carInfo = carInfoRepository.findByEid(eid);
+		//
+		SnowflakeIdWorker idWorker = new SnowflakeIdWorker(BizUtil.getDbWorkerId(), BizUtil.getDbDatacenterId());
+		//
+		List<MgEquipExcel> lstExcel = equipExcelRepository.findByExcelPathAndDelFlag(excelPath, 0);
+		String name = "";// 查找车辆用
+		for (MgEquipExcel tmpExcel : lstExcel) {
+			name = tmpExcel.getName();
+			if (carInfo == null) {
+				// 针对车辆更新车辆主表
+				if ("车辆".equals(name)) {
+					carInfo = new CarInfo();
+					carInfo.setId(BizUtil.genDbIdStr(idWorker));
+					carInfo.setEid(eid);
+					carInfo.setCarName(tmpExcel.getEquipName());
+					carInfo.setFrameNum(tmpExcel.getBhNum());
+					carInfo.setGroupId(areaId + "");
+					carInfo.setProvId(BizUtil.getProvId(areaId));
+					carInfo.setCityId(BizUtil.getCityId(areaId));
+					carInfo.setAreaId(areaId);
+					carInfoRepository.save(carInfo);
+				}
+			}
+			EquipInfo equipInfo = new EquipInfo();
+			equipInfo.setId(BizUtil.genDbIdStr(idWorker));
+			equipInfo.setEid(eid);
+			equipInfo.setType(tmpExcel.getType());
+			equipInfo.setName(name);
+			equipInfo.setBhNum(tmpExcel.getBhNum());
+			equipInfo.setXhNum(tmpExcel.getXhNum());
+			equipInfo.setFactory(tmpExcel.getFactory());
+			equipInfo.setBirthDate(DateUtil.parseToDate(tmpExcel.getBirthDate(), "yyyyMMdd"));
+			equipInfo.setVersion(tmpExcel.getVersion());
+			equipInfo.setCountNum(StringUtils.isBlank(tmpExcel.getCountNum()) ? 0L : Long.valueOf(tmpExcel.getCountNum()));
+			equipInfo.setNote(tmpExcel.getNote());
+			lstBatch.add(equipInfo);
+		}
+		if (lstBatch.size() > 0) {
+			equipInfoRepository.saveAll(lstBatch);
+		}
+		return true;
 	}
 }

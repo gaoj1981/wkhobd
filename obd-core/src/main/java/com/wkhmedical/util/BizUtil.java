@@ -37,13 +37,19 @@ public class BizUtil {
 		return configProps.getUploadPath();
 	}
 
-	public static Long genDbId() {
-		SnowflakeIdWorker idWorker = new SnowflakeIdWorker(configProps.getDbWorkerId(), configProps.getDbDatacenterId());
+	public static Long getDbWorkerId() {
+		return configProps.getDbWorkerId();
+	}
+
+	public static Long getDbDatacenterId() {
+		return configProps.getDbDatacenterId();
+	}
+
+	public static Long genDbId(SnowflakeIdWorker idWorker) {
 		return idWorker.nextId();
 	}
 
-	public static String genDbIdStr() {
-		SnowflakeIdWorker idWorker = new SnowflakeIdWorker(configProps.getDbWorkerId(), configProps.getDbDatacenterId());
+	public static String genDbIdStr(SnowflakeIdWorker idWorker) {
 		return idWorker.nextId() + "";
 	}
 

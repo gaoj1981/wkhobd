@@ -26,6 +26,7 @@ import com.wkhmedical.repository.jpa.CarInsurRepository;
 import com.wkhmedical.service.CarInsurService;
 import com.wkhmedical.util.AssistUtil;
 import com.wkhmedical.util.BizUtil;
+import com.wkhmedical.util.SnowflakeIdWorker;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -77,7 +78,8 @@ public class CarInsurServiceImpl implements CarInsurService {
 		}
 		// 组装Bean
 		CarInsur carInsur = AssistUtil.coverBean(infoBody, CarInsur.class);
-		carInsur.setId(BizUtil.genDbIdStr());
+		SnowflakeIdWorker idWorker = new SnowflakeIdWorker(BizUtil.getDbWorkerId(), BizUtil.getDbDatacenterId());
+		carInsur.setId(BizUtil.genDbIdStr(idWorker));
 		carInsur.setCid(carInfo.getId());
 		// 入库
 		carInsurRepository.save(carInsur);

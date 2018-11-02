@@ -26,6 +26,7 @@ import com.wkhmedical.repository.jpa.CarInfoRepository;
 import com.wkhmedical.service.BindUserService;
 import com.wkhmedical.util.AssistUtil;
 import com.wkhmedical.util.BizUtil;
+import com.wkhmedical.util.SnowflakeIdWorker;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -63,7 +64,8 @@ public class BindUserServiceImpl implements BindUserService {
 	@Override
 	@Transactional
 	public void addInfo(BindUserAddBody infoBody) {
-		String id = BizUtil.genDbIdStr();
+		SnowflakeIdWorker idWorker = new SnowflakeIdWorker(BizUtil.getDbWorkerId(), BizUtil.getDbDatacenterId());
+		String id = BizUtil.genDbIdStr(idWorker);
 		// 校验默认
 		Integer isDefault = infoBody.getIsDefault();
 		int utype = infoBody.getUtype();

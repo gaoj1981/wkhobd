@@ -28,6 +28,9 @@
 	<entry key="file_excel_sheet_colnum_error">Excel文件Sheet{0}中列数有误</entry>
 	<entry key="file_excel_sheet_rownum_error">Excel文件Sheet{0}中行数超过最大{1}行</entry>
 	
+	<entry key="file_excel_biz_lockdog_need">Excel文件中必须存在加密狗数据</entry>
+	<entry key="file_excel_biz_lockdog_eid_max">加密狗编号不能超过18位</entry>
+	
 	<!-- 业务错误信息模板 -->
 	<entry key="public_captcha_error">图形验证码错误</entry>
 	<entry key="public_mobivali_error">手机验证码错误</entry>

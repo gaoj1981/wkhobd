@@ -29,4 +29,7 @@ public interface EquipInfoService {
 	Long getCountSum();
 
 	EquipExcelDTO getExcelList(String excelPath, Integer areaId);
+
+	boolean importEquipExcel(String excelPath, Integer areaId, String eid);
+
 }

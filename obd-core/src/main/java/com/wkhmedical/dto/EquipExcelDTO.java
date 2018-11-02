@@ -22,6 +22,7 @@ public class EquipExcelDTO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private String eid;
 	private Integer total;
 	private Integer sucNum;
 	private Integer errNum;

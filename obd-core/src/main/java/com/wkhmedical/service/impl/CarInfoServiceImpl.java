@@ -26,6 +26,7 @@ import com.wkhmedical.repository.mongo.ObdCarRepository;
 import com.wkhmedical.service.CarInfoService;
 import com.wkhmedical.util.AssistUtil;
 import com.wkhmedical.util.BizUtil;
+import com.wkhmedical.util.SnowflakeIdWorker;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -100,7 +101,8 @@ public class CarInfoServiceImpl implements CarInfoService {
 		BindUser bu1 = bindUserRepository.findByUtypeAndAreaIdAndIsDefault(1, areaId, 1);
 		BindUser bu2 = bindUserRepository.findByUtypeAndAreaIdAndIsDefault(2, areaId, 1);
 		// 组装CarInfo
-		String id = BizUtil.genDbIdStr();
+		SnowflakeIdWorker idWorker = new SnowflakeIdWorker(BizUtil.getDbWorkerId(), BizUtil.getDbDatacenterId());
+		String id = BizUtil.genDbIdStr(idWorker);
 		carInfo.setId(id);
 		carInfo.setGroupId(areaId + "");// 目前需求暂将区间ID作为分组标准
 		carInfo.setProvId(BizUtil.getProvId(areaId));

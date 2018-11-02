@@ -26,6 +26,7 @@ import com.wkhmedical.service.CarMotService;
 import com.wkhmedical.util.AssistUtil;
 import com.wkhmedical.util.BizUtil;
 import com.wkhmedical.util.DateUtil;
+import com.wkhmedical.util.SnowflakeIdWorker;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -127,7 +128,8 @@ public class CarMotServiceImpl implements CarMotService {
 		}
 		// 组装Bean
 		CarMot carMot = AssistUtil.coverBean(infoBody, CarMot.class);
-		String idKey = BizUtil.genDbIdStr();
+		SnowflakeIdWorker idWorker = new SnowflakeIdWorker(BizUtil.getDbWorkerId(), BizUtil.getDbDatacenterId());
+		String idKey = BizUtil.genDbIdStr(idWorker);
 		carMot.setId(idKey);
 		carMot.setCid(carInfo.getId());
 		// 入库

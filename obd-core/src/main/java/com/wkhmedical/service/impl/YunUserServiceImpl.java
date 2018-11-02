@@ -18,6 +18,7 @@ import com.wkhmedical.po.YunUser;
 import com.wkhmedical.repository.jpa.YunUserRepository;
 import com.wkhmedical.service.YunUserService;
 import com.wkhmedical.util.BizUtil;
+import com.wkhmedical.util.SnowflakeIdWorker;
 
 @Service
 public class YunUserServiceImpl implements YunUserService {
@@ -71,7 +72,8 @@ public class YunUserServiceImpl implements YunUserService {
 		else {
 			// 入库
 			YunUser userInfo = new YunUser();
-			userInfo.setId(BizUtil.genDbIdStr());
+			SnowflakeIdWorker idWorker = new SnowflakeIdWorker(BizUtil.getDbWorkerId(), BizUtil.getDbDatacenterId());
+			userInfo.setId(BizUtil.genDbIdStr(idWorker));
 			userInfo.setUserName(registerInfo.getUserName());
 			userInfo.setUserPwd(password.getPwd());
 			userInfo.setUserPwdSalt(password.getPwdSalt());

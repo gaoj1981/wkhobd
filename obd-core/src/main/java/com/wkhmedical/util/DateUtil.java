@@ -125,7 +125,7 @@ public class DateUtil {
 			date = sdf.parse(s);
 		}
 		catch (ParseException e) {
-			e.printStackTrace();
+			date = null;
 		}
 		return date;
 	}
