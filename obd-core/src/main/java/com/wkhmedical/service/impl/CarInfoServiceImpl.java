@@ -63,7 +63,7 @@ public class CarInfoServiceImpl implements CarInfoService {
 		String id = paramBody.getId();
 		Optional<CarInfo> optObj = carInfoRepository.findById(id);
 		if (!optObj.isPresent()) {
-			throw new BizRuntimeException("info_not_exists", id + "");
+			throw new BizRuntimeException("info_not_exists", id);
 		}
 		return optObj.get();
 	}

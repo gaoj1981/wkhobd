@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.taoxeo.boot.security.CurrentUser;
 import com.taoxeo.repository.Paging;
+import com.wkhmedical.dto.EquipDetailDTO;
 import com.wkhmedical.dto.EquipInfoBody;
 import com.wkhmedical.dto.EquipInfoDTO;
 import com.wkhmedical.dto.ValiAdd;
@@ -97,6 +98,12 @@ public class EquipInfoController {
 	@GetMapping("/count.sum")
 	public Long getCountSum() {
 		return equipInfoService.getCountSum();
+	}
+
+	@ApiOperation(value = "获取设备列表详情信息")
+	@GetMapping("/get.detail")
+	public EquipDetailDTO getEquipDetail(@ApiParam(name = "eid", value = "车辆ID", required = true) @RequestParam String eid) {
+		return equipInfoService.getDetail(eid);
 	}
 
 }

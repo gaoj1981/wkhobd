@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import com.taoxeo.repository.Paging;
+import com.wkhmedical.dto.EquipDetailDTO;
 import com.wkhmedical.dto.EquipExcelDTO;
 import com.wkhmedical.dto.EquipInfoBody;
 import com.wkhmedical.dto.EquipInfoDTO;
@@ -33,5 +34,7 @@ public interface EquipInfoService {
 	EquipExcelDTO getExcelList(String excelPath, Integer areaId);
 
 	boolean importEquipExcel(String excelPath, Integer areaId, String eid);
+
+	EquipDetailDTO getDetail(String eid);
 
 }

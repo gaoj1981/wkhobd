@@ -17,6 +17,7 @@ import com.taoxeo.lang.BeanUtils;
 import com.taoxeo.lang.exception.BizRuntimeException;
 import com.taoxeo.repository.Paging;
 import com.wkhmedical.constant.EquipConstant;
+import com.wkhmedical.dto.EquipDetailDTO;
 import com.wkhmedical.dto.EquipExcelDTO;
 import com.wkhmedical.dto.EquipInfoBody;
 import com.wkhmedical.dto.EquipInfoDTO;
@@ -438,6 +439,24 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 			equipInfoRepository.insertBatch(lstBatch);
 		}
 		return true;
+	}
+
+	@Override
+	public EquipDetailDTO getDetail(String eid) {
+		EquipDetailDTO equipDetail = new EquipDetailDTO();
+		// 获取车辆信息
+		CarInfo carInfo = carInfoRepository.findByEid(eid);
+		if (carInfo == null) {
+			throw new BizRuntimeException("carinfo_not_exists", eid);
+		}
+		equipDetail.setName(carInfo.getCarName());
+		// 获取固定设备列表
+		List<EquipInfo> lstFixed = equipInfoRepository.findByEidAndTypeOrderByIdAsc(eid, 0);
+		equipDetail.setLstFixed(lstFixed);
+		// 获取辅助设备列表
+		List<EquipInfo> lstAssist = equipInfoRepository.findByEidAndTypeOrderByIdAsc(eid, 1);
+		equipDetail.setLstAssist(lstAssist);
+		return equipDetail;
 	}
 
 }
