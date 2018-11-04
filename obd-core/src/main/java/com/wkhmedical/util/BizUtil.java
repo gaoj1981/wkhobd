@@ -155,6 +155,25 @@ public class BizUtil {
 		}
 	}
 
+	public static void setSqlJoin(Object obj, String fname, StringBuffer sqlBuf, Map<String, Object> paramMap, String sqlStr) {
+		Object value = getFieldValueByName(fname, obj);
+		if (value != null) {
+			sqlBuf.append(sqlStr);
+			paramMap.put(fname, value);
+		}
+	}
+
+	public static void setSqlJoin4EqualStr(Object obj, String fname, StringBuffer sqlBuf) {
+		Object value = getFieldValueByName(fname, obj);
+		if (value != null) {
+			sqlBuf.append(" AND ");
+			sqlBuf.append(fname);
+			sqlBuf.append(" = '");
+			sqlBuf.append(value);
+			sqlBuf.append("'");
+		}
+	}
+
 	public static void setSqlWhere(Object obj, String fnames, StringBuffer sqlWhere, List<Object> objList, List<String> sqlStrList) {
 		String[] fnArr = fnames.split(",");
 		String fname, sqlStr;

@@ -24,6 +24,8 @@ public interface EquipInfoService {
 
 	void deleteInfo(String id);
 
+	void deleteBatch(String ids);
+
 	void delInfo(String id);
 
 	Long getCountSum();

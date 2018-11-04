@@ -11,12 +11,18 @@ import com.wkhmedical.po.EquipInfo;
 
 public interface IEquipInfoRepository {
 	EquipInfo findByKey(String id);
-	
+
 	List<EquipInfoDTO> findEquipInfoList(EquipInfoBody paramBody, Pageable pageable);
-	
+
 	Page<EquipInfoDTO> findPgEquipInfoDTO(EquipInfoBody paramBody, Pageable pageable);
-	
+
 	Page<EquipInfo> findPgEquipInfo(EquipInfoBody paramBody, Pageable pageable);
 
 	Integer findCount(String id);
+
+	void insertBatch(List<EquipInfo> lstBatch);
+
+	void deleteBatch(String[] idsArr);
+
+	void deleteByParam(EquipInfoBody paramBody);
 }

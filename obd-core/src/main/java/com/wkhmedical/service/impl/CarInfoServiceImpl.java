@@ -18,10 +18,12 @@ import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoEditBody;
 import com.wkhmedical.dto.CarInfoPageParam;
 import com.wkhmedical.dto.CarInfoParam;
+import com.wkhmedical.dto.EquipInfoBody;
 import com.wkhmedical.po.BindUser;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.repository.jpa.BindUserRepository;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
+import com.wkhmedical.repository.jpa.EquipInfoRepository;
 import com.wkhmedical.repository.mongo.ObdCarRepository;
 import com.wkhmedical.service.CarInfoService;
 import com.wkhmedical.util.AssistUtil;
@@ -40,6 +42,8 @@ public class CarInfoServiceImpl implements CarInfoService {
 	BindUserRepository bindUserRepository;
 	@Resource
 	ObdCarRepository obdCarRepository;
+	@Resource
+	EquipInfoRepository equipInfoRepository;
 
 	@Override
 	public Page<CarInfo> getCarInfoPage(Paging<CarInfoPageParam> paramBody) {
@@ -143,26 +147,36 @@ public class CarInfoServiceImpl implements CarInfoService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteCarInfo(String eid) {
 		CarInfo carInfo = carInfoRepository.findByEid(eid);
 		if (carInfo != null) {
 			carInfo.setEid(BizUtil.getDelBackupVal(eid));
 			carInfo.setDelFlag(1);
 			carInfoRepository.update(carInfo);
+			// 同步删除其下所有设备
+			EquipInfoBody paramBody = new EquipInfoBody();
+			paramBody.setEid(eid);
+			equipInfoRepository.deleteByParam(paramBody);
 		}
 	}
 
 	@Override
+	@Transactional
 	public void delInfo(String id) {
 		Optional<CarInfo> optObj = carInfoRepository.findById(id);
 		if (!optObj.isPresent()) {
 			throw new BizRuntimeException("info_not_exists", id);
 		}
-		log.info("逻辑删除");
 		CarInfo carInfo = optObj.get();
-		carInfo.setEid(BizUtil.getDelBackupVal(carInfo.getEid()));
+		String eid = carInfo.getEid();
+		carInfo.setEid(BizUtil.getDelBackupVal(eid));
 		carInfo.setDelFlag(1);
 		carInfoRepository.update(carInfo);
+		// 同步删除其下所有设备
+		EquipInfoBody paramBody = new EquipInfoBody();
+		paramBody.setEid(eid);
+		equipInfoRepository.deleteByParam(paramBody);
 	}
 
 	@Override

@@ -61,13 +61,13 @@ public class EquipInfoController {
 
 	@ApiOperation(value = "添加设备详情")
 	@PostMapping("/add")
-	public void equipInfoAdd(@RequestBody @Validated({ValiAdd.class}) EquipInfoBody paramBody, @CurrentUser TUserDetails user) {
+	public void equipInfoAdd(@RequestBody @Validated({ ValiAdd.class }) EquipInfoBody paramBody, @CurrentUser TUserDetails user) {
 		equipInfoService.addInfo(paramBody);
 	}
 
 	@ApiOperation(value = "修改设备详情")
 	@PostMapping("/edit")
-	public void equipInfoEdit(@RequestBody @Validated({ValiEdit.class}) EquipInfoBody paramBody) {
+	public void equipInfoEdit(@RequestBody @Validated({ ValiEdit.class }) EquipInfoBody paramBody) {
 		equipInfoService.updateInfo(paramBody);
 	}
 
@@ -78,6 +78,13 @@ public class EquipInfoController {
 		return true;
 	}
 
+	@ApiOperation(value = "批量删除选中设备")
+	@DeleteMapping("/delete.batch")
+	public boolean equipInfoDeleteBatch(@ApiParam(value = "id主KEY群（逗号分隔）", required = true) @RequestParam String ids) {
+		equipInfoService.deleteBatch(ids);
+		return true;
+	}
+
 	@ApiOperation(value = "逻辑删设备详情")
 	@DeleteMapping("/del")
 	public boolean equipInfoDel(@ApiParam(value = "id主KEY", required = true) @RequestParam String id) {
@@ -85,11 +92,11 @@ public class EquipInfoController {
 		log.info("非物理删除。id：" + id);
 		return true;
 	}
-	
+
 	@ApiOperation(value = "获取设备详情总数")
 	@GetMapping("/count.sum")
 	public Long getCountSum() {
 		return equipInfoService.getCountSum();
 	}
-	
+
 }

@@ -106,6 +106,15 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 	}
 
 	@Override
+	public void deleteBatch(String ids) {
+		if (StringUtils.isBlank(ids)) {
+			return;
+		}
+		String[] idsArr = ids.split(",");
+		equipInfoRepository.deleteBatch(idsArr);
+	}
+
+	@Override
 	public void delInfo(String id) {
 		Optional<EquipInfo> optObj = equipInfoRepository.findById(id);
 		if (optObj.isPresent()) {
@@ -426,8 +435,9 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 			lstBatch.add(equipInfo);
 		}
 		if (lstBatch.size() > 0) {
-			equipInfoRepository.saveAll(lstBatch);
+			equipInfoRepository.insertBatch(lstBatch);
 		}
 		return true;
 	}
+
 }
