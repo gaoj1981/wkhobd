@@ -1,5 +1,7 @@
 package com.wkhmedical.dto;
 
+import java.math.BigDecimal;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,5 +35,7 @@ public class CarSendDTO {
 	private Double oneTimeDriveDistance;
 	private Double oneTimeDirveGasTotal;
 	private Double averageSpeed;
+	private BigDecimal lng;
+	private BigDecimal lat;
 
 }

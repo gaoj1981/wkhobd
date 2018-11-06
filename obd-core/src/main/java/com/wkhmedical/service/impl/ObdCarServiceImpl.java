@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.taoxeo.lang.BeanUtils;
@@ -46,13 +47,22 @@ public class ObdCarServiceImpl implements ObdCarService {
 		if (carInfo == null) {
 			throw new BizRuntimeException("carinfo_not_exists", eid);
 		}
+		String deviceNumber = carInfo.getDeviceNumber();
+		if (StringUtils.isBlank(deviceNumber)) {
+			return null;
+		}
 		//
 		List<MgObdCar> ObdCarList = obdCarRepository.findTopByDeviceNumberOrderByInsTimeDesc(carInfo.getDeviceNumber());
 		if (ObdCarList == null) {
 			return null;
-		} else {
+		}
+		else {
 			MgObdCar obdCar = ObdCarList.get(0);
-			return AssistUtil.coverBean(obdCar, ObdCarDTO.class);
+			ObdCarDTO obdCarDTO = AssistUtil.coverBean(obdCar, ObdCarDTO.class);
+			obdCarDTO.setAreaId(carInfo.getAreaId());
+			obdCarDTO.setEid(carInfo.getEid());
+			obdCarDTO.setCarName(carInfo.getCarName());
+			return obdCarDTO;
 		}
 	}
 
