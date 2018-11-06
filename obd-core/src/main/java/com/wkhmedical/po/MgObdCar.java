@@ -1,5 +1,6 @@
 package com.wkhmedical.po;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -37,11 +38,11 @@ public class MgObdCar {
 	private String deviceNumber;
 
 	/**
-	 * 电瓶电压  V
+	 * 电瓶电压 V
 	 */
 	private Double batteryvoltage;
 	/**
-	 * 总里程  KM
+	 * 总里程 KM
 	 */
 	private Double totalMileage;
 	/**
@@ -53,11 +54,11 @@ public class MgObdCar {
 	 */
 	private Double averageGasUsed;
 	/**
-	 * 发动机转速 
+	 * 发动机转速
 	 */
 	private Integer engineTurnSpeed;
 	/**
-	 * 车辆速度  KM/H
+	 * 车辆速度 KM/H
 	 */
 	private Integer vehicleSpeed;
 	/**
@@ -129,8 +130,15 @@ public class MgObdCar {
 	 */
 	private Double oneTimeDirveGasTotal;
 	/**
-	 * 本次行驶平均速度  KM/时
+	 * 本次行驶平均速度 KM/时
 	 */
 	private Double averageSpeed;
-
+	/**
+	 * 位置经度
+	 */
+	private BigDecimal lng;
+	/**
+	 * 位置纬度
+	 */
+	private BigDecimal lat;
 }

@@ -60,6 +60,9 @@ public class EquipInfoBody implements Serializable {
 	@ApiModelProperty(value = "备注")
 	private String note;
 
+	@ApiModelProperty(value = "排序号")
+	private Integer orderNo;
+
 	@ApiModelProperty(value = "车辆ID（支持模糊查询）")
 	private String eidLike;
 

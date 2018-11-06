@@ -80,7 +80,7 @@ public class EquipInfoRepositoryImpl implements IEquipInfoRepository {
 		Sort sort = pageable.getSort();
 		String[] fnamesArr = new String[] {};
 		String[] onamesArr = new String[] {};
-		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY insTime DESC");
+		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY orderNo ASC, id ASC");
 		//
 		return equipInfoRepository.findPageByNativeSql(sql + sqlWhere + sqlOrder, sqlCount + sqlWhere, objList.toArray(), pageable);
 	}
@@ -131,7 +131,7 @@ public class EquipInfoRepositoryImpl implements IEquipInfoRepository {
 		Sort sort = pageable.getSort();
 		String[] fnamesArr = new String[] {};
 		String[] onamesArr = new String[] {};
-		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY insTime DESC");
+		String sqlOrder = BizUtil.getSqlOrder(sort, fnamesArr, onamesArr, " ORDER BY orderNo ASC, id ASC");
 		sqlBuf.append(sqlOrder);
 		// 返回组装后的查询SQL
 		SearchSqlParam sqlParam = new SearchSqlParam();

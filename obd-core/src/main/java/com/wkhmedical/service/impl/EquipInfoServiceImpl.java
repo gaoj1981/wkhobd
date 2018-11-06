@@ -73,6 +73,12 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 
 	@Override
 	public void addInfo(EquipInfoBody infoBody) {
+		// 校验eid
+		String eid = infoBody.getEid();
+		CarInfo carInfo = carInfoRepository.findByEid(eid);
+		if (carInfo == null) {
+			throw new BizRuntimeException("carinfo_not_exists", eid);
+		}
 		// 组装Bean
 		EquipInfo equipInfo = AssistUtil.coverBean(infoBody, EquipInfo.class);
 		SnowflakeIdWorker idWorker = new SnowflakeIdWorker(BizUtil.getDbWorkerId(), BizUtil.getDbDatacenterId());

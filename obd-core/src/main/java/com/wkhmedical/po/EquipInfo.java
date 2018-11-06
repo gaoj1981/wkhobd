@@ -11,6 +11,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +28,7 @@ public class EquipInfo implements Serializable {
 
 	@Id
 	private String id;
-	
+
 	private String eid;
 	private Integer type;
 	private String equipId;
@@ -35,11 +37,13 @@ public class EquipInfo implements Serializable {
 	private String xhNum;
 	private String factoryId;
 	private String factory;
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date birthDate;
 	private String version;
 	private Long countNum;
 	private String note;
 	private Integer delFlag;
+	private Integer orderNo;
 	@Column(insertable = false, updatable = false)
 	private Date insTime;
 	@Column(insertable = false, updatable = false)

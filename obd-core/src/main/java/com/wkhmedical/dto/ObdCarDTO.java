@@ -1,6 +1,7 @@
 package com.wkhmedical.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -37,5 +38,11 @@ public class ObdCarDTO implements Serializable {
 
 	@ApiModelProperty(value = "汽车仪表总里程 KM")
 	private Double dashboardTotalMileage;
+
+	@ApiModelProperty(value = "位置经度")
+	private BigDecimal lng;
+
+	@ApiModelProperty(value = "位置纬度")
+	private BigDecimal lat;
 
 }
