@@ -49,12 +49,12 @@ public class ObdCarServiceImpl implements ObdCarService {
 		}
 		String deviceNumber = carInfo.getDeviceNumber();
 		if (StringUtils.isBlank(deviceNumber)) {
-			return null;
+			throw new BizRuntimeException("obdcar_not_related", eid);
 		}
 		//
 		List<MgObdCar> ObdCarList = obdCarRepository.findTopByDeviceNumberOrderByInsTimeDesc(carInfo.getDeviceNumber());
-		if (ObdCarList == null) {
-			return null;
+		if (ObdCarList == null || ObdCarList.size() == 0) {
+			throw new BizRuntimeException("obdcar_devicenumber_not_exists", carInfo.getDeviceNumber());
 		}
 		else {
 			MgObdCar obdCar = ObdCarList.get(0);

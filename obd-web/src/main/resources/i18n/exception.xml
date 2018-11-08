@@ -56,6 +56,7 @@
 	<entry key="obdcar_eid_already_exists">eid：{0}已存在deviceNumber关联信息</entry>
 	<entry key="obdcar_devicenumber_already_exists">devicenumber：{0}已存在eid关联信息</entry>
 	<entry key="obdcar_not_related">eid：{0}未关联OBD实时设备</entry>
+	<entry key="obdcar_devicenumber_not_exists">deviceNumber：{0}不存在</entry>
 	
 	<entry key="carinfo_not_exists">eid：{0}车辆不存在</entry>
 	<entry key="carinfo_already_exists">eid：{0}车辆已存在</entry>

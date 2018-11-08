@@ -55,7 +55,10 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = getSelectSql();
 		BizUtil.setSqlJoin(paramBody, "areaId", sqlBuf, paramList, " AND ci.areaId = ?");
+		BizUtil.setSqlJoin(paramBody, "provId", sqlBuf, paramList, " AND ci.provId = ?");
+		BizUtil.setSqlJoin(paramBody, "cityId", sqlBuf, paramList, " AND ci.cityId = ?");
 		BizUtil.setSqlJoin(paramBody, "eidLike", sqlBuf, paramList, " AND ci.eid LIKE ?");
+		BizUtil.setSqlJoin(paramBody, "plateNumLike", sqlBuf, paramList, " AND ci.plateNum LIKE ?");
 		//
 		String orderByStr = " ORDER BY ci.insTime DESC";
 		sqlBuf.append(orderByStr);

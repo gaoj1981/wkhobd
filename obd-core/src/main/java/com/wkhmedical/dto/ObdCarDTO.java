@@ -45,6 +45,15 @@ public class ObdCarDTO implements Serializable {
 	@ApiModelProperty(value = "位置纬度")
 	private BigDecimal lat;
 
+	@ApiModelProperty(value = "车辆环境温度")
+	private Integer environmentTemperature;
+
+	@ApiModelProperty(value = "冷却液温度")
+	private Integer coolWaterTemperature;
+
+	@ApiModelProperty(value = "进气口温度")
+	private Integer airDoorTemperature;
+
 	@ApiModelProperty(value = "车辆ID")
 	private String eid;
 
@@ -53,4 +62,5 @@ public class ObdCarDTO implements Serializable {
 
 	@ApiModelProperty(value = "区县ID")
 	private Integer areaId;
+
 }

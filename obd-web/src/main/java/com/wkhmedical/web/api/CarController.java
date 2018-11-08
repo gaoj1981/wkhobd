@@ -54,7 +54,6 @@ public class CarController {
 	@ApiOperation(value = "获取车辆OBD实时信息（APP用）")
 	@PostMapping("/get.obd")
 	public ObdCarDTO getCarObdInfo(@ApiParam(name = "eid", value = "车辆ID", required = true) @RequestParam String eid) {
-		log.info("car's obd");
 		return obdCarService.getObdCar(eid);
 	}
 
