@@ -52,16 +52,23 @@ public class WebSecurityConfig extends AbstractWebSecurityConfig {
 		//@formatter:on
 	}
 
-	/* (non-Javadoc)
-	 * @see com.taoxeo.boot.security.AbstractWebSecurityConfig#configure(org.springframework.security.config.annotation.web.builders.WebSecurity)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.taoxeo.boot.security.AbstractWebSecurityConfig#configure(org.springframework.security.
+	 * config.annotation.web.builders.WebSecurity)
 	 */
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/api/device/**", "/webjars/**", "/anonymous/**", "/images/**", "/static/**", "/favicon.ico", "/index.html", "/swagger-resources/**");
+		web.ignoring().antMatchers("/api/device/**", "/webjars/**", "/anonymous/**", "/images/**", "/static/**", "/favicon.ico", "/index.html",
+				"/swagger-resources/**", "/websocket.html");
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#userDetailsService()
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+	 * #userDetailsService()
 	 */
 	@Override
 	public DefaultUserDetailsService userDetailsService() {

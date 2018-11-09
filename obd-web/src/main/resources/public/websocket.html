@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<script type="application/javascript"
+	src="http://cdn.bootcss.com/stomp.js/2.3.3/stomp.js"></script>
+<script type="text/javascript">
+	var stompClient;
+	var subscribeHook;
+	function connect() {
+		// 建立连接对象（还未发起连接）
+		var socket = new WebSocket("ws://" + location.host
+				+ "/stomp");
+		// 获取 STOMP 子协议的客户端对象
+		stompClient = Stomp.over(socket);
+
+		// 向服务器发起websocket连接并发送CONNECT帧
+		stompClient.connect({}, function connectCallback(frame) {
+			// 连接成功时（服务器响应 CONNECTED 帧）的回调方法
+			console.log('已连接【' + frame + '】');
+			document.getElementById('connect').innerHTML='已连接';
+		}, function errorCallBack(error) {
+			// 连接失败时（服务器响应 ERROR 帧）的回调方法
+			console.log('连接失败【' + error + '】');
+			alert('连接失败【' + error + '】');
+		});
+	}
+
+	function subscribe(destination) {
+		var value = document.getElementById('destination').value;
+		if(subscribeHook){
+			subscribeHook.unsubscribe();
+		}
+		subscribeHook = stompClient.subscribe(value, function(response) {
+			console.log('message:', response.body);
+			var msgDiv = document.createElement("div");
+			msgDiv.innerHTML=response.body;
+			document.getElementById('showMsg').appendChild(msgDiv);
+		});
+	}
+
+	function send() {
+		var value = document.getElementById('msg').value;
+		var send_dest = document.getElementById('send_dest').value;
+		stompClient.send(send_dest, {}, value);
+	}
+</script>
+</head>
+<body>
+	<div>
+		<input type="text" id="token" style="width: 300px;" placeholder="ACCESS_TOKEN"/>
+		<button onclick="connect()" id="connect">CONNECT</button>
+	</div>
+	<br>
+	<div>Send Message To <input type="text" id="send_dest" style="width: 300px;" placeholder="Send Destination" value="/app/queue/wave.data.derek"/><button onclick="send()">SEND</button></div>
+	<textarea id="msg" rows="20" cols="80" style="border:1px solid #ccc; font-size:12px; color:#333">
+{
+late : "0",
+sequence : "1001",
+listWave : [ {
+wvData : 'xxxxxx',
+wvId : '121',
+leadOff : '1'
+} ]
+})
+	</textarea>
+	<br>
+	<br>
+	<input type="text" id="destination" style="width: 300px;" placeholder="Subscribe Destination" value="/queue/wave.data.derek"/>
+	<button onclick="subscribe()">SUBSCRIBE</button>
+	
+	<div id="showMsg" style="width:800px; height:200px; border:1px solid #ccc; font-size:12px; color:#53ff53; background-color: #000; overflow: scroll;'">
+	</div>
+</body>
+</html>
