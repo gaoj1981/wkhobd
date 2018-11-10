@@ -38,6 +38,9 @@ public class BindUserEditBody implements Serializable {
 	@ApiModelProperty(value = "姓名")
 	private String uname;
 
+	@ApiModelProperty(value = "公司")
+	private String ltd;
+
 	@ApiModelProperty(value = "职位")
 	private String job;
 

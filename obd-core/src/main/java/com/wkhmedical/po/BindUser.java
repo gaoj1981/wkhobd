@@ -43,6 +43,8 @@ public class BindUser implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private Gender sex;
 
+	private String ltd;
+
 	private String job;
 
 	private String tel;

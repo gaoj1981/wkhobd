@@ -36,6 +36,10 @@ public class BindUserAddBody implements Serializable {
 	@Length(min = 0, max = 15, message = "姓名不能超过15个字符")
 	private String uname;
 
+	@ApiModelProperty(value = "公司")
+	@Length(min = 0, max = 100, message = "职位不能超过100个字符")
+	private String ltd;
+
 	@ApiModelProperty(value = "职位")
 	@Length(min = 0, max = 20, message = "职位不能超过15个字符")
 	private String job;
