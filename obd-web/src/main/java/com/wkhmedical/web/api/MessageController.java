@@ -64,5 +64,4 @@ public class MessageController {
 		applicationContext.publishEvent(new SendEvent(message));
 	}
 
-
 }

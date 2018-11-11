@@ -15,4 +15,5 @@ public class CarInfoParam implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String id;
 	private String eid;
+	private String deviceNumber;
 }

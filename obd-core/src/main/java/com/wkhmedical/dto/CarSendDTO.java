@@ -38,4 +38,5 @@ public class CarSendDTO {
 	private BigDecimal lng;
 	private BigDecimal lat;
 
+	private String eid;
 }

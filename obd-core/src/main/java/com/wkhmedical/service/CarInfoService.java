@@ -18,7 +18,9 @@ public interface CarInfoService {
 	List<CarInfoDTO> getCarInfoList(Paging<CarInfoPageParam> paramBody);
 
 	CarInfo getInfo(CarInfoParam paramBody);
-	
+
+	CarInfo getCarInfo(CarInfoParam paramBody);
+
 	CarInfoDTO getCarInfo(String eid);
 
 	void addCarInfo(CarInfoAddBody carInfoBody);
@@ -28,6 +30,6 @@ public interface CarInfoService {
 	void deleteCarInfo(String eid);
 
 	void delInfo(String id);
-	
+
 	Long getCountSum();
 }

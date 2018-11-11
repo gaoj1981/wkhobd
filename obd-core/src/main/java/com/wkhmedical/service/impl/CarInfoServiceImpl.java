@@ -5,10 +5,10 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import com.taoxeo.lang.BeanUtils;
 import com.taoxeo.lang.exception.BizRuntimeException;
@@ -66,6 +66,26 @@ public class CarInfoServiceImpl implements CarInfoService {
 			throw new BizRuntimeException("info_not_exists", id);
 		}
 		return optObj.get();
+	}
+
+	@Override
+	public CarInfo getCarInfo(CarInfoParam paramBody) {
+		String id = paramBody.getId();
+		String eid = paramBody.getEid();
+		String deviceNumber = paramBody.getDeviceNumber();
+		if (StringUtils.isNotBlank(id)) {
+			Optional<CarInfo> optObj = carInfoRepository.findById(id);
+			if (optObj.isPresent()) {
+				return optObj.get();
+			}
+		}
+		else if (StringUtils.isNotBlank(eid)) {
+			return carInfoRepository.findByEid(eid);
+		}
+		else if (StringUtils.isNotBlank(deviceNumber)) {
+			return carInfoRepository.findByDeviceNumber(deviceNumber);
+		}
+		return null;
 	}
 
 	@Override
