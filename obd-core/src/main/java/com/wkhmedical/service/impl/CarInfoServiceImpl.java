@@ -18,6 +18,7 @@ import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoEditBody;
 import com.wkhmedical.dto.CarInfoPageParam;
 import com.wkhmedical.dto.CarInfoParam;
+import com.wkhmedical.dto.ChartCarDTO;
 import com.wkhmedical.dto.EquipInfoBody;
 import com.wkhmedical.po.BindUser;
 import com.wkhmedical.po.CarInfo;
@@ -202,5 +203,13 @@ public class CarInfoServiceImpl implements CarInfoService {
 	@Override
 	public Long getCountSum() {
 		return carInfoRepository.findCountSum();
+	}
+
+	@Override
+	public List<ChartCarDTO> getChartCarList(Integer groupType) {
+		CarInfoParam paramBody = new CarInfoParam();
+		paramBody.setGroupByProv(true);
+		List<ChartCarDTO> lstChart = carInfoRepository.findCarCountGroupBy(paramBody);
+		return lstChart;
 	}
 }

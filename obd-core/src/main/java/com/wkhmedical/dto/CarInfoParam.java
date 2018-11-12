@@ -16,4 +16,5 @@ public class CarInfoParam implements Serializable {
 	private String id;
 	private String eid;
 	private String deviceNumber;
+	private Boolean groupByProv;
 }

@@ -10,6 +10,7 @@ import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoEditBody;
 import com.wkhmedical.dto.CarInfoPageParam;
 import com.wkhmedical.dto.CarInfoParam;
+import com.wkhmedical.dto.ChartCarDTO;
 import com.wkhmedical.po.CarInfo;
 
 public interface CarInfoService {
@@ -32,4 +33,7 @@ public interface CarInfoService {
 	void delInfo(String id);
 
 	Long getCountSum();
+
+	List<ChartCarDTO> getChartCarList(Integer groupType);
+
 }

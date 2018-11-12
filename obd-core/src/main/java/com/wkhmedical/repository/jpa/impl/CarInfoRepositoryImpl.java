@@ -18,6 +18,7 @@ import com.taoxeo.repository.JdbcQuery;
 import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoPageParam;
 import com.wkhmedical.dto.CarInfoParam;
+import com.wkhmedical.dto.ChartCarDTO;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
 import com.wkhmedical.repository.jpa.ICarInfoRepository;
@@ -173,4 +174,13 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		return hibernateSupport.countByNativeSql("SELECT COUNT(1) FROM car_info WHERE delFlag=0", null);
 	}
 
+	@Override
+	public List<ChartCarDTO> findCarCountGroupBy(CarInfoParam paramBody) {
+		boolean groupByProv = paramBody.getGroupByProv();
+		if (groupByProv) {
+			return hibernateSupport.findByNativeSql(ChartCarDTO.class, "SELECT provId,COUNT(1) AS countNum FROM car_info GROUP BY provId", null,
+					1000);
+		}
+		return null;
+	}
 }
