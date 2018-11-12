@@ -39,7 +39,7 @@ public class ChartsController {
 	@ApiOperation(value = "车辆图表汇总")
 	@PostMapping("/car.group")
 	public List<ChartCarDTO> getCountSum(@ApiParam(value = "Group类型", required = true) @RequestParam Integer groupType) {
-		log.info("Car GroupBy Prov Chart");
+		log.info("Car GroupByProv Chart");
 		return carInfoService.getChartCarList(groupType);
 	}
 

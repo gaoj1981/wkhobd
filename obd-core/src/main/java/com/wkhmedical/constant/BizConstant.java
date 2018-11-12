@@ -20,6 +20,7 @@ public class BizConstant {
 	public final static Integer USER_STATE_1 = 1;
 	public final static Integer USER_STATE_2 = 2;
 
+	// 省份简称
 	public final static Map<Integer, String> MAP_PROV_ELLIPSIS = new HashMap<Integer, String>();
 	static {
 		MAP_PROV_ELLIPSIS.put(110000, "京");

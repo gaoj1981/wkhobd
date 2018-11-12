@@ -36,7 +36,7 @@ public class SysController {
 		rtnUser.setEmail("user@maxnoo.com");
 		rtnUser.setSignature("Just Do It");
 		rtnUser.setTitle("工程师");
-		rtnUser.setGroup("一科-技术二部-北京分公司-集团总部");
+		rtnUser.setGroup("攻程一科-技术二部-北京分公司-集团总部");
 		List<Map<String, Object>> tags = new ArrayList<Map<String, Object>>();
 		Map<String, Object> tmpTag = new HashMap<String, Object>();
 		tmpTag.put("key", "0");

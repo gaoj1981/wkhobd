@@ -211,12 +211,16 @@ public class CarInfoServiceImpl implements CarInfoService {
 	@Override
 	public List<ChartCarDTO> getChartCarList(Integer groupType) {
 		CarInfoParam paramBody = new CarInfoParam();
-		paramBody.setGroupByProv(true);
+		paramBody.setGroupByProv(false);
+		if (groupType == 1) {
+			// 按省份统计
+			paramBody.setGroupByProv(true);
+		}
 		List<ChartCarDTO> lstChart = carInfoRepository.findCarCountGroupBy(paramBody);
-		//
+		// 涵盖所有省
 		Map<Integer, String> mapProv = new HashMap<Integer, String>();
 		mapProv.putAll(BizConstant.MAP_PROV_ELLIPSIS);
-		//
+		// 统计省份不存在，则置0
 		for (ChartCarDTO chartCar : lstChart) {
 			chartCar.setY(chartCar.getCountNum());
 			chartCar.setX(mapProv.get(chartCar.getProvId()));
