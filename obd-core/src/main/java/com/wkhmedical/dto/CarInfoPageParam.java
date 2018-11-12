@@ -22,4 +22,7 @@ public class CarInfoPageParam {
 
 	@ApiModelProperty(value = "车牌号（支持模糊查询）")
 	private String plateNumLike;
+
+	@ApiModelProperty(value = "车管人员（支持运营或维护）")
+	private String buserId;
 }

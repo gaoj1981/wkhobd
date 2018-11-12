@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -112,6 +113,13 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 			sqlStrList.add(" AND areaId = ?");
 			sqlStrList.add(" AND eid LIKE ?");
 			BizUtil.setSqlWhere(paramBody, "areaId,eidLike", sqlWhere, objList, sqlStrList);
+			// 车管人员查询处理
+			String buserId = paramBody.getBuserId();
+			if (StringUtils.isNotBlank(buserId)) {
+				sqlWhere.append(" AND (prinId = ? OR maintId = ?)");
+				objList.add(buserId);
+				objList.add(buserId);
+			}
 		}
 		//
 		Sort sort = pageable.getSort();
