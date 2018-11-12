@@ -181,6 +181,6 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 			return hibernateSupport.findByNativeSql(ChartCarDTO.class, "SELECT provId,COUNT(1) AS countNum FROM car_info GROUP BY provId", null,
 					1000);
 		}
-		return null;
+		return new ArrayList<ChartCarDTO>();
 	}
 }

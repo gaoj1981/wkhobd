@@ -1,6 +1,8 @@
 package com.wkhmedical.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.Resource;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.taoxeo.lang.BeanUtils;
 import com.taoxeo.lang.exception.BizRuntimeException;
 import com.taoxeo.repository.Paging;
+import com.wkhmedical.constant.BizConstant;
 import com.wkhmedical.dto.CarInfoAddBody;
 import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoEditBody;
@@ -210,6 +213,22 @@ public class CarInfoServiceImpl implements CarInfoService {
 		CarInfoParam paramBody = new CarInfoParam();
 		paramBody.setGroupByProv(true);
 		List<ChartCarDTO> lstChart = carInfoRepository.findCarCountGroupBy(paramBody);
+		//
+		Map<Integer, String> mapProv = new HashMap<Integer, String>();
+		mapProv.putAll(BizConstant.MAP_PROV_ELLIPSIS);
+		//
+		for (ChartCarDTO chartCar : lstChart) {
+			chartCar.setY(chartCar.getCountNum());
+			chartCar.setX(mapProv.get(chartCar.getProvId()));
+			mapProv.remove(chartCar.getProvId());
+		}
+		ChartCarDTO chartCar;
+		for (String value : mapProv.values()) {
+			chartCar = new ChartCarDTO();
+			chartCar.setX(value);
+			chartCar.setY(0);
+			lstChart.add(chartCar);
+		}
 		return lstChart;
 	}
 }

@@ -6,7 +6,7 @@ package com.wkhmedical.web.api;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +37,7 @@ public class ChartsController {
 	 * @return
 	 */
 	@ApiOperation(value = "车辆图表汇总")
-	@GetMapping("/car.group")
+	@PostMapping("/car.group")
 	public List<ChartCarDTO> getCountSum(@ApiParam(value = "Group类型", required = true) @RequestParam Integer groupType) {
 		log.info("Car GroupBy Prov Chart");
 		return carInfoService.getChartCarList(groupType);
