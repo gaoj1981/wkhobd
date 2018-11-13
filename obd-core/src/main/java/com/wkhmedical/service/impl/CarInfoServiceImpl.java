@@ -121,7 +121,8 @@ public class CarInfoServiceImpl implements CarInfoService {
 				throw new BizRuntimeException("carinfo_devicenumber_already_exists", deviceNumber);
 			}
 		}
-
+		// 判断车牌号唯一性
+		// TODO
 		//
 		CarInfo carInfo = AssistUtil.coverBean(carInfoBody, CarInfo.class);
 		Integer areaId = carInfo.getAreaId();
