@@ -14,4 +14,6 @@ public interface CarInfoRepository extends JpaRepository<CarInfo, String>, ICarI
 
 	CarInfo findByEidAndDelFlag(String eid, int delFlag);
 
+	CarInfo findByPlateNum(String plateNum);
+
 }

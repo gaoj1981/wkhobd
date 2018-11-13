@@ -63,6 +63,7 @@
 	<entry key="carinfo_devicenumber_already_exists">devicenumber：{0}车辆已存在</entry>
 	<entry key="carinfo_edit_id_must">待修改车辆的主KEY（id字段）必须</entry>
 	<entry key="carinfo_not_exists">id：{0}车辆不存在</entry>
+	<entry key="carinfo_platenum_already_exists">车牌号：{0}已存在</entry>
 
 	<entry key="carinsur_already_exists">该车辆该保险已存在</entry>
 	<entry key="carinsur_insurnum_already_exists">该保单号：{0}已存在</entry>

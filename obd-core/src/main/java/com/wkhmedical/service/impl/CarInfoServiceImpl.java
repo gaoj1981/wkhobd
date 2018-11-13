@@ -122,7 +122,13 @@ public class CarInfoServiceImpl implements CarInfoService {
 			}
 		}
 		// 判断车牌号唯一性
-		// TODO
+		String plateNum = carInfoBody.getPlateNum();
+		if (StringUtils.isNoneBlank(plateNum)) {
+			CarInfo plateInfo = carInfoRepository.findByPlateNum(plateNum);
+			if (plateInfo != null) {
+				throw new BizRuntimeException("carinfo_platenum_already_exists", plateNum);
+			}
+		}
 		//
 		CarInfo carInfo = AssistUtil.coverBean(carInfoBody, CarInfo.class);
 		Integer areaId = carInfo.getAreaId();
@@ -164,7 +170,14 @@ public class CarInfoServiceImpl implements CarInfoService {
 				}
 			}
 		}
-
+		// 判断车牌号唯一性
+		String plateNum = carInfoBody.getPlateNum();
+		if (StringUtils.isNoneBlank(plateNum)) {
+			CarInfo plateInfo = carInfoRepository.findByPlateNum(plateNum);
+			if (plateInfo != null && !eid.equals(plateInfo.getEid())) {
+				throw new BizRuntimeException("carinfo_platenum_already_exists", plateNum);
+			}
+		}
 		// 更新
 		BeanUtils.merageProperty(carInfoUpd, carInfoBody);
 		carInfoRepository.update(carInfoUpd);
