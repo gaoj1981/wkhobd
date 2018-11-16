@@ -1,12 +1,13 @@
 package com.wkhmedical.repository.jpa;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.wkhmedical.dto.CarInsurDTO;
 import com.wkhmedical.dto.CarInsurBody;
+import com.wkhmedical.dto.CarInsurDTO;
 import com.wkhmedical.po.CarInsur;
 
 public interface ICarInsurRepository {
@@ -17,4 +18,10 @@ public interface ICarInsurRepository {
 	Page<CarInsur> findPgCarInsur(CarInsurBody paramBody, Pageable pageable);
 
 	Integer findCount(String id);
+
+	Page<CarInsurDTO> findPgCarInsurDTO(CarInsurBody paramBody, Pageable pageable);
+
+	Page<CarInsurDTO> findByExpDay(Integer expDayFlag);
+
+	Date findMaxExpDate(String cid);
 }

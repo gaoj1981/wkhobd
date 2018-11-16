@@ -55,7 +55,7 @@ public class CarInsurController {
 
 	@ApiOperation(value = "获取车辆保险分页对象")
 	@PostMapping("/get.page")
-	public Page<CarInsur> getCarInsurPage(@RequestBody @Valid Paging<CarInsurBody> paramBody) {
+	public Page<CarInsurDTO> getCarInsurPage(@RequestBody @Valid Paging<CarInsurBody> paramBody) {
 		return carInsurService.getPgList(paramBody);
 	}
 

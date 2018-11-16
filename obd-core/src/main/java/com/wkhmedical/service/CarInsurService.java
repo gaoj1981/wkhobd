@@ -18,7 +18,7 @@ public interface CarInsurService {
 
 	List<CarInsurDTO> getList(Paging<CarInsurBody> paramBody);
 	
-	Page<CarInsur> getPgList(Paging<CarInsurBody> paramBody);
+	Page<CarInsurDTO> getPgList(Paging<CarInsurBody> paramBody);
 
 	void addInfo(CarInsurBodyAdd infoBody);
 

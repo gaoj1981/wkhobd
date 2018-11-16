@@ -1,5 +1,7 @@
 package com.wkhmedical.web.api;
 
+import java.math.BigDecimal;
+
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
@@ -21,6 +23,7 @@ import com.wkhmedical.message.event.SendEvent;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.service.CarInfoService;
 import com.wkhmedical.service.ObdCarService;
+import com.wkhmedical.util.MapGPSUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -68,6 +71,13 @@ public class ObdController {
 				BeanUtils.merageProperty(obdCar, obdSend);
 				String eid = carInfo.getEid();
 				obdSend.setEid(carInfo.getEid());
+				BigDecimal lat = obdCar.getLat();
+				BigDecimal lng = obdCar.getLng();
+				BigDecimal[] bdArr = MapGPSUtil.Transform(lat.doubleValue(), lng.doubleValue());
+				if (bdArr != null && bdArr.length == 2) {
+					obdCar.setLat(bdArr[0]);
+					obdCar.setLng(bdArr[1]);
+				}
 				messagingTemplate.convertAndSend("/queue/obd.data." + eid, obdCar);
 				Message message = new Message(eid, ObdCarDTO.class.getSimpleName(), obdCar);
 				applicationContext.publishEvent(new SendEvent(message));

@@ -51,6 +51,7 @@ public class CarMotBody implements Serializable {
 	@Max(2)
 	private Integer valiType;
 
+	// ===========查询扩展=============
 	@ApiModelProperty(value = "车辆ID（支持模糊查询）")
 	private String eidLike;
 

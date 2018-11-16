@@ -36,4 +36,27 @@ public class CarInsurBody implements Serializable {
 	@Min(0)
 	@Max(2)
 	private Integer valiType;
+
+	// ===========查询扩展=============
+
+	@ApiModelProperty(value = "车辆ID（支持模糊查询）")
+	private String eidLike;
+
+	@ApiModelProperty(value = "区县ID")
+	private Integer areaId;
+
+	@ApiModelProperty(value = "日期查询区分。1：添加时间；2：最后修改时间；3：保险失效日期；4：保险生效日期；")
+	private Integer timeSel;
+
+	@ApiModelProperty(value = "查询开始日期")
+	private String timeStart;
+
+	@ApiModelProperty(value = "查询结束日期")
+	private String timeEnd;
+
+	@ApiModelProperty(value = "保险到期范围。1:30天内到期；2：60天内到期；3：90天内到期；4：已过期")
+	@Min(0)
+	@Max(4)
+	private Integer expDayFlag;
+
 }

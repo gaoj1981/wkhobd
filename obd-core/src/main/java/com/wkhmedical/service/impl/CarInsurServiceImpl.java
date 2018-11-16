@@ -1,5 +1,6 @@
 package com.wkhmedical.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,10 +23,12 @@ import com.wkhmedical.dto.CarInsurParam;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.po.CarInsur;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
+import com.wkhmedical.repository.jpa.CarInsurCopyRepository;
 import com.wkhmedical.repository.jpa.CarInsurRepository;
 import com.wkhmedical.service.CarInsurService;
 import com.wkhmedical.util.AssistUtil;
 import com.wkhmedical.util.BizUtil;
+import com.wkhmedical.util.DateUtil;
 import com.wkhmedical.util.SnowflakeIdWorker;
 
 import lombok.extern.log4j.Log4j2;
@@ -36,6 +39,8 @@ public class CarInsurServiceImpl implements CarInsurService {
 
 	@Resource
 	CarInsurRepository carInsurRepository;
+	@Resource
+	CarInsurCopyRepository carInsurCopyRepository;
 	@Resource
 	CarInfoRepository carInfoRepository;
 
@@ -56,9 +61,34 @@ public class CarInsurServiceImpl implements CarInsurService {
 	}
 
 	@Override
-	public Page<CarInsur> getPgList(Paging<CarInsurBody> paramBody) {
+	public Page<CarInsurDTO> getPgList(Paging<CarInsurBody> paramBody) {
 		CarInsurBody queryObj = paramBody.getQuery();
-		return carInsurRepository.findPgCarInsur(queryObj, paramBody.toPageable());
+		// 判断是否只查询过期类型
+		Integer expDayFlag = queryObj.getExpDayFlag();
+		if (expDayFlag != null && expDayFlag.intValue() >= 1) {
+			int dayFlag = expDayFlag.intValue();
+			//
+			Date dtNow = new Date();
+			String expDateMin = DateUtil.formatDate(dtNow, "yyyy-MM-dd");
+			String expDateMax = DateUtil.formatDate(dtNow, "yyyy-MM-dd");
+			if (dayFlag == 1) {
+				expDateMax = DateUtil.formatDate(DateUtil.getDateAddDay(dtNow, 30), "yyyy-MM-dd");
+			}
+			else if (dayFlag == 2) {
+				expDateMax = DateUtil.formatDate(DateUtil.getDateAddDay(dtNow, 60), "yyyy-MM-dd");
+			}
+			else if (dayFlag == 3) {
+				expDateMax = DateUtil.formatDate(DateUtil.getDateAddDay(dtNow, 90), "yyyy-MM-dd");
+			}
+			else if (dayFlag == 4) {
+				expDateMax = DateUtil.formatDate(dtNow, "yyyy-MM-dd");
+				expDateMin = null;
+			}
+			return carInsurCopyRepository.findByExpDay(expDateMin, expDateMax, paramBody.toPageable());
+		}
+		else {
+			return carInsurRepository.findPgCarInsurDTO(queryObj, paramBody.toPageable());
+		}
 	}
 
 	@Override
