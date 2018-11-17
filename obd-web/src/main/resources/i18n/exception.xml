@@ -65,13 +65,17 @@
 	<entry key="carinfo_not_exists">id：{0}车辆不存在</entry>
 	<entry key="carinfo_platenum_already_exists">车牌号：{0}已存在</entry>
 
-	<entry key="carinsur_already_exists">该车辆该保险已存在</entry>
-	<entry key="carinsur_insurnum_already_exists">该保单号：{0}已存在</entry>
-	
 	<entry key="binduser_already_default">该分类人员已有默认设置</entry>
 	
 	<entry key="carmot_exists_expired">已存在晚于该车年检有效期的记录</entry>
 	<entry key="carmot_nocar_exists">该年检对应的车辆不存在</entry>
 	<entry key="carmot_expdate_over_max">该车年检有效期需小于{0}</entry>
 	<entry key="carmot_expdate_over_min">该车年检有效期需大于{0}</entry>
+	
+	<entry key="carinsur_already_exists">该车辆该保险已存在</entry>
+	<entry key="carinsur_insurnum_already_exists">该保单号：{0}已存在</entry>
+	<entry key="carinsur_exists_expired">已存在晚于该车保险有效期的记录</entry>
+	<entry key="carinsur_nocar_exists">该保险对应的车辆不存在</entry>
+	<entry key="carinsur_expdate_over_max">该车保险有效期需小于{0}</entry>
+	<entry key="carinsur_expdate_over_min">该车保险有效期需大于{0}</entry>
 </properties>

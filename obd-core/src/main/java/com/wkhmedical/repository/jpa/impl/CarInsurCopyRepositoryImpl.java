@@ -52,17 +52,6 @@ public class CarInsurCopyRepositoryImpl implements ICarInsurCopyRepository {
 	}
 
 	@Override
-	public Page<CarInsurCopyDTO> findPgCarInsurCopyDTO(CarInsurCopyBody paramBody, Pageable pageable) {
-		List<CarInsurCopyDTO> lstRes = findCarInsurCopyList(paramBody, pageable);
-		SearchSqlParam sqlParam = getDTOSql(paramBody, pageable);
-		String countSql = sqlParam.getCountSql();
-		long total = hibernateSupport.countByNativeSql(countSql, sqlParam.getParamList().toArray());
-		PageImpl<CarInsurCopyDTO> pageResult = new PageImpl<CarInsurCopyDTO>(lstRes, pageable, total);
-		//
-		return pageResult;
-	}
-
-	@Override
 	public Page<CarInsurCopy> findPgCarInsurCopy(CarInsurCopyBody paramBody, Pageable pageable) {
 		// SQL主语句
 		String sql = "SELECT * FROM car_insur_copy";
@@ -160,6 +149,11 @@ public class CarInsurCopyRepositoryImpl implements ICarInsurCopyRepository {
 		PageImpl<CarInsurDTO> pageResult = new PageImpl<CarInsurDTO>(lstRes, pageable, total);
 
 		return pageResult;
+	}
+
+	@Override
+	public void deleteByCid(String cid) {
+		jdbcQuery.getJdbcTemplate().execute("DELETE FROM car_insur_copy WHERE cid = '" + cid + "'");
 	}
 
 }

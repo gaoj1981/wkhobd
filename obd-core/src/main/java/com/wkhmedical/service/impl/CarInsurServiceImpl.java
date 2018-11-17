@@ -22,6 +22,7 @@ import com.wkhmedical.dto.CarInsurDTO;
 import com.wkhmedical.dto.CarInsurParam;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.po.CarInsur;
+import com.wkhmedical.po.CarInsurCopy;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
 import com.wkhmedical.repository.jpa.CarInsurCopyRepository;
 import com.wkhmedical.repository.jpa.CarInsurRepository;
@@ -106,6 +107,14 @@ public class CarInsurServiceImpl implements CarInsurService {
 		if (insurTmp != null) {
 			throw new BizRuntimeException("carinsur_insurnum_already_exists", insurNum);
 		}
+		// 校验是否已在有效期
+		Date maxExpDate = carInsurRepository.findMaxExpDate(carInfo.getId());
+		if (maxExpDate != null) {
+			Date expDate = infoBody.getExpDate();
+			if (maxExpDate.compareTo(expDate) > 0) {
+				throw new BizRuntimeException("carinsur_exists_expired");
+			}
+		}
 		// 组装Bean
 		CarInsur carInsur = AssistUtil.coverBean(infoBody, CarInsur.class);
 		SnowflakeIdWorker idWorker = new SnowflakeIdWorker(BizUtil.getDbWorkerId(), BizUtil.getDbDatacenterId());
@@ -113,6 +122,15 @@ public class CarInsurServiceImpl implements CarInsurService {
 		carInsur.setCid(carInfo.getId());
 		// 入库
 		carInsurRepository.save(carInsur);
+		// 拷贝保险最大有效记录
+		Date dtNow = new Date();
+		// step1:删除当前最大有效记录
+		carInsurCopyRepository.deleteByCid(carInfo.getId());
+		// step2:同步保险最大有效记录
+		CarInsurCopy carInsurCopy = new CarInsurCopy();
+		BeanUtils.merageProperty(carInsurCopy, carInsur);
+		carInsurCopy.setInsTime(dtNow);
+		carInsurCopyRepository.save(carInsurCopy);
 	}
 
 	@Override
@@ -122,8 +140,7 @@ public class CarInsurServiceImpl implements CarInsurService {
 		// 判断待修改记录唯一性
 		CarInsur carInsurUpd = carInsurRepository.findByKey(id);
 		if (carInsurUpd == null) {
-			// 不加""exception中产生千分位
-			throw new BizRuntimeException("info_not_exists", id + "");
+			throw new BizRuntimeException("info_not_exists", id);
 		}
 		// 校验保单号是否重复
 		String insurNum = infoBody.getInsurNum();
@@ -133,10 +150,47 @@ public class CarInsurServiceImpl implements CarInsurService {
 				throw new BizRuntimeException("carinsur_insurnum_already_exists", insurNum);
 			}
 		}
+		// 判断是否同步最大值记录
+		boolean isNeedCopy = false;
+		// 年检有效期判断
+		String cid = carInsurUpd.getCid();
+		Date expDate = carInsurUpd.getExpDate();
+		Date maxExpDate = carInsurRepository.findMaxExpDate(cid);
+		Date pageExpDate = infoBody.getExpDate();
+		if (expDate.compareTo(maxExpDate) == 0) {
+			// 当前修改记录是最大记录
+			if (maxExpDate.compareTo(pageExpDate) > 0) {
+				List<CarInsur> lstObjs = carInsurRepository.findByCidAndDelFlagAndExpDateGreaterThanAndExpDateLessThanOrderByExpDateDesc(cid, 0,
+						pageExpDate, maxExpDate);
+				if (lstObjs != null && lstObjs.size() > 0) {
+					CarInsur carInsurMin = lstObjs.get(0);
+					throw new BizRuntimeException("carinsur_expdate_over_min", DateUtil.formatDate(carInsurMin.getExpDate(), "yyyyMMdd"));
+				}
+				isNeedCopy = true;
+			}
+			else if (maxExpDate.compareTo(pageExpDate) < 0) {
+				isNeedCopy = true;
+			}
+		}
+		else {
+			// 当前修改记录非最大记录
+			if (maxExpDate.compareTo(pageExpDate) < 0) {
+				throw new BizRuntimeException("carinsur_expdate_over_max", maxExpDate);
+			}
+		}
 		// merge修改body与原记录对象
 		BeanUtils.merageProperty(carInsurUpd, infoBody);
 		// 更新库记录
 		carInsurRepository.update(carInsurUpd);
+		// 同步年检最大记录
+		if (isNeedCopy) {
+			// step1:删除当前最大有效记录
+			carInsurCopyRepository.deleteByCid(carInsurUpd.getCid());
+			// step2:同步年检最大有效记录
+			CarInsurCopy carInsurCopy = new CarInsurCopy();
+			BeanUtils.merageProperty(carInsurCopy, carInsurUpd);
+			carInsurCopyRepository.save(carInsurCopy);
+		}
 	}
 
 	@Override
@@ -158,6 +212,21 @@ public class CarInsurServiceImpl implements CarInsurService {
 			carInsurUpd.setInsurNum(BizUtil.getDelBackupVal(carInsurUpd.getInsurNum()));
 			carInsurUpd.setDelFlag(1);
 			carInsurRepository.update(carInsurUpd);
+			// 同步年检最大记录
+			Optional<CarInsurCopy> carInsurCopyOpt = carInsurCopyRepository.findById(id);
+			if (carInsurCopyOpt.isPresent()) {
+				CarInsurCopy carInsurCopy = carInsurCopyOpt.get();
+				// step1:删除当前最大有效记录
+				carInsurCopyRepository.delete(carInsurCopy);
+				List<CarInsur> lstObjs = carInsurRepository.findByCidAndDelFlagOrderByExpDateDesc(carInsurUpd.getCid(), 0);
+				if (lstObjs != null && lstObjs.size() > 0) {
+					CarInsur carInsur = lstObjs.get(0);
+					// step2:同步年检最大有效记录
+					carInsurCopy = new CarInsurCopy();
+					BeanUtils.merageProperty(carInsurCopy, carInsur);
+					carInsurCopyRepository.save(carInsurCopy);
+				}
+			}
 		}
 	}
 

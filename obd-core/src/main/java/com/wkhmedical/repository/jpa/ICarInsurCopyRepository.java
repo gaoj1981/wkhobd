@@ -15,11 +15,11 @@ public interface ICarInsurCopyRepository {
 
 	List<CarInsurCopyDTO> findCarInsurCopyList(CarInsurCopyBody paramBody, Pageable pageable);
 
-	Page<CarInsurCopyDTO> findPgCarInsurCopyDTO(CarInsurCopyBody paramBody, Pageable pageable);
-
 	Page<CarInsurCopy> findPgCarInsurCopy(CarInsurCopyBody paramBody, Pageable pageable);
 
 	Integer findCount(String id);
+
+	void deleteByCid(String cid);
 
 	Page<CarInsurDTO> findByExpDay(String expDateMin, String expDateMax, Pageable pageable);
 }
