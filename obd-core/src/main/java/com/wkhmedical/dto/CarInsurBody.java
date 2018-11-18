@@ -59,4 +59,7 @@ public class CarInsurBody implements Serializable {
 	@Max(4)
 	private Integer expDayFlag;
 
+	@ApiModelProperty(value = "保单编号（支持模糊查询）")
+	private String insurNumLike;
+
 }

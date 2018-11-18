@@ -115,6 +115,7 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 		BizUtil.setSqlJoin(paramBody, "eid", sqlBuf, paramList, " AND ci.eid = ?");
 		BizUtil.setSqlJoin(paramBody, "areaId", sqlBuf, paramList, " AND ci.areaId = ?");
 		BizUtil.setSqlJoin(paramBody, "eidLike", sqlBuf, paramList, " AND ci.eid LIKE ?");
+		BizUtil.setSqlJoin(paramBody, "insurNumLike", sqlBuf, paramList, " AND cm.insurNum LIKE ?");
 		Integer valiType = (Integer) BizUtil.getFieldValueByName("valiType", paramBody);
 		if (valiType != null) {
 			Date dtNow = new Date();
@@ -138,10 +139,10 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 				dateName = "updTime";
 			}
 			else if (timeSel.intValue() == 3) {
-				dateName = "expDate";
+				dateName = "effectDate";
 			}
 			else if (timeSel.intValue() == 4) {
-				dateName = "motDate";
+				dateName = "expDate";
 			}
 			sqlBuf.append(" AND " + dateName + ">=? AND " + dateName + "<=?");
 			paramList.add(paramBody.getTimeStart());
