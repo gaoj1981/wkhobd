@@ -16,6 +16,8 @@ public interface CarInsurService {
 
 	CarInsur getInfo(CarInsurParam paramBody);
 
+	CarInsurDTO getExInfo(CarInsurBody paramBody);
+
 	List<CarInsurDTO> getList(Paging<CarInsurBody> paramBody);
 	
 	Page<CarInsurDTO> getPgList(Paging<CarInsurBody> paramBody);

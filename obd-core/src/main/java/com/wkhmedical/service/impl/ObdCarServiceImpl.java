@@ -1,5 +1,6 @@
 package com.wkhmedical.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -17,6 +18,7 @@ import com.wkhmedical.repository.jpa.CarInfoRepository;
 import com.wkhmedical.repository.mongo.ObdCarRepository;
 import com.wkhmedical.service.ObdCarService;
 import com.wkhmedical.util.AssistUtil;
+import com.wkhmedical.util.MapGPSUtil;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -62,6 +64,14 @@ public class ObdCarServiceImpl implements ObdCarService {
 			obdCarDTO.setAreaId(carInfo.getAreaId());
 			obdCarDTO.setEid(carInfo.getEid());
 			obdCarDTO.setCarName(carInfo.getCarName());
+			// 地图坐标纠偏
+			BigDecimal lat = obdCarDTO.getLat();
+			BigDecimal lng = obdCarDTO.getLng();
+			BigDecimal[] bdArr = MapGPSUtil.Transform(lat.doubleValue(), lng.doubleValue());
+			if (bdArr != null && bdArr.length == 2) {
+				obdCarDTO.setLat(bdArr[0]);
+				obdCarDTO.setLng(bdArr[1]);
+			}
 			return obdCarDTO;
 		}
 	}

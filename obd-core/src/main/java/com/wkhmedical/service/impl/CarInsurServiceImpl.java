@@ -56,6 +56,27 @@ public class CarInsurServiceImpl implements CarInsurService {
 	}
 
 	@Override
+	public CarInsurDTO getExInfo(CarInsurBody paramBody) {
+		CarInsurDTO rtnDTO = new CarInsurDTO();
+		String id = paramBody.getId();
+		Optional<CarInsur> optObj = carInsurRepository.findById(id);
+		if (!optObj.isPresent()) {
+			throw new BizRuntimeException("info_not_exists", id);
+		}
+		CarInsur carInsur = optObj.get();
+		// 获取车辆对象
+		Optional<CarInfo> optCar = carInfoRepository.findById(carInsur.getCid());
+		if (!optCar.isPresent()) {
+			throw new BizRuntimeException("carinsur_nocar_exists");
+		}
+		CarInfo carInfo = optCar.get();
+		// 合并保险对象（此处开发需注意同名属性覆盖）
+		BeanUtils.merageProperty(rtnDTO, carInfo);
+		BeanUtils.merageProperty(rtnDTO, carInsur);
+		return rtnDTO;
+	}
+
+	@Override
 	public List<CarInsurDTO> getList(Paging<CarInsurBody> paramBody) {
 		CarInsurBody queryObj = paramBody.getQuery();
 		return carInsurRepository.findCarInsurList(queryObj, paramBody.toPageable());

@@ -47,6 +47,14 @@ public class CarInsurController {
 		return carInsurService.getInfo(paramBody);
 	}
 
+	@ApiOperation(value = "获取车辆保险固定信息")
+	@GetMapping("/get.info")
+	public CarInsurDTO getCarInsurInfo(@ApiParam(value = "id主Key", required = true) @RequestParam String id) {
+		CarInsurBody paramBody = new CarInsurBody();
+		paramBody.setId(id);
+		return carInsurService.getExInfo(paramBody);
+	}
+
 	@ApiOperation(value = "获取车辆保险分页列表（APP用）")
 	@PostMapping("/get.list")
 	public List<CarInsurDTO> getCarInsurData(@RequestBody @Valid Paging<CarInsurBody> paramBody) {

@@ -36,6 +36,9 @@ public class ObdCarDTO implements Serializable {
 	@ApiModelProperty(value = "剩余油量")
 	private Integer remainingGasValue;
 
+	@ApiModelProperty(value = "总油耗量 ML")
+	private Integer totalGasUsed;
+
 	@ApiModelProperty(value = "汽车仪表总里程 KM")
 	private Double dashboardTotalMileage;
 
