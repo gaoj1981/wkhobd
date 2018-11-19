@@ -167,9 +167,10 @@ public class CarInsurRepositoryImpl implements ICarInsurRepository {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public Date findMaxExpDate(String cid) {
+	public Date findMaxExpDate(String cid, Integer insurType) {
 		List<Map> lstMaxExpDate = hibernateSupport.findByNativeSql(Map.class,
-				"SELECT MAX(expDate) AS maxDate FROM car_insur WHERE delFlag = 0 AND cid=?", new String[] { cid }, 1);
+				"SELECT MAX(expDate) AS maxDate FROM car_insur WHERE delFlag = 0 AND cid=? AND insurType=?",
+				new String[] { cid, String.valueOf(insurType) }, 1);
 		if (lstMaxExpDate != null) {
 			Map<String, Object> rtnMap = lstMaxExpDate.get(0);
 			return (Date) rtnMap.get("maxDate");

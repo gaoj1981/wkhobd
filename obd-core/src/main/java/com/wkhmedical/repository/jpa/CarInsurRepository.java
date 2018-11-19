@@ -10,9 +10,10 @@ import com.wkhmedical.po.CarInsur;
 
 @Repository
 public interface CarInsurRepository extends JpaRepository<CarInsur, String>, ICarInsurRepository {
-	List<CarInsur> findByCidAndDelFlagAndExpDateGreaterThanAndExpDateLessThanOrderByExpDateDesc(String cid, Integer delFlag, Date dt1, Date dt2);
+	List<CarInsur> findByCidAndInsurTypeAndDelFlagAndExpDateGreaterThanAndExpDateLessThanOrderByExpDateDesc(String cid, Integer insurType,
+			Integer delFlag, Date dt1, Date dt2);
 
-	List<CarInsur> findByCidAndDelFlagOrderByExpDateDesc(String cid, Integer delFlag);
+	List<CarInsur> findByCidAndInsurTypeAndDelFlagOrderByExpDateDesc(String cid, Integer insurType, Integer delFlag);
 
 	CarInsur findByCidAndInsurType(String cid, Integer insurType);
 

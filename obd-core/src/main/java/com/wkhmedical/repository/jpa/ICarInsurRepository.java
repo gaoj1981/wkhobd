@@ -23,5 +23,5 @@ public interface ICarInsurRepository {
 
 	Page<CarInsurDTO> findByExpDay(Integer expDayFlag);
 
-	Date findMaxExpDate(String cid);
+	Date findMaxExpDate(String cid, Integer insurType);
 }

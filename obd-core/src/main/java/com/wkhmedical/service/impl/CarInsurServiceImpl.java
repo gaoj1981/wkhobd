@@ -129,7 +129,7 @@ public class CarInsurServiceImpl implements CarInsurService {
 			throw new BizRuntimeException("carinsur_insurnum_already_exists", insurNum);
 		}
 		// 校验是否已在有效期
-		Date maxExpDate = carInsurRepository.findMaxExpDate(carInfo.getId());
+		Date maxExpDate = carInsurRepository.findMaxExpDate(carInfo.getId(), infoBody.getInsurType());
 		if (maxExpDate != null) {
 			Date expDate = infoBody.getExpDate();
 			if (maxExpDate.compareTo(expDate) > 0) {
@@ -176,13 +176,14 @@ public class CarInsurServiceImpl implements CarInsurService {
 		// 年检有效期判断
 		String cid = carInsurUpd.getCid();
 		Date expDate = carInsurUpd.getExpDate();
-		Date maxExpDate = carInsurRepository.findMaxExpDate(cid);
+		Integer insurType = carInsurUpd.getInsurType();
+		Date maxExpDate = carInsurRepository.findMaxExpDate(cid, insurType);
 		Date pageExpDate = infoBody.getExpDate();
 		if (expDate.compareTo(maxExpDate) == 0) {
 			// 当前修改记录是最大记录
 			if (maxExpDate.compareTo(pageExpDate) > 0) {
-				List<CarInsur> lstObjs = carInsurRepository.findByCidAndDelFlagAndExpDateGreaterThanAndExpDateLessThanOrderByExpDateDesc(cid, 0,
-						pageExpDate, maxExpDate);
+				List<CarInsur> lstObjs = carInsurRepository.findByCidAndInsurTypeAndDelFlagAndExpDateGreaterThanAndExpDateLessThanOrderByExpDateDesc(
+						cid, insurType, 0, pageExpDate, maxExpDate);
 				if (lstObjs != null && lstObjs.size() > 0) {
 					CarInsur carInsurMin = lstObjs.get(0);
 					throw new BizRuntimeException("carinsur_expdate_over_min", DateUtil.formatDate(carInsurMin.getExpDate(), "yyyyMMdd"));
@@ -239,7 +240,8 @@ public class CarInsurServiceImpl implements CarInsurService {
 				CarInsurCopy carInsurCopy = carInsurCopyOpt.get();
 				// step1:删除当前最大有效记录
 				carInsurCopyRepository.delete(carInsurCopy);
-				List<CarInsur> lstObjs = carInsurRepository.findByCidAndDelFlagOrderByExpDateDesc(carInsurUpd.getCid(), 0);
+				List<CarInsur> lstObjs = carInsurRepository.findByCidAndInsurTypeAndDelFlagOrderByExpDateDesc(carInsurUpd.getCid(),
+						carInsurUpd.getInsurType(), 0);
 				if (lstObjs != null && lstObjs.size() > 0) {
 					CarInsur carInsur = lstObjs.get(0);
 					// step2:同步年检最大有效记录
