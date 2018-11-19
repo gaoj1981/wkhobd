@@ -25,7 +25,7 @@ public class SysController {
 
 	@ApiOperation(value = "获取当前用户")
 	@GetMapping("/get.current_user")
-	public SessionUserDTO carMotAdd(@CurrentUser TUserDetails user) {
+	public SessionUserDTO getCurUser(@CurrentUser TUserDetails user) {
 		if (user == null) {
 			return null;
 		}
