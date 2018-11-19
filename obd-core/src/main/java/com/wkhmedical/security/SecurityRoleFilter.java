@@ -26,9 +26,7 @@ public class SecurityRoleFilter extends GenericFilterBean {
 		// 继续调用 Filter 链
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		String uri = httpRequest.getRequestURI().replace(httpRequest.getContextPath(), "");
-		System.out.println(uri + SecurityUtils.getCurrentUser().getUsername());
-		System.out.println(userRepository);
-		System.out.println(SecurityUtils.getCurrentUser().getRole());
+		System.out.println(uri + SecurityUtils.getCurrentUser().getRole());
 		chain.doFilter(request, response);
 	}
 

@@ -3,6 +3,8 @@
  */
 package com.wkhmedical;
 
+import javax.annotation.Resource;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -52,6 +54,9 @@ public class WebOAuthConfig {
 	@EnableResourceServer
 	protected static class ResourceServerConfiguration extends AbstractResourceServerConfiguration {
 
+		@Resource
+		SecurityRoleFilter securityRoleFilter;
+
 		/*
 		 * (non-Javadoc)
 		 * @see com.taoxeo.boot.security.oauth2.AbstractResourceServerConfiguration#configure(org.
@@ -81,7 +86,7 @@ public class WebOAuthConfig {
 				.authorizeRequests()
 				.antMatchers("/api/**","/obd/**", "/public/**").access("hasRole('ROLE_USER') or hasRole('ROLE_WXUSER')");
 			// @formatter:on
-			http.addFilterAfter(new SecurityRoleFilter(), FilterSecurityInterceptor.class);
+			http.addFilterAfter(securityRoleFilter, FilterSecurityInterceptor.class);
 		}
 	}
 }
