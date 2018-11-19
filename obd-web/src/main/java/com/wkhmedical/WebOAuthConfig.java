@@ -3,8 +3,6 @@
  */
 package com.wkhmedical;
 
-import javax.annotation.Resource;
-
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,11 +10,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 import com.taoxeo.boot.security.oauth2.AbstractAuthorizationServerConfig;
 import com.taoxeo.boot.security.oauth2.AbstractResourceServerConfiguration;
-import com.wkhmedical.security.SecurityRoleFilter;
 
 /**
  * The Class WebOAuthConfig.
@@ -54,9 +50,6 @@ public class WebOAuthConfig {
 	@EnableResourceServer
 	protected static class ResourceServerConfiguration extends AbstractResourceServerConfiguration {
 
-		@Resource
-		SecurityRoleFilter securityRoleFilter;
-
 		/*
 		 * (non-Javadoc)
 		 * @see com.taoxeo.boot.security.oauth2.AbstractResourceServerConfiguration#configure(org.
@@ -86,7 +79,7 @@ public class WebOAuthConfig {
 				.authorizeRequests()
 				.antMatchers("/api/**","/obd/**", "/public/**").access("hasRole('ROLE_USER') or hasRole('ROLE_WXUSER')");
 			// @formatter:on
-			http.addFilterAfter(securityRoleFilter, FilterSecurityInterceptor.class);
+//			http.addFilterAfter(securityRoleFilter, FilterSecurityInterceptor.class);
 		}
 	}
 }

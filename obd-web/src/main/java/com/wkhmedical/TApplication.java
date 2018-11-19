@@ -3,14 +3,14 @@
  */
 package com.wkhmedical;
 
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.taoxeo.boot.BootAutoConfig;
-
-import lombok.extern.log4j.Log4j2;
 
 /**
  * The Class TApplication.
@@ -18,10 +18,14 @@ import lombok.extern.log4j.Log4j2;
  * @author Derek
  * @since 1.0, 2018-9-13
  */
-@Log4j2
 @SpringBootApplication
 @BootAutoConfig
-public class TApplication implements ApplicationRunner {
+public class TApplication implements WebMvcConfigurer {
+
+	@Autowired
+	SecurityIdentityHandlerInterceptor securityIdentityHandlerInterceptor;
+	@Value("${spring.session.single-identity:true}")
+	private Boolean sessionSingleIdentity;
 
 	/**
 	 * The main method.
@@ -32,11 +36,11 @@ public class TApplication implements ApplicationRunner {
 		SpringApplication.run(TApplication.class, args);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.boot.ApplicationRunner#run(org.springframework.boot.ApplicationArguments)
-	 */
 	@Override
-	public void run(ApplicationArguments args) throws Exception {
-		log.info("Application Startup");
+	public void addInterceptors(InterceptorRegistry registry) {
+		if (sessionSingleIdentity) {
+			registry.addInterceptor(securityIdentityHandlerInterceptor);
+		}
 	}
+
 }
