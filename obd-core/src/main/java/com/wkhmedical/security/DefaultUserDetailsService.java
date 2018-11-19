@@ -53,8 +53,11 @@ public class DefaultUserDetailsService implements UserDetailsService {
 		userDetails.setEnabled(true);
 		if ("13300000000".equals(username)) {
 			userDetails.addAuthorities(AuthorityUtils.createAuthorityList(new String[] { "admin" }));
-		}else{
+			userDetails.setRole("admin");
+		}
+		else {
 			userDetails.addAuthorities(AuthorityUtils.createAuthorityList(new String[] { "user" }));
+			userDetails.setRole("user");
 		}
 		return userDetails;
 	}
