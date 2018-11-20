@@ -11,7 +11,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.wkhmedical.po.OauthRole;
 import com.wkhmedical.po.YunUser;
+import com.wkhmedical.repository.jpa.OauthRoleRepository;
 import com.wkhmedical.repository.jpa.YunUserRepository;
 
 /**
@@ -25,6 +27,9 @@ public class DefaultUserDetailsService implements UserDetailsService {
 
 	@Autowired
 	YunUserRepository userRepository;
+
+	@Autowired
+	OauthRoleRepository oauthRoleRepository;
 
 	/*
 	 * (non-Javadoc)
@@ -51,14 +56,17 @@ public class DefaultUserDetailsService implements UserDetailsService {
 		userDetails.setSalt(user.getUserPwdSalt());
 		userDetails.setRealName(user.getUserName());
 		userDetails.setEnabled(true);
-		if ("13300000000".equals(username)) {
-			userDetails.addAuthorities(AuthorityUtils.createAuthorityList(new String[] { "admin" }));
-			userDetails.setRole("admin");
+		String roleId = user.getRoleId();
+		String userRole = "user";
+		if (StringUtils.isNotBlank(roleId)) {
+			OauthRole oauthRole = oauthRoleRepository.findByKey(roleId);
+			if (oauthRole != null) {
+				// TODO后期需要加入是否有效的权限
+				userRole = oauthRole.getRoleName();
+			}
 		}
-		else {
-			userDetails.addAuthorities(AuthorityUtils.createAuthorityList(new String[] { "user" }));
-			userDetails.setRole("user");
-		}
+		userDetails.addAuthorities(AuthorityUtils.createAuthorityList(new String[] { userRole }));
+		userDetails.setRole(userRole);
 		return userDetails;
 	}
 

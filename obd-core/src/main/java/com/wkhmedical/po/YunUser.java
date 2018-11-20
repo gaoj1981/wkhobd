@@ -42,6 +42,8 @@ public class YunUser implements Serializable {
 
 	private Date userBirth;
 
+	private String roleId;
+
 	private Integer state;
 
 	@Enumerated(EnumType.STRING)

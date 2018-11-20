@@ -23,19 +23,13 @@ public class DefaultAuthenticationSuccessHandler extends SavedRequestAwareAuthen
 			throws ServletException, IOException {
 		// 临时设置权限
 		TUserDetails userDetail = (TUserDetails) authentication.getPrincipal();
-		String uname = userDetail.getUsername();
 		if (WebUtil.isAjaxRequest(request)) {
 			WebUtil.setJsonResponseConfig(response);
 			response.setStatus(HttpServletResponse.SC_OK);
 			JSONObject jso = new JSONObject();
 			jso.put("status", "ok");
 			jso.put("type", "account");
-			if ("123111111".equals(uname)) {
-				jso.put("currentAuthority", "admin");
-			}
-			else {
-				jso.put("currentAuthority", "user");
-			}
+			jso.put("currentAuthority", userDetail.getRole());
 			PrintWriter out = response.getWriter();
 			out.append(jso.toJSONString());
 			out.flush();
@@ -43,7 +37,8 @@ public class DefaultAuthenticationSuccessHandler extends SavedRequestAwareAuthen
 			clearAuthenticationAttributes(request);
 		}
 		else {
-			if ("123111111".equals(uname)) {
+			String role = userDetail.getRole();
+			if ("admin".equals(role)) {
 				super.onAuthenticationSuccess(request, response, authentication);
 			}
 			else {

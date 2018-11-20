@@ -33,7 +33,7 @@ public class SecurityIdentityHandlerInterceptor extends HandlerInterceptorAdapte
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		if (request.getRequestURI().startsWith("/public/")) return true;
-		log.info(SecurityUtils.getCurrentUser().getRole() + userRepository + request.getRequestURI());
+		log.info(SecurityUtils.getCurrentUser().getRole() + " " + request.getRequestURI());
 		return true;
 	}
 
