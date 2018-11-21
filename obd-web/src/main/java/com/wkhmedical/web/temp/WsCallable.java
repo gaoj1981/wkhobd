@@ -14,6 +14,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
+import com.taoxeo.boot.security.PasswordUtils;
+import com.taoxeo.boot.security.PasswordUtils.Password;
 import com.wkhmedical.dto.ObdCarDTO;
 import com.wkhmedical.message.Message;
 import com.wkhmedical.message.event.SendEvent;
@@ -58,5 +60,11 @@ public class WsCallable implements Callable<T> {
 			}
 		}
 		return null;
+	}
+	
+	public static void main(String[] args) {
+		Password password = PasswordUtils.encodePwd("111111");
+		System.out.println(password.getPwd());
+		System.out.println(password.getPwdSalt());
 	}
 }

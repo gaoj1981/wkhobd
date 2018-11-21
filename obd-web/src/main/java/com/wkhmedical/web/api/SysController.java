@@ -64,11 +64,11 @@ public class SysController {
 			Map<String, Object> geographic = new HashMap<String, Object>();
 			Map<String, Object> sub2 = new HashMap<String, Object>();
 			sub2.put("key", exinfo.getProvId() + "");
-			sub2.put("label", "浙江省");
+			sub2.put("label", "");
 			geographic.put("province", sub2);
 			sub2 = new HashMap<String, Object>();
 			sub2.put("key", exinfo.getCityId() + "");
-			sub2.put("label", "杭州市");
+			sub2.put("label", "");
 			geographic.put("city", sub2);
 			rtnUser.setGeographic(geographic);
 			rtnUser.setAddress(exinfo.getAddr());
