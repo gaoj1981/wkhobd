@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.taoxeo.boot.security.CurrentUser;
+import com.wkhmedical.constant.Geographic;
 import com.wkhmedical.dto.SessionUserDTO;
 import com.wkhmedical.po.UserExinfo;
 import com.wkhmedical.security.TUserDetails;
@@ -80,6 +81,7 @@ public class SysController {
 	@ApiOperation(value = "获取当前用户权限")
 	@GetMapping("/get.current_role")
 	public Set<String> getCurRole(@CurrentUser TUserDetails user) {
+		System.out.println(Geographic.GeographicMap);
 		Set<String> authSet = AuthorityUtils.authorityListToSet(user.getAuthorities());
 		return authSet;
 	}
