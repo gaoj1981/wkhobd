@@ -179,8 +179,8 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		boolean groupByProv = paramBody.getGroupByProv();
 		if (groupByProv) {
 			// 按省份汇总
-			return hibernateSupport.findByNativeSql(ChartCarDTO.class, "SELECT provId,COUNT(1) AS countNum FROM car_info GROUP BY provId", null,
-					1000);
+			return hibernateSupport.findByNativeSql(ChartCarDTO.class,
+					"SELECT provId,COUNT(1) AS countNum FROM car_info WHERE delFlag=0 GROUP BY provId", null, 1000);
 		}
 		return new ArrayList<ChartCarDTO>();
 	}

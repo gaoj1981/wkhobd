@@ -53,9 +53,9 @@ public class WareRecordServiceImpl implements WareRecordService {
 	}
 
 	@Override
-	public Page<WareRecord> getPgList(Paging<WareRecordBody> paramBody) {
+	public Page<WareRecordDTO> getPgList(Paging<WareRecordBody> paramBody) {
 		WareRecordBody queryObj = paramBody.getQuery();
-		return wareRecordRepository.findPgWareRecord(queryObj, paramBody.toPageable());
+		return wareRecordRepository.findPgWareRecordDTO(queryObj, paramBody.toPageable());
 	}
 
 	@Override

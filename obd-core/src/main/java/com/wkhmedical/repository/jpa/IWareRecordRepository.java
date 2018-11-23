@@ -16,5 +16,7 @@ public interface IWareRecordRepository {
 
 	Page<WareRecord> findPgWareRecord(WareRecordBody paramBody, Pageable pageable);
 
+	Page<WareRecordDTO> findPgWareRecordDTO(WareRecordBody paramBody, Pageable pageable);
+
 	Integer findCount(String id);
 }

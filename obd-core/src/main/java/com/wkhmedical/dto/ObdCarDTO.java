@@ -42,6 +42,9 @@ public class ObdCarDTO implements Serializable {
 	@ApiModelProperty(value = "汽车仪表总里程 KM")
 	private Double dashboardTotalMileage;
 
+	@ApiModelProperty(value = "电瓶电压 V")
+	private Double batteryvoltage;
+
 	@ApiModelProperty(value = "位置经度")
 	private BigDecimal lng;
 

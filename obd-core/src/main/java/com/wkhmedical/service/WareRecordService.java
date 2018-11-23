@@ -15,7 +15,7 @@ public interface WareRecordService {
 
 	List<WareRecordDTO> getList(Paging<WareRecordBody> paramBody);
 
-	Page<WareRecord> getPgList(Paging<WareRecordBody> paramBody);
+	Page<WareRecordDTO> getPgList(Paging<WareRecordBody> paramBody);
 
 	void addInfo(WareRecordBody infoBody);
 

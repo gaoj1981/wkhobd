@@ -55,14 +55,13 @@ public class WareRecordController {
 
 	@ApiOperation(value = "获取维修保养分页对象")
 	@PostMapping("/get.page")
-	public Page<WareRecord> getWareRecordPage(@RequestBody @Valid Paging<WareRecordBody> paramBody) {
+	public Page<WareRecordDTO> getWareRecordPage(@RequestBody @Valid Paging<WareRecordBody> paramBody) {
 		return wareRecordService.getPgList(paramBody);
 	}
 
 	@ApiOperation(value = "添加维修保养（APP用）")
 	@PostMapping("/add")
-	public void wareRecordAdd(@RequestBody @Validated({ ValiAdd.class }) WareRecordBody paramBody,
-			@CurrentUser TUserDetails user) {
+	public void wareRecordAdd(@RequestBody @Validated({ ValiAdd.class }) WareRecordBody paramBody, @CurrentUser TUserDetails user) {
 		wareRecordService.addInfo(paramBody);
 	}
 

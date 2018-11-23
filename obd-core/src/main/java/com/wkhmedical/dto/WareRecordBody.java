@@ -66,4 +66,8 @@ public class WareRecordBody implements Serializable {
 	@Length(min = 0, max = 11, groups = { ValiAdd.class, ValiEdit.class })
 	private String excTel;
 
+	// ===========查询扩展=============
+	@ApiModelProperty(value = "车辆ID（支持模糊查询）")
+	private String eidLike;
+
 }

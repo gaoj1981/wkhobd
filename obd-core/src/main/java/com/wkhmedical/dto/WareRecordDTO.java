@@ -42,4 +42,13 @@ public class WareRecordDTO implements Serializable {
 	@ApiModelProperty(value = "操作人电话")
 	private String excTel;
 
+	@ApiModelProperty(value = "车辆所属区域")
+	private String areaId;
+
+	@ApiModelProperty(value = "车辆所属省份")
+	private String provId;
+
+	@ApiModelProperty(value = "车辆所属城市")
+	private String cityId;
+
 }

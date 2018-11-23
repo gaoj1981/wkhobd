@@ -93,6 +93,7 @@ public class MessageController {
 				obdCar.setEnvironmentTemperature(28 + random.nextInt(10));
 				obdCar.setAirDoorTemperature(78 + random.nextInt(10));
 				obdCar.setCoolWaterTemperature(90 + random.nextInt(10));
+				obdCar.setBatteryvoltage(Double.valueOf(String.format("%.2f", 9.01 + random.nextInt(10) + Math.random())));
 				obdCar.setEid(userId);
 				messagingTemplate.convertAndSend("/queue/obd.data." + userId, obdCar);
 				Message message = new Message("11111111", ObdCarDTO.class.getSimpleName(), obdCar);
