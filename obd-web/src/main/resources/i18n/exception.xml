@@ -78,4 +78,6 @@
 	<entry key="carinsur_nocar_exists">该保险对应的车辆不存在</entry>
 	<entry key="carinsur_expdate_over_max">该车保险有效期需小于{0}</entry>
 	<entry key="carinsur_expdate_over_min">该车保险有效期需大于{0}</entry>
+	
+	<entry key="warerecord_nocar_exists">该维修记录对应的车辆不存在</entry>
 </properties>

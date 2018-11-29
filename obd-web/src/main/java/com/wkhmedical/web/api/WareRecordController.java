@@ -47,6 +47,14 @@ public class WareRecordController {
 		return wareRecordService.getInfo(paramBody);
 	}
 
+	@ApiOperation(value = "获取车辆保险固定信息")
+	@GetMapping("/get.info")
+	public WareRecordDTO getWareRecordInfo(@ApiParam(value = "id主Key", required = true) @RequestParam String id) {
+		WareRecordBody paramBody = new WareRecordBody();
+		paramBody.setId(id);
+		return wareRecordService.getExInfo(paramBody);
+	}
+
 	@ApiOperation(value = "获取维修保养分页列表（APP用）")
 	@PostMapping("/get.list")
 	public List<WareRecordDTO> getWareRecordData(@RequestBody @Valid Paging<WareRecordBody> paramBody) {

@@ -47,6 +47,27 @@ public class WareRecordServiceImpl implements WareRecordService {
 	}
 
 	@Override
+	public WareRecordDTO getExInfo(WareRecordBody paramBody) {
+		WareRecordDTO rtnDTO = new WareRecordDTO();
+		String id = paramBody.getId();
+		Optional<WareRecord> optObj = wareRecordRepository.findById(id);
+		if (!optObj.isPresent()) {
+			throw new BizRuntimeException("info_not_exists", id);
+		}
+		WareRecord wareRecord = optObj.get();
+		// 获取车辆对象
+		Optional<CarInfo> optCar = carInfoRepository.findById(wareRecord.getCid());
+		if (!optCar.isPresent()) {
+			throw new BizRuntimeException("warerecord_nocar_exists");
+		}
+		CarInfo carInfo = optCar.get();
+		// 合并保险对象（此处开发需注意同名属性覆盖）
+		BeanUtils.merageProperty(rtnDTO, carInfo);
+		BeanUtils.merageProperty(rtnDTO, wareRecord);
+		return rtnDTO;
+	}
+
+	@Override
 	public List<WareRecordDTO> getList(Paging<WareRecordBody> paramBody) {
 		WareRecordBody queryObj = paramBody.getQuery();
 		return wareRecordRepository.findWareRecordList(queryObj, paramBody.toPageable());

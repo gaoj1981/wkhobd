@@ -113,7 +113,8 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 			List<String> sqlStrList = new ArrayList<String>();
 			sqlStrList.add(" AND areaId = ?");
 			sqlStrList.add(" AND eid LIKE ?");
-			BizUtil.setSqlWhere(paramBody, "areaId,eidLike", sqlWhere, objList, sqlStrList);
+			sqlStrList.add(" AND plateNum LIKE ?");
+			BizUtil.setSqlWhere(paramBody, "areaId,eidLike,plateNumLike", sqlWhere, objList, sqlStrList);
 			// 车管人员查询处理
 			String buserId = paramBody.getBuserId();
 			if (StringUtils.isNotBlank(buserId)) {

@@ -13,6 +13,8 @@ public interface WareRecordService {
 
 	WareRecord getInfo(WareRecordBody paramBody);
 
+	WareRecordDTO getExInfo(WareRecordBody paramBody);
+
 	List<WareRecordDTO> getList(Paging<WareRecordBody> paramBody);
 
 	Page<WareRecordDTO> getPgList(Paging<WareRecordBody> paramBody);
