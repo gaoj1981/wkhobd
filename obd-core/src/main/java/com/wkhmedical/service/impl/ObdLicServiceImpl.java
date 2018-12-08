@@ -318,4 +318,23 @@ public class ObdLicServiceImpl implements ObdLicService {
 			return null;
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.ObdLicService#updateEquipCheck(java.lang.String)
+	 */
+	@Override
+	public void updateEquipCheck(String sendStr) {
+		JSONObject requestJso = JSONObject.parseObject(sendStr);
+		log.info("请求JSON：" + requestJso);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.ObdLicService#updateEquipStuff(java.lang.String)
+	 */
+	@Override
+	public void updateEquipStuff(String sendStr) {
+
+	}
 }

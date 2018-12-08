@@ -81,6 +81,22 @@ public class DeviceController {
 	}
 
 	/**
+	 * 推送设备体检信息.
+	 *
+	 * @param act 推送类型
+	 * @param sendStr 推送信息
+	 */
+	@PostMapping("/device/send/{act:check|stuff}")
+	public void sendCheck(@PathVariable String act, @RequestBody @Valid String sendStr) {
+		if ("check".equals(act)) {
+			obdLicService.updateEquipCheck(sendStr);
+		}
+		else if ("stuff".equals(act)) {
+			obdLicService.updateEquipStuff(sendStr);
+		}
+	}
+
+	/**
 	 * 获取授权已使用/总量
 	 * 
 	 * @return

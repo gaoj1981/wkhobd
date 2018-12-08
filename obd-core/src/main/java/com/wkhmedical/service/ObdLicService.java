@@ -8,4 +8,8 @@ public interface ObdLicService {
 	ObdLicDTO getObdLic(String urlEid, String rsaStr);
 
 	Long[] getLicCountArr(LicStatus status);
+
+	void updateEquipCheck(String sendStr);
+
+	void updateEquipStuff(String sendStr);
 }

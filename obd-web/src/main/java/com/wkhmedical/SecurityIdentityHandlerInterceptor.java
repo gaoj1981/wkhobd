@@ -32,7 +32,13 @@ public class SecurityIdentityHandlerInterceptor extends HandlerInterceptorAdapte
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		if (request.getRequestURI().startsWith("/public/")) return true;
+		// 请求URI
+		String reqUri = request.getRequestURI();
+		// 通行URI
+		if (reqUri.startsWith("/anonymous/") || reqUri.startsWith("/api/device/")) {
+			return true;
+		}
+
 		log.info(SecurityUtils.getCurrentUser().getRole() + " " + request.getRequestURI());
 		return true;
 	}
