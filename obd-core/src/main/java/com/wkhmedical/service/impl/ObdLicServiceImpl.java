@@ -7,23 +7,32 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.taoxeo.lang.exception.BizRuntimeException;
 import com.wkhmedical.config.ConfigProperties;
 import com.wkhmedical.constant.LicStatus;
+import com.wkhmedical.dto.DeviceCheckDTO;
 import com.wkhmedical.dto.LicInfoDTO;
 import com.wkhmedical.dto.ObdLicDTO;
 import com.wkhmedical.exception.ObdLicException;
+import com.wkhmedical.po.CarInfo;
+import com.wkhmedical.po.DeviceCheck;
 import com.wkhmedical.po.MgObdLic;
 import com.wkhmedical.po.MgObdLicReq;
 import com.wkhmedical.po.MgObdLicSum;
+import com.wkhmedical.repository.jpa.CarInfoRepository;
+import com.wkhmedical.repository.jpa.DeviceCheckRepository;
 import com.wkhmedical.repository.mongo.ObdLicRepository;
 import com.wkhmedical.repository.mongo.ObdLicReqRepository;
 import com.wkhmedical.repository.mongo.ObdLicSumRepository;
 import com.wkhmedical.service.ObdLicService;
+import com.wkhmedical.util.BizUtil;
 import com.wkhmedical.util.DateUtil;
 import com.wkhmedical.util.RSAUtil;
+import com.wkhmedical.util.SnowflakeIdWorker;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -40,6 +49,10 @@ public class ObdLicServiceImpl implements ObdLicService {
 	ObdLicSumRepository licSumRepository;
 	@Resource
 	ObdLicReqRepository licReqRepository;
+	@Resource
+	DeviceCheckRepository dcRepository;
+	@Resource
+	CarInfoRepository carInfoRepository;
 
 	@Override
 	public ObdLicDTO getObdLic(String urlEid, String rsaStr) {
@@ -324,9 +337,287 @@ public class ObdLicServiceImpl implements ObdLicService {
 	 * @see com.wkhmedical.service.ObdLicService#updateEquipCheck(java.lang.String)
 	 */
 	@Override
+	@Transactional
 	public void updateEquipCheck(String sendStr) {
 		JSONObject requestJso = JSONObject.parseObject(sendStr);
-		log.info("请求JSON：" + requestJso);
+		log.info("体检JSON：" + requestJso);
+		//
+		String eid = requestJso.getString("eid");
+		CarInfo carInfo = carInfoRepository.findByEidAndDelFlag(eid, 0);
+		if (carInfo == null) {
+			throw new BizRuntimeException("carinfo_not_exists", eid);
+		}
+		//
+		SnowflakeIdWorker idWorker = new SnowflakeIdWorker(BizUtil.getDbWorkerId(), BizUtil.getDbDatacenterId());
+		//
+		DeviceCheckDTO dcDTO = BizUtil.getDCheck4Json(requestJso);
+		Long time = DateUtil.getTimestamp();
+		// BCAbnm
+		DeviceCheck dcObj = dcRepository.findByEidAndType(eid, "BCAbnm");
+		if (dcObj == null) {
+			dcObj = new DeviceCheck();
+			dcObj.setId(BizUtil.genDbIdStr(idWorker));
+			dcObj.setEid(eid);
+			dcObj.setType("BCAbnm");
+			dcObj.setStatus(0);
+			dcObj.setNumber(dcDTO.getBcabnm());
+			dcObj.setTime(time);
+			dcRepository.save(dcObj);
+		}
+		else {
+			Long bcabnm = dcObj.getNumber();
+			dcObj.setNumber(bcabnm + dcDTO.getBcabnm());
+			dcObj.setTime(time);
+			dcRepository.update(dcObj);
+		}
+		// BCExam
+		dcObj = dcRepository.findByEidAndType(eid, "BCExam");
+		if (dcObj == null) {
+			dcObj = new DeviceCheck();
+			dcObj.setId(BizUtil.genDbIdStr(idWorker));
+			dcObj.setEid(eid);
+			dcObj.setType("BCExam");
+			dcObj.setStatus(1);
+			dcObj.setNumber(dcDTO.getBcexam());
+			dcObj.setTime(time);
+			dcRepository.save(dcObj);
+		}
+		else {
+			Long bcexam = dcObj.getNumber();
+			dcObj.setNumber(bcexam + dcDTO.getBcexam());
+			dcObj.setTime(time);
+			dcRepository.update(dcObj);
+		}
+
+		// BIOAbnm
+		dcObj = dcRepository.findByEidAndType(eid, "BIOAbnm");
+		if (dcObj == null) {
+			dcObj = new DeviceCheck();
+			dcObj.setId(BizUtil.genDbIdStr(idWorker));
+			dcObj.setEid(eid);
+			dcObj.setType("BIOAbnm");
+			dcObj.setStatus(0);
+			dcObj.setNumber(dcDTO.getBioabnm());
+			dcObj.setTime(time);
+			dcRepository.save(dcObj);
+		}
+		else {
+			Long bioabnm = dcObj.getNumber();
+			dcObj.setNumber(bioabnm + dcDTO.getBioabnm());
+			dcObj.setTime(time);
+			dcRepository.update(dcObj);
+		}
+
+		// BIOExam
+		dcObj = dcRepository.findByEidAndType(eid, "BIOExam");
+		if (dcObj == null) {
+			dcObj = new DeviceCheck();
+			dcObj.setId(BizUtil.genDbIdStr(idWorker));
+			dcObj.setEid(eid);
+			dcObj.setType("BIOExam");
+			dcObj.setStatus(1);
+			dcObj.setNumber(dcDTO.getBioexam());
+			dcObj.setTime(time);
+			dcRepository.save(dcObj);
+		}
+		else {
+			Long bioexam = dcObj.getNumber();
+			dcObj.setNumber(bioexam + dcDTO.getBioexam());
+			dcObj.setTime(time);
+			dcRepository.update(dcObj);
+		}
+
+		// BScanAbnm
+		dcObj = dcRepository.findByEidAndType(eid, "BScanAbnm");
+		if (dcObj == null) {
+			dcObj = new DeviceCheck();
+			dcObj.setId(BizUtil.genDbIdStr(idWorker));
+			dcObj.setEid(eid);
+			dcObj.setType("BScanAbnm");
+			dcObj.setStatus(0);
+			dcObj.setNumber(dcDTO.getBscanabnm());
+			dcObj.setTime(time);
+			dcRepository.save(dcObj);
+		}
+		else {
+			Long bscanabnm = dcObj.getNumber();
+			dcObj.setNumber(bscanabnm + dcDTO.getBscanabnm());
+			dcObj.setTime(time);
+			dcRepository.update(dcObj);
+		}
+
+		// BScanExam
+		dcObj = dcRepository.findByEidAndType(eid, "BScanExam");
+		if (dcObj == null) {
+			dcObj = new DeviceCheck();
+			dcObj.setId(BizUtil.genDbIdStr(idWorker));
+			dcObj.setEid(eid);
+			dcObj.setType("BScanExam");
+			dcObj.setStatus(1);
+			dcObj.setNumber(dcDTO.getBscanexam());
+			dcObj.setTime(time);
+			dcRepository.save(dcObj);
+		}
+		else {
+			Long bscanexam = dcObj.getNumber();
+			dcObj.setNumber(bscanexam + dcDTO.getBscanexam());
+			dcObj.setTime(time);
+			dcRepository.update(dcObj);
+		}
+
+		// EcgAbnm
+		dcObj = dcRepository.findByEidAndType(eid, "EcgAbnm");
+		if (dcObj == null) {
+			dcObj = new DeviceCheck();
+			dcObj.setId(BizUtil.genDbIdStr(idWorker));
+			dcObj.setEid(eid);
+			dcObj.setType("EcgAbnm");
+			dcObj.setStatus(0);
+			dcObj.setNumber(dcDTO.getEcgabnm());
+			dcObj.setTime(time);
+			dcRepository.save(dcObj);
+		}
+		else {
+			Long ecgabnm = dcObj.getNumber();
+			dcObj.setNumber(ecgabnm + dcDTO.getEcgabnm());
+			dcObj.setTime(time);
+			dcRepository.update(dcObj);
+		}
+
+		// EcgExam
+		dcObj = dcRepository.findByEidAndType(eid, "EcgExam");
+		if (dcObj == null) {
+			dcObj = new DeviceCheck();
+			dcObj.setId(BizUtil.genDbIdStr(idWorker));
+			dcObj.setEid(eid);
+			dcObj.setType("EcgExam");
+			dcObj.setStatus(1);
+			dcObj.setNumber(dcDTO.getEcgexam());
+			dcObj.setTime(time);
+			dcRepository.save(dcObj);
+		}
+		else {
+			Long ecgexam = dcObj.getNumber();
+			dcObj.setNumber(ecgexam + dcDTO.getEcgexam());
+			dcObj.setTime(time);
+			dcRepository.update(dcObj);
+		}
+
+		// IbpAbnm
+		dcObj = dcRepository.findByEidAndType(eid, "IbpAbnm");
+		if (dcObj == null) {
+			dcObj = new DeviceCheck();
+			dcObj.setId(BizUtil.genDbIdStr(idWorker));
+			dcObj.setEid(eid);
+			dcObj.setType("IbpAbnm");
+			dcObj.setStatus(0);
+			dcObj.setNumber(dcDTO.getIbpabnm());
+			dcObj.setTime(time);
+			dcRepository.save(dcObj);
+		}
+		else {
+			Long ibpabnm = dcObj.getNumber();
+			dcObj.setNumber(ibpabnm + dcDTO.getIbpabnm());
+			dcObj.setTime(time);
+			dcRepository.update(dcObj);
+		}
+
+		// getIbpexam
+		dcObj = dcRepository.findByEidAndType(eid, "IbpExam");
+		if (dcObj == null) {
+			dcObj = new DeviceCheck();
+			dcObj.setId(BizUtil.genDbIdStr(idWorker));
+			dcObj.setEid(eid);
+			dcObj.setType("IbpExam");
+			dcObj.setStatus(1);
+			dcObj.setNumber(dcDTO.getIbpexam());
+			dcObj.setTime(time);
+			dcRepository.save(dcObj);
+		}
+		else {
+			Long ibpexam = dcObj.getNumber();
+			dcObj.setNumber(ibpexam + dcDTO.getIbpexam());
+			dcObj.setTime(time);
+			dcRepository.update(dcObj);
+		}
+
+		// Report
+		dcObj = dcRepository.findByEidAndType(eid, "Report");
+		if (dcObj == null) {
+			dcObj = new DeviceCheck();
+			dcObj.setId(BizUtil.genDbIdStr(idWorker));
+			dcObj.setEid(eid);
+			dcObj.setType("Report");
+			dcObj.setStatus(1);
+			dcObj.setNumber(dcDTO.getReport());
+			dcObj.setTime(time);
+			dcRepository.save(dcObj);
+		}
+		else {
+			Long report = dcObj.getNumber();
+			dcObj.setNumber(report + dcDTO.getReport());
+			dcObj.setTime(time);
+			dcRepository.update(dcObj);
+		}
+
+		// UrineAbnm
+		dcObj = dcRepository.findByEidAndType(eid, "UrineAbnm");
+		if (dcObj == null) {
+			dcObj = new DeviceCheck();
+			dcObj.setId(BizUtil.genDbIdStr(idWorker));
+			dcObj.setEid(eid);
+			dcObj.setType("UrineAbnm");
+			dcObj.setStatus(0);
+			dcObj.setNumber(dcDTO.getUrineabnm());
+			dcObj.setTime(time);
+			dcRepository.save(dcObj);
+		}
+		else {
+			Long urineabnm = dcObj.getNumber();
+			dcObj.setNumber(urineabnm + dcDTO.getUrineabnm());
+			dcObj.setTime(time);
+			dcRepository.update(dcObj);
+		}
+
+		// UrineExam
+		dcObj = dcRepository.findByEidAndType(eid, "UrineExam");
+		if (dcObj == null) {
+			dcObj = new DeviceCheck();
+			dcObj.setId(BizUtil.genDbIdStr(idWorker));
+			dcObj.setEid(eid);
+			dcObj.setType("UrineExam");
+			dcObj.setStatus(1);
+			dcObj.setNumber(dcDTO.getUrineexam());
+			dcObj.setTime(time);
+			dcRepository.save(dcObj);
+		}
+		else {
+			Long urineexam = dcObj.getNumber();
+			dcObj.setNumber(urineexam + dcDTO.getUrineexam());
+			dcObj.setTime(time);
+			dcRepository.update(dcObj);
+		}
+
+		// PersonTime
+		dcObj = dcRepository.findByEidAndType(eid, "PersonTime");
+		if (dcObj == null) {
+			dcObj = new DeviceCheck();
+			dcObj.setId(BizUtil.genDbIdStr(idWorker));
+			dcObj.setEid(eid);
+			dcObj.setType("PersonTime");
+			dcObj.setStatus(1);
+			dcObj.setNumber(dcDTO.getPersontime());
+			dcObj.setTime(time);
+			dcRepository.save(dcObj);
+		}
+		else {
+			Long persontime = dcObj.getNumber();
+			dcObj.setNumber(persontime + dcDTO.getPersontime());
+			dcObj.setTime(time);
+			dcRepository.update(dcObj);
+		}
+		// 处理开关机时间
+		// TODO
 	}
 
 	/*

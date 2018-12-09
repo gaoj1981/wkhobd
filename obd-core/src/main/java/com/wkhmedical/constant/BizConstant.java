@@ -58,4 +58,5 @@ public class BizConstant {
 		MAP_PROV_ELLIPSIS.put(810000, "港");
 		MAP_PROV_ELLIPSIS.put(820000, "澳");
 	}
+
 }

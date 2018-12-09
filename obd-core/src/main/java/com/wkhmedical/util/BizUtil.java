@@ -18,9 +18,11 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wkhmedical.config.ConfigProperties;
 import com.wkhmedical.constant.BizConstant;
 import com.wkhmedical.constant.Gender;
+import com.wkhmedical.dto.DeviceCheckDTO;
 import com.wkhmedical.dto.IdCardValidator;
 
 @Component
@@ -304,6 +306,50 @@ public class BizUtil {
 		rtnArr[0] = page;
 		rtnArr[1] = size;
 		return rtnArr;
+	}
+
+	public static DeviceCheckDTO getDCheck4Json(JSONObject jso) {
+		//
+		DeviceCheckDTO rtnDcheck = new DeviceCheckDTO();
+		//
+		String eid = jso.getString("eid");
+		String t0 = jso.getString("t0");
+		String t1 = jso.getString("t1");
+		JSONObject stats = jso.getJSONObject("Stats");
+		Long bcabnm = stats.getLong("BCAbnm") == null ? 0L : stats.getLong("BCAbnm");
+		Long bcexam = stats.getLong("BCExam") == null ? 0L : stats.getLong("BCExam");
+		Long bioabnm = stats.getLong("BIOAbnm") == null ? 0L : stats.getLong("BIOAbnm");
+		Long bioexam = stats.getLong("BIOExam") == null ? 0L : stats.getLong("BIOExam");
+		Long bscanabnm = stats.getLong("BScanAbnm") == null ? 0L : stats.getLong("BScanAbnm");
+		Long bscanexam = stats.getLong("BScanExam") == null ? 0L : stats.getLong("BScanExam");
+		Long ecgabnm = stats.getLong("EcgAbnm") == null ? 0L : stats.getLong("EcgAbnm");
+		Long ecgexam = stats.getLong("EcgExam") == null ? 0L : stats.getLong("EcgExam");
+		Long ibpabnm = stats.getLong("IbpAbnm") == null ? 0L : stats.getLong("IbpAbnm");
+		Long ibpexam = stats.getLong("IbpExam") == null ? 0L : stats.getLong("IbpExam");
+		Long report = stats.getLong("Report") == null ? 0L : stats.getLong("Report");
+		Long urineabnm = stats.getLong("UrineAbnm") == null ? 0L : stats.getLong("UrineAbnm");
+		Long urineexam = stats.getLong("UrineExam") == null ? 0L : stats.getLong("UrineExam");
+		Long persontime = stats.getLong("PersonTime") == null ? 0L : stats.getLong("PersonTime");
+		//
+		rtnDcheck.setEid(eid);
+		rtnDcheck.setT0(t0);
+		rtnDcheck.setT1(t1);
+		rtnDcheck.setBcabnm(bcabnm);
+		rtnDcheck.setBcexam(bcexam);
+		rtnDcheck.setBioabnm(bioabnm);
+		rtnDcheck.setBioexam(bioexam);
+		rtnDcheck.setBscanabnm(bscanabnm);
+		rtnDcheck.setBscanexam(bscanexam);
+		rtnDcheck.setEcgabnm(ecgabnm);
+		rtnDcheck.setEcgexam(ecgexam);
+		rtnDcheck.setIbpabnm(ibpabnm);
+		rtnDcheck.setIbpexam(ibpexam);
+		rtnDcheck.setReport(report);
+		rtnDcheck.setUrineabnm(urineabnm);
+		rtnDcheck.setUrineexam(urineexam);
+		rtnDcheck.setPersontime(persontime);
+		//
+		return rtnDcheck;
 	}
 
 }
