@@ -1,10 +1,13 @@
 package com.wkhmedical.repository.jpa.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.taoxeo.repository.HibernateSupport;
@@ -43,6 +46,54 @@ public class DeviceCheckRepositoryImpl implements IDeviceCheckRepository {
 		}
 		log.info("获取设备体检对象为NULL");
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.repository.jpa.IDeviceCheckRepository#getCheckSum(com.wkhmedical.dto.
+	 * DeviceCheckSumBody)
+	 */
+	@Override
+	public Long getCheckSum(String eid, Long provId, Long cityId, Long areaId, Long townId, Long villId, String inTypeStr) {
+		List<Object> paramList = new ArrayList<Object>();
+		StringBuilder sqlBuf = new StringBuilder("");
+		sqlBuf.append(" SELECT SUM(dc.number) AS sumNum");
+		sqlBuf.append(" FROM device_check dc");
+		sqlBuf.append(" LEFT JOIN car_info ci ON dc.eid=ci.eid");
+		sqlBuf.append(" WHERE 1 = 1");
+		if (StringUtils.isNotBlank(eid)) {
+			sqlBuf.append(" AND dc.eid = ?");
+			paramList.add(eid);
+		}
+		if (provId != null) {
+			sqlBuf.append(" AND ci.provId = ?");
+			paramList.add(provId);
+		}
+		if (cityId != null) {
+			sqlBuf.append(" AND ci.cityId = ?");
+			paramList.add(cityId);
+		}
+		if (areaId != null) {
+			sqlBuf.append(" AND ci.areaId = ?");
+			paramList.add(areaId);
+		}
+		if (townId != null) {
+			sqlBuf.append(" AND ci.townId = ?");
+			paramList.add(townId);
+		}
+		if (villId != null) {
+			sqlBuf.append(" AND ci.villId = ?");
+			paramList.add(villId);
+		}
+		// 处理体检项IN查询
+		if (StringUtils.isNotBlank(inTypeStr)) {
+			sqlBuf.append(" AND dc.type IN (" + inTypeStr + ")");
+		}
+		@SuppressWarnings("rawtypes")
+		List<Map> lstCount = hibernateSupport.findByNativeSql(Map.class, sqlBuf.toString(), paramList.toArray());
+		BigDecimal resNum = (BigDecimal) lstCount.get(0).get("sumNum");
+		if (resNum == null) return 0L;
+		return resNum.longValue();
 	}
 
 }

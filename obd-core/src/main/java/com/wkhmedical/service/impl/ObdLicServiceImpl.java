@@ -15,6 +15,7 @@ import com.taoxeo.lang.exception.BizRuntimeException;
 import com.wkhmedical.config.ConfigProperties;
 import com.wkhmedical.constant.LicStatus;
 import com.wkhmedical.dto.DeviceCheckDTO;
+import com.wkhmedical.dto.DeviceCheckSumBody;
 import com.wkhmedical.dto.LicInfoDTO;
 import com.wkhmedical.dto.ObdLicDTO;
 import com.wkhmedical.exception.ObdLicException;
@@ -627,5 +628,83 @@ public class ObdLicServiceImpl implements ObdLicService {
 	@Override
 	public void updateEquipStuff(String sendStr) {
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.ObdLicService#getCheckSum(com.wkhmedical.dto.DeviceCheckSumBody)
+	 */
+	@Override
+	public Long getCheckSum(DeviceCheckSumBody paramBody) {
+		StringBuilder inStrs = new StringBuilder("");
+
+		Boolean bcabnm = paramBody.getBcabnm();
+		if (bcabnm) {
+			inStrs.append("'BCAbnm',");
+		}
+		Boolean bcexam = paramBody.getBcexam();
+		if (bcexam) {
+			inStrs.append("'BCExam',");
+		}
+		Boolean bioabnm = paramBody.getBioabnm();
+		if (bioabnm) {
+			inStrs.append("'BIOAbnm',");
+		}
+		Boolean bioexam = paramBody.getBioexam();
+		if (bioexam) {
+			inStrs.append("'BIOExam',");
+		}
+		Boolean bscanabnm = paramBody.getBscanabnm();
+		if (bscanabnm) {
+			inStrs.append("'BScanAbnm',");
+		}
+		Boolean bscanexam = paramBody.getBscanexam();
+		if (bscanexam) {
+			inStrs.append("'BScanExam',");
+		}
+		Boolean ecgabnm = paramBody.getEcgabnm();
+		if (ecgabnm) {
+			inStrs.append("'EcgAbnm',");
+		}
+		Boolean ecgexam = paramBody.getEcgexam();
+		if (ecgexam) {
+			inStrs.append("'EcgExam',");
+		}
+		Boolean ibpabnm = paramBody.getIbpabnm();
+		if (ibpabnm) {
+			inStrs.append("'IbpAbnm',");
+		}
+		Boolean ibpexam = paramBody.getIbpexam();
+		if (ibpexam) {
+			inStrs.append("'IbpExam',");
+		}
+		Boolean report = paramBody.getReport();
+		if (report) {
+			inStrs.append("'Report',");
+		}
+		Boolean urineabnm = paramBody.getUrineabnm();
+		if (urineabnm) {
+			inStrs.append("'UrineAbnm',");
+		}
+		Boolean urineexam = paramBody.getUrineexam();
+		if (urineexam) {
+			inStrs.append("'UrineExam',");
+		}
+		Boolean persontime = paramBody.getPersontime();
+		if (persontime) {
+			inStrs.append("'PersonTime',");
+		}
+		String inTypeStr = inStrs.toString();
+		if (inTypeStr.endsWith(",")) {
+			inTypeStr = inTypeStr.substring(0, inTypeStr.length() - 1);
+		}
+		String eid = paramBody.getEid();
+		Long provId = paramBody.getProvId();
+		Long cityId = paramBody.getCityId();
+		Long areaId = paramBody.getAreaId();
+		Long townId = paramBody.getTownId();
+		Long villId = paramBody.getVillId();
+
+		return dcRepository.getCheckSum(eid, provId, cityId, areaId, townId, villId, inTypeStr);
 	}
 }

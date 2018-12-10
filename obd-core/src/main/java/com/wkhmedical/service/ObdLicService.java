@@ -1,6 +1,7 @@
 package com.wkhmedical.service;
 
 import com.wkhmedical.constant.LicStatus;
+import com.wkhmedical.dto.DeviceCheckSumBody;
 import com.wkhmedical.dto.ObdLicDTO;
 
 public interface ObdLicService {
@@ -12,4 +13,6 @@ public interface ObdLicService {
 	void updateEquipCheck(String sendStr);
 
 	void updateEquipStuff(String sendStr);
+
+	Long getCheckSum(DeviceCheckSumBody paramBody);
 }
