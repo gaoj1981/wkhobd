@@ -32,9 +32,9 @@ public class DeviceCheckDTO implements Serializable {
 
 	private Long ecgexam;
 
-	private Long ibpabnm;
+	private Long bpabnm;
 
-	private Long ibpexam;
+	private Long bpexam;
 
 	private Long report;
 

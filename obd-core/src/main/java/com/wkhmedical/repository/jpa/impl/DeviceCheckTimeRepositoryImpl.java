@@ -4,9 +4,9 @@ import javax.annotation.Resource;
 
 import com.taoxeo.repository.HibernateSupport;
 import com.taoxeo.repository.JdbcQuery;
-import com.wkhmedical.repository.jpa.IDeviceTimeTempRepository;
+import com.wkhmedical.repository.jpa.IDeviceCheckTimeRepository;
 
-public class DeviceTimeTempRepositoryImpl implements IDeviceTimeTempRepository {
+public class DeviceCheckTimeRepositoryImpl implements IDeviceCheckTimeRepository {
 
 	@Resource
 	HibernateSupport hibernateSupport;

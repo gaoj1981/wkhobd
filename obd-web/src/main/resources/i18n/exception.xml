@@ -80,4 +80,7 @@
 	<entry key="carinsur_expdate_over_min">该车保险有效期需大于{0}</entry>
 	
 	<entry key="warerecord_nocar_exists">该维修记录对应的车辆不存在</entry>
+	
+	<entry key="devicecheck_sdt_error">体检推送开始日期有误</entry>
+	<entry key="devicecheck_edt_error">体检推送结束日期有误</entry>
 </properties>

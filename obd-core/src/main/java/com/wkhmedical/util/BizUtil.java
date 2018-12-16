@@ -324,8 +324,8 @@ public class BizUtil {
 		Long bscanexam = stats.getLong("BScanExam") == null ? 0L : stats.getLong("BScanExam");
 		Long ecgabnm = stats.getLong("EcgAbnm") == null ? 0L : stats.getLong("EcgAbnm");
 		Long ecgexam = stats.getLong("EcgExam") == null ? 0L : stats.getLong("EcgExam");
-		Long ibpabnm = stats.getLong("IbpAbnm") == null ? 0L : stats.getLong("IbpAbnm");
-		Long ibpexam = stats.getLong("IbpExam") == null ? 0L : stats.getLong("IbpExam");
+		Long bpabnm = stats.getLong("BpAbnm") == null ? 0L : stats.getLong("BpAbnm");
+		Long bpexam = stats.getLong("BpExam") == null ? 0L : stats.getLong("BpExam");
 		Long report = stats.getLong("Report") == null ? 0L : stats.getLong("Report");
 		Long urineabnm = stats.getLong("UrineAbnm") == null ? 0L : stats.getLong("UrineAbnm");
 		Long urineexam = stats.getLong("UrineExam") == null ? 0L : stats.getLong("UrineExam");
@@ -342,8 +342,8 @@ public class BizUtil {
 		rtnDcheck.setBscanexam(bscanexam);
 		rtnDcheck.setEcgabnm(ecgabnm);
 		rtnDcheck.setEcgexam(ecgexam);
-		rtnDcheck.setIbpabnm(ibpabnm);
-		rtnDcheck.setIbpexam(ibpexam);
+		rtnDcheck.setBpabnm(bpabnm);
+		rtnDcheck.setBpexam(bpexam);
 		rtnDcheck.setReport(report);
 		rtnDcheck.setUrineabnm(urineabnm);
 		rtnDcheck.setUrineexam(urineexam);

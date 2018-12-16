@@ -1,11 +1,14 @@
 package com.wkhmedical.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +16,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.taoxeo.lang.exception.BizRuntimeException;
 import com.wkhmedical.config.ConfigProperties;
+import com.wkhmedical.constant.BizConstant;
 import com.wkhmedical.constant.LicStatus;
 import com.wkhmedical.dto.DeviceCheckDTO;
 import com.wkhmedical.dto.DeviceCheckSumBody;
@@ -21,11 +25,16 @@ import com.wkhmedical.dto.ObdLicDTO;
 import com.wkhmedical.exception.ObdLicException;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.po.DeviceCheck;
+import com.wkhmedical.po.DeviceCheckTime;
+import com.wkhmedical.po.DeviceTimeTemp;
 import com.wkhmedical.po.MgObdLic;
 import com.wkhmedical.po.MgObdLicReq;
 import com.wkhmedical.po.MgObdLicSum;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
 import com.wkhmedical.repository.jpa.DeviceCheckRepository;
+import com.wkhmedical.repository.jpa.DeviceCheckTimeRepository;
+import com.wkhmedical.repository.jpa.DeviceTimeRepository;
+import com.wkhmedical.repository.jpa.DeviceTimeTempRepository;
 import com.wkhmedical.repository.mongo.ObdLicRepository;
 import com.wkhmedical.repository.mongo.ObdLicReqRepository;
 import com.wkhmedical.repository.mongo.ObdLicSumRepository;
@@ -54,6 +63,12 @@ public class ObdLicServiceImpl implements ObdLicService {
 	DeviceCheckRepository dcRepository;
 	@Resource
 	CarInfoRepository carInfoRepository;
+	@Resource
+	DeviceCheckTimeRepository deviceCheckTimeRepository;
+	@Resource
+	DeviceTimeRepository deviceTimeRepository;
+	@Resource
+	DeviceTimeTempRepository deviceTimeTempRepository;
 
 	@Override
 	public ObdLicDTO getObdLic(String urlEid, String rsaStr) {
@@ -353,272 +368,106 @@ public class ObdLicServiceImpl implements ObdLicService {
 		//
 		DeviceCheckDTO dcDTO = BizUtil.getDCheck4Json(requestJso);
 		Long time = DateUtil.getTimestamp();
-		// BCAbnm
-		DeviceCheck dcObj = dcRepository.findByEidAndType(eid, "BCAbnm");
-		if (dcObj == null) {
-			dcObj = new DeviceCheck();
-			dcObj.setId(BizUtil.genDbIdStr(idWorker));
-			dcObj.setEid(eid);
-			dcObj.setType("BCAbnm");
-			dcObj.setStatus(0);
-			dcObj.setNumber(dcDTO.getBcabnm());
-			dcObj.setTime(time);
-			dcRepository.save(dcObj);
+		String t0Str = dcDTO.getT0();
+		String t1Str = dcDTO.getT1();
+		Date t0;
+		Date t1 = null;
+		// 校验开始日期格式t0
+		t0 = DateUtil.parseToDate(t0Str, "yyyyMMddHHmmss");
+		if (t0 == null) {
+			throw new BizRuntimeException("devicecheck_sdt_error");
 		}
-		else {
-			Long bcabnm = dcObj.getNumber();
-			dcObj.setNumber(bcabnm + dcDTO.getBcabnm());
-			dcObj.setTime(time);
-			dcRepository.update(dcObj);
-		}
-		// BCExam
-		dcObj = dcRepository.findByEidAndType(eid, "BCExam");
-		if (dcObj == null) {
-			dcObj = new DeviceCheck();
-			dcObj.setId(BizUtil.genDbIdStr(idWorker));
-			dcObj.setEid(eid);
-			dcObj.setType("BCExam");
-			dcObj.setStatus(1);
-			dcObj.setNumber(dcDTO.getBcexam());
-			dcObj.setTime(time);
-			dcRepository.save(dcObj);
-		}
-		else {
-			Long bcexam = dcObj.getNumber();
-			dcObj.setNumber(bcexam + dcDTO.getBcexam());
-			dcObj.setTime(time);
-			dcRepository.update(dcObj);
-		}
+		String t0Str4Day = t0Str.substring(0, 8);
+		// 校验结束日期格式t0
+		if (StringUtils.isNotBlank(t1Str)) {
+			String t1Str4Day = t1Str.substring(0, 8);
+			if (!t1Str4Day.equals(t0Str4Day)) {
+				throw new BizRuntimeException("devicecheck_edt_error");
+			}
+			t1 = DateUtil.parseToDate(t1Str, "yyyyMMddHHmmss");
 
-		// BIOAbnm
-		dcObj = dcRepository.findByEidAndType(eid, "BIOAbnm");
-		if (dcObj == null) {
-			dcObj = new DeviceCheck();
-			dcObj.setId(BizUtil.genDbIdStr(idWorker));
-			dcObj.setEid(eid);
-			dcObj.setType("BIOAbnm");
-			dcObj.setStatus(0);
-			dcObj.setNumber(dcDTO.getBioabnm());
-			dcObj.setTime(time);
-			dcRepository.save(dcObj);
+			if (t1 == null) {
+				throw new BizRuntimeException("devicecheck_edt_error");
+			}
 		}
-		else {
-			Long bioabnm = dcObj.getNumber();
-			dcObj.setNumber(bioabnm + dcDTO.getBioabnm());
-			dcObj.setTime(time);
-			dcRepository.update(dcObj);
-		}
+		Date dtSend = DateUtil.parseToDate(t0Str4Day, "yyyyMMdd");
 
-		// BIOExam
-		dcObj = dcRepository.findByEidAndType(eid, "BIOExam");
-		if (dcObj == null) {
-			dcObj = new DeviceCheck();
-			dcObj.setId(BizUtil.genDbIdStr(idWorker));
-			dcObj.setEid(eid);
-			dcObj.setType("BIOExam");
-			dcObj.setStatus(1);
-			dcObj.setNumber(dcDTO.getBioexam());
-			dcObj.setTime(time);
-			dcRepository.save(dcObj);
-		}
-		else {
-			Long bioexam = dcObj.getNumber();
-			dcObj.setNumber(bioexam + dcDTO.getBioexam());
-			dcObj.setTime(time);
-			dcRepository.update(dcObj);
-		}
-
-		// BScanAbnm
-		dcObj = dcRepository.findByEidAndType(eid, "BScanAbnm");
-		if (dcObj == null) {
-			dcObj = new DeviceCheck();
-			dcObj.setId(BizUtil.genDbIdStr(idWorker));
-			dcObj.setEid(eid);
-			dcObj.setType("BScanAbnm");
-			dcObj.setStatus(0);
-			dcObj.setNumber(dcDTO.getBscanabnm());
-			dcObj.setTime(time);
-			dcRepository.save(dcObj);
-		}
-		else {
-			Long bscanabnm = dcObj.getNumber();
-			dcObj.setNumber(bscanabnm + dcDTO.getBscanabnm());
-			dcObj.setTime(time);
-			dcRepository.update(dcObj);
-		}
-
-		// BScanExam
-		dcObj = dcRepository.findByEidAndType(eid, "BScanExam");
-		if (dcObj == null) {
-			dcObj = new DeviceCheck();
-			dcObj.setId(BizUtil.genDbIdStr(idWorker));
-			dcObj.setEid(eid);
-			dcObj.setType("BScanExam");
-			dcObj.setStatus(1);
-			dcObj.setNumber(dcDTO.getBscanexam());
-			dcObj.setTime(time);
-			dcRepository.save(dcObj);
-		}
-		else {
-			Long bscanexam = dcObj.getNumber();
-			dcObj.setNumber(bscanexam + dcDTO.getBscanexam());
-			dcObj.setTime(time);
-			dcRepository.update(dcObj);
-		}
-
-		// EcgAbnm
-		dcObj = dcRepository.findByEidAndType(eid, "EcgAbnm");
-		if (dcObj == null) {
-			dcObj = new DeviceCheck();
-			dcObj.setId(BizUtil.genDbIdStr(idWorker));
-			dcObj.setEid(eid);
-			dcObj.setType("EcgAbnm");
-			dcObj.setStatus(0);
-			dcObj.setNumber(dcDTO.getEcgabnm());
-			dcObj.setTime(time);
-			dcRepository.save(dcObj);
-		}
-		else {
-			Long ecgabnm = dcObj.getNumber();
-			dcObj.setNumber(ecgabnm + dcDTO.getEcgabnm());
-			dcObj.setTime(time);
-			dcRepository.update(dcObj);
-		}
-
-		// EcgExam
-		dcObj = dcRepository.findByEidAndType(eid, "EcgExam");
-		if (dcObj == null) {
-			dcObj = new DeviceCheck();
-			dcObj.setId(BizUtil.genDbIdStr(idWorker));
-			dcObj.setEid(eid);
-			dcObj.setType("EcgExam");
-			dcObj.setStatus(1);
-			dcObj.setNumber(dcDTO.getEcgexam());
-			dcObj.setTime(time);
-			dcRepository.save(dcObj);
-		}
-		else {
-			Long ecgexam = dcObj.getNumber();
-			dcObj.setNumber(ecgexam + dcDTO.getEcgexam());
-			dcObj.setTime(time);
-			dcRepository.update(dcObj);
-		}
-
-		// IbpAbnm
-		dcObj = dcRepository.findByEidAndType(eid, "IbpAbnm");
-		if (dcObj == null) {
-			dcObj = new DeviceCheck();
-			dcObj.setId(BizUtil.genDbIdStr(idWorker));
-			dcObj.setEid(eid);
-			dcObj.setType("IbpAbnm");
-			dcObj.setStatus(0);
-			dcObj.setNumber(dcDTO.getIbpabnm());
-			dcObj.setTime(time);
-			dcRepository.save(dcObj);
-		}
-		else {
-			Long ibpabnm = dcObj.getNumber();
-			dcObj.setNumber(ibpabnm + dcDTO.getIbpabnm());
-			dcObj.setTime(time);
-			dcRepository.update(dcObj);
-		}
-
-		// getIbpexam
-		dcObj = dcRepository.findByEidAndType(eid, "IbpExam");
-		if (dcObj == null) {
-			dcObj = new DeviceCheck();
-			dcObj.setId(BizUtil.genDbIdStr(idWorker));
-			dcObj.setEid(eid);
-			dcObj.setType("IbpExam");
-			dcObj.setStatus(1);
-			dcObj.setNumber(dcDTO.getIbpexam());
-			dcObj.setTime(time);
-			dcRepository.save(dcObj);
-		}
-		else {
-			Long ibpexam = dcObj.getNumber();
-			dcObj.setNumber(ibpexam + dcDTO.getIbpexam());
-			dcObj.setTime(time);
-			dcRepository.update(dcObj);
-		}
-
-		// Report
-		dcObj = dcRepository.findByEidAndType(eid, "Report");
-		if (dcObj == null) {
-			dcObj = new DeviceCheck();
-			dcObj.setId(BizUtil.genDbIdStr(idWorker));
-			dcObj.setEid(eid);
-			dcObj.setType("Report");
-			dcObj.setStatus(1);
-			dcObj.setNumber(dcDTO.getReport());
-			dcObj.setTime(time);
-			dcRepository.save(dcObj);
-		}
-		else {
-			Long report = dcObj.getNumber();
-			dcObj.setNumber(report + dcDTO.getReport());
-			dcObj.setTime(time);
-			dcRepository.update(dcObj);
-		}
-
-		// UrineAbnm
-		dcObj = dcRepository.findByEidAndType(eid, "UrineAbnm");
-		if (dcObj == null) {
-			dcObj = new DeviceCheck();
-			dcObj.setId(BizUtil.genDbIdStr(idWorker));
-			dcObj.setEid(eid);
-			dcObj.setType("UrineAbnm");
-			dcObj.setStatus(0);
-			dcObj.setNumber(dcDTO.getUrineabnm());
-			dcObj.setTime(time);
-			dcRepository.save(dcObj);
-		}
-		else {
-			Long urineabnm = dcObj.getNumber();
-			dcObj.setNumber(urineabnm + dcDTO.getUrineabnm());
-			dcObj.setTime(time);
-			dcRepository.update(dcObj);
-		}
-
-		// UrineExam
-		dcObj = dcRepository.findByEidAndType(eid, "UrineExam");
-		if (dcObj == null) {
-			dcObj = new DeviceCheck();
-			dcObj.setId(BizUtil.genDbIdStr(idWorker));
-			dcObj.setEid(eid);
-			dcObj.setType("UrineExam");
-			dcObj.setStatus(1);
-			dcObj.setNumber(dcDTO.getUrineexam());
-			dcObj.setTime(time);
-			dcRepository.save(dcObj);
-		}
-		else {
-			Long urineexam = dcObj.getNumber();
-			dcObj.setNumber(urineexam + dcDTO.getUrineexam());
-			dcObj.setTime(time);
-			dcRepository.update(dcObj);
-		}
-
-		// PersonTime
-		dcObj = dcRepository.findByEidAndType(eid, "PersonTime");
-		if (dcObj == null) {
-			dcObj = new DeviceCheck();
-			dcObj.setId(BizUtil.genDbIdStr(idWorker));
-			dcObj.setEid(eid);
-			dcObj.setType("PersonTime");
-			dcObj.setStatus(1);
-			dcObj.setNumber(dcDTO.getPersontime());
-			dcObj.setTime(time);
-			dcRepository.save(dcObj);
-		}
-		else {
-			Long persontime = dcObj.getNumber();
-			dcObj.setNumber(persontime + dcDTO.getPersontime());
-			dcObj.setTime(time);
-			dcRepository.update(dcObj);
+		//
+		DeviceCheck dcObj;
+		DeviceCheckTime dcTimeObj;
+		String typeName;
+		for (Map.Entry<String, String> entry : BizConstant.MAP_CHECK_ITEMS.entrySet()) {
+			try {
+				Long number = (Long) PropertyUtils.getProperty(dcDTO, entry.getKey());
+				typeName = entry.getValue();
+				dcObj = dcRepository.findByEidAndType(eid, typeName);
+				// 处理体检汇总
+				if (dcObj == null) {
+					dcObj = new DeviceCheck();
+					dcObj.setId(BizUtil.genDbIdStr(idWorker));
+					dcObj.setEid(eid);
+					dcObj.setType(entry.getValue());
+					dcObj.setStatus(0);
+					dcObj.setNumber(number);
+					dcObj.setTime(time);
+					dcRepository.save(dcObj);
+				}
+				else {
+					Long objNum = dcObj.getNumber();
+					dcObj.setNumber(objNum + number);
+					dcObj.setTime(time);
+					dcRepository.update(dcObj);
+				}
+				// 处理体检日期汇总
+				dcTimeObj = deviceCheckTimeRepository.findByEidAndTypeAndDt(eid, typeName, dtSend);
+				if (dcTimeObj == null) {
+					dcTimeObj = new DeviceCheckTime();
+					dcTimeObj.setId(BizUtil.genDbIdStr(idWorker));
+					dcTimeObj.setEid(eid);
+					dcTimeObj.setType(typeName);
+					dcTimeObj.setNumber(number);
+					dcTimeObj.setDt(dtSend);
+					deviceCheckTimeRepository.save(dcTimeObj);
+				}
+				else {
+					Long objNum = dcTimeObj.getNumber();
+					dcTimeObj.setNumber(objNum + number);
+					deviceCheckTimeRepository.update(dcTimeObj);
+				}
+			}
+			catch (Exception e) {
+			}
 		}
 		// 处理开关机时间
-		// TODO
+		DeviceTimeTemp deviceTimeTemp = deviceTimeTempRepository.findByEidAndDt(eid, dtSend);
+		if (deviceTimeTemp == null) {
+			deviceTimeTemp = new DeviceTimeTemp();
+			deviceTimeTemp.setId(BizUtil.genDbIdStr(idWorker));
+			deviceTimeTemp.setEid(eid);
+			deviceTimeTemp.setDt(dtSend);
+			deviceTimeTemp.setSdt(t0);
+			deviceTimeTemp.setEdt(t1);
+			deviceTimeTemp.setFlag(0);
+			deviceTimeTempRepository.save(deviceTimeTemp);
+		}
+		else {
+			Date sdt = deviceTimeTemp.getSdt();
+			if (sdt != null && sdt.compareTo(t0) > 0) {
+				deviceTimeTemp.setSdt(sdt);
+			}
+			Date edt = deviceTimeTemp.getEdt();
+			if (t1 != null) {
+				if (edt == null) {
+					deviceTimeTemp.setEdt(t1);
+				}
+				else {
+					if (edt.compareTo(t1) < 0) {
+						deviceTimeTemp.setEdt(edt);
+					}
+				}
+			}
+			deviceTimeTempRepository.update(deviceTimeTemp);
+		}
 	}
 
 	/*
@@ -638,62 +487,18 @@ public class ObdLicServiceImpl implements ObdLicService {
 	public Long getCheckSum(DeviceCheckSumBody paramBody) {
 		StringBuilder inStrs = new StringBuilder("");
 
-		Boolean bcabnm = paramBody.getBcabnm();
-		if (bcabnm) {
-			inStrs.append("'BCAbnm',");
+		// 反射机制获取需要汇总的体检项
+		for (Map.Entry<String, String> entry : BizConstant.MAP_CHECK_ITEMS.entrySet()) {
+			try {
+				Boolean isTrue = (Boolean) PropertyUtils.getProperty(paramBody, entry.getKey());
+				if (isTrue) {
+					inStrs.append("'" + entry.getValue() + "',");
+				}
+			}
+			catch (Exception e) {
+			}
 		}
-		Boolean bcexam = paramBody.getBcexam();
-		if (bcexam) {
-			inStrs.append("'BCExam',");
-		}
-		Boolean bioabnm = paramBody.getBioabnm();
-		if (bioabnm) {
-			inStrs.append("'BIOAbnm',");
-		}
-		Boolean bioexam = paramBody.getBioexam();
-		if (bioexam) {
-			inStrs.append("'BIOExam',");
-		}
-		Boolean bscanabnm = paramBody.getBscanabnm();
-		if (bscanabnm) {
-			inStrs.append("'BScanAbnm',");
-		}
-		Boolean bscanexam = paramBody.getBscanexam();
-		if (bscanexam) {
-			inStrs.append("'BScanExam',");
-		}
-		Boolean ecgabnm = paramBody.getEcgabnm();
-		if (ecgabnm) {
-			inStrs.append("'EcgAbnm',");
-		}
-		Boolean ecgexam = paramBody.getEcgexam();
-		if (ecgexam) {
-			inStrs.append("'EcgExam',");
-		}
-		Boolean ibpabnm = paramBody.getIbpabnm();
-		if (ibpabnm) {
-			inStrs.append("'IbpAbnm',");
-		}
-		Boolean ibpexam = paramBody.getIbpexam();
-		if (ibpexam) {
-			inStrs.append("'IbpExam',");
-		}
-		Boolean report = paramBody.getReport();
-		if (report) {
-			inStrs.append("'Report',");
-		}
-		Boolean urineabnm = paramBody.getUrineabnm();
-		if (urineabnm) {
-			inStrs.append("'UrineAbnm',");
-		}
-		Boolean urineexam = paramBody.getUrineexam();
-		if (urineexam) {
-			inStrs.append("'UrineExam',");
-		}
-		Boolean persontime = paramBody.getPersontime();
-		if (persontime) {
-			inStrs.append("'PersonTime',");
-		}
+
 		String inTypeStr = inStrs.toString();
 		if (inTypeStr.endsWith(",")) {
 			inTypeStr = inTypeStr.substring(0, inTypeStr.length() - 1);

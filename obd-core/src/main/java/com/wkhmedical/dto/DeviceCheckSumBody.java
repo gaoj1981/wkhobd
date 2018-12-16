@@ -48,9 +48,9 @@ public class DeviceCheckSumBody implements Serializable {
 
 	private Boolean ecgexam = false;
 
-	private Boolean ibpabnm = false;
+	private Boolean bpabnm = false;
 
-	private Boolean ibpexam = false;
+	private Boolean bpexam = false;
 
 	private Boolean report = false;
 

@@ -59,4 +59,22 @@ public class BizConstant {
 		MAP_PROV_ELLIPSIS.put(820000, "澳");
 	}
 
+	public static final Map<String, String> MAP_CHECK_ITEMS = new HashMap<String, String>();
+	static {
+		MAP_CHECK_ITEMS.put("bcabnm", "BCAbnm");
+		MAP_CHECK_ITEMS.put("bcexam", "BCExam");
+		MAP_CHECK_ITEMS.put("bioabnm", "BIOAbnm");
+		MAP_CHECK_ITEMS.put("bioexam", "BIOExam");
+		MAP_CHECK_ITEMS.put("bscanabnm", "BScanAbnm");
+		MAP_CHECK_ITEMS.put("bscanexam", "BScanExam");
+		MAP_CHECK_ITEMS.put("ecgabnm", "EcgAbnm");
+		MAP_CHECK_ITEMS.put("ecgexam", "EcgExam");
+		MAP_CHECK_ITEMS.put("bpabnm", "BpAbnm");
+		MAP_CHECK_ITEMS.put("bpexam", "BpExam");
+		MAP_CHECK_ITEMS.put("report", "Report");
+		MAP_CHECK_ITEMS.put("urineabnm", "UrineAbnm");
+		MAP_CHECK_ITEMS.put("urineexam", "UrineExam");
+		MAP_CHECK_ITEMS.put("persontime", "PersonTime");
+	}
+
 }
