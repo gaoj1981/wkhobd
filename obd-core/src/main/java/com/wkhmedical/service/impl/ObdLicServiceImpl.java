@@ -453,7 +453,7 @@ public class ObdLicServiceImpl implements ObdLicService {
 		else {
 			Date sdt = deviceTimeTemp.getSdt();
 			if (sdt != null && sdt.compareTo(t0) > 0) {
-				deviceTimeTemp.setSdt(sdt);
+				deviceTimeTemp.setSdt(t0);
 			}
 			Date edt = deviceTimeTemp.getEdt();
 			if (t1 != null) {
@@ -462,7 +462,7 @@ public class ObdLicServiceImpl implements ObdLicService {
 				}
 				else {
 					if (edt.compareTo(t1) < 0) {
-						deviceTimeTemp.setEdt(edt);
+						deviceTimeTemp.setEdt(t1);
 					}
 				}
 			}
