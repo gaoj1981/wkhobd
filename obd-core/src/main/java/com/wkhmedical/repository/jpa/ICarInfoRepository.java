@@ -1,6 +1,7 @@
 package com.wkhmedical.repository.jpa;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,9 +33,12 @@ public interface ICarInfoRepository {
 
 	Long findCountSum();
 
-	void updateCarInfoBindUser(String bindUserId, Integer utype, Integer areaId);
+	void updateCarInfoBindUser(String bindUserId, Integer utype, Long areaId);
 
 	void updateCarInfoBindUserNull(String bindUserId, Integer utype);
 
 	List<ChartCarDTO> findCarCountGroupBy(CarInfoParam paramBody);
+
+	Long findCarCountByMapArea(Map<String, Object> mapArea);
+
 }

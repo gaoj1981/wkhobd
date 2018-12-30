@@ -34,7 +34,7 @@ public class BindUser implements Serializable {
 	@Id
 	private String id;
 
-	private Integer areaId;
+	private Long areaId;
 
 	private Integer utype;
 

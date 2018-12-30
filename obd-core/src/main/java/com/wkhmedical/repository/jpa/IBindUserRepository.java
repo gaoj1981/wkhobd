@@ -18,5 +18,5 @@ public interface IBindUserRepository {
 
 	Integer findCount(String id);
 
-	void updateBindUserDefault(Integer areaId, Integer utype, Integer isDefault);
+	void updateBindUserDefault(Long areaId, Integer utype, Integer isDefault);
 }

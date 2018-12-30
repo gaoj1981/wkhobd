@@ -133,7 +133,7 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 	}
 
 	@Override
-	public void updateCarInfoBindUser(String bindUserId, Integer utype, Integer areaId) {
+	public void updateCarInfoBindUser(String bindUserId, Integer utype, Long areaId) {
 		String utypeStr = null;
 		if (utype == 1) {
 			utypeStr = "prinId";
@@ -185,4 +185,15 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		}
 		return new ArrayList<ChartCarDTO>();
 	}
+
+	@Override
+	public Long findCarCountByMapArea(Map<String, Object> mapArea) {
+		StringBuilder sqlAppend = new StringBuilder("SELECT COUNT(1) FROM car_info ci");
+		sqlAppend.append(" WHERE ci.delFlag=0");
+		for (Map.Entry<String, Object> entry : mapArea.entrySet()) {
+			sqlAppend.append(" AND ci." + entry.getKey() + "='" + entry.getValue() + "'");
+		}
+		return hibernateSupport.countByNativeSql(sqlAppend.toString(), null);
+	}
+
 }

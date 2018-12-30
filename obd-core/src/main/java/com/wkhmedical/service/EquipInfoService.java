@@ -31,9 +31,9 @@ public interface EquipInfoService {
 
 	Long getCountSum();
 
-	EquipExcelDTO getExcelList(String excelPath, Integer areaId);
+	EquipExcelDTO getExcelList(String excelPath, Long areaId);
 
-	boolean importEquipExcel(String excelPath, Integer areaId, String eid);
+	boolean importEquipExcel(String excelPath, Long areaId, String eid);
 
 	EquipDetailDTO getDetail(String eid);
 

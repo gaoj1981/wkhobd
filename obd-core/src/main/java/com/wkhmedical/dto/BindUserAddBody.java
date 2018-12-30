@@ -23,9 +23,9 @@ public class BindUserAddBody implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value = "区县ID", required = true)
-	@Min(value = 100000, message = "非法参数")
-	@Max(value = 999999, message = "非法参数")
-	private Integer areaId;
+	@Min(value = 100000000000l, message = "非法参数")
+	@Max(value = 999999999999l, message = "非法参数")
+	private Long areaId;
 
 	@ApiModelProperty(value = "人员分类：1：运营；2：维护", required = true)
 	@Min(value = 1, message = "非法参数")

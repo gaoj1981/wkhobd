@@ -12,7 +12,7 @@ public interface BindUserRepository extends JpaRepository<BindUser, String>, IBi
 
 	BindUser findByIdAndDelFlag(String id, Integer delFlag);
 
-	BindUser findByUtypeAndAreaIdAndIsDefault(Integer utype, Integer areaId, Integer isDefault);
+	BindUser findByUtypeAndAreaIdAndIsDefault(Integer utype, Long areaId, Integer isDefault);
 
-	List<BindUser> findByAreaIdAndIsDefault(Integer areaId, Integer isDefault);
+	List<BindUser> findByAreaIdAndIsDefault(Long areaId, Integer isDefault);
 }

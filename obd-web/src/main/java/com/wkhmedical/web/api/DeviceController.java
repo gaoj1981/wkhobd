@@ -138,7 +138,7 @@ public class DeviceController {
 	@ApiOperation(value = "解析和检验设备Excel")
 	@PostMapping("/device/excel.analysis")
 	public EquipExcelDTO excelAnalysis(@ApiParam(value = "excel文件路径", required = true) @RequestParam String excelPath,
-			@ApiParam(value = "区县ID", required = true) @RequestParam Integer areaId) {
+			@ApiParam(value = "区县ID", required = true) @RequestParam Long areaId) {
 		System.out.println(areaId + excelPath);
 		return equipInfoService.getExcelList(excelPath, areaId);
 	}
@@ -146,7 +146,7 @@ public class DeviceController {
 	@ApiOperation(value = "导入设备Excel数据")
 	@PostMapping("/device/excel.import")
 	public boolean excelImport(@ApiParam(value = "excel文件路径", required = true) @RequestParam String excelPath,
-			@ApiParam(value = "区县ID", required = true) @RequestParam Integer areaId,
+			@ApiParam(value = "区县ID", required = true) @RequestParam Long areaId,
 			@ApiParam(value = "设备唯一ID", required = true) @RequestParam String eid) {
 		return equipInfoService.importEquipExcel(excelPath, areaId, eid);
 	}

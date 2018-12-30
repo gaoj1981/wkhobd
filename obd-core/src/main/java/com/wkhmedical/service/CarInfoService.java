@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import com.taoxeo.repository.Paging;
+import com.wkhmedical.dto.AreaCarBody;
+import com.wkhmedical.dto.AreaCarDTO;
 import com.wkhmedical.dto.CarInfoAddBody;
 import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoEditBody;
@@ -36,4 +38,5 @@ public interface CarInfoService {
 
 	List<ChartCarDTO> getChartCarList(Integer groupType);
 
+	AreaCarDTO getAreaCar(AreaCarBody paramBody);
 }

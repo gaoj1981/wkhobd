@@ -7,7 +7,9 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,8 @@ import com.taoxeo.lang.BeanUtils;
 import com.taoxeo.lang.exception.BizRuntimeException;
 import com.taoxeo.repository.Paging;
 import com.wkhmedical.constant.BizConstant;
+import com.wkhmedical.dto.AreaCarBody;
+import com.wkhmedical.dto.AreaCarDTO;
 import com.wkhmedical.dto.CarInfoAddBody;
 import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoEditBody;
@@ -23,8 +27,10 @@ import com.wkhmedical.dto.CarInfoPageParam;
 import com.wkhmedical.dto.CarInfoParam;
 import com.wkhmedical.dto.ChartCarDTO;
 import com.wkhmedical.dto.EquipInfoBody;
+import com.wkhmedical.po.BaseArea;
 import com.wkhmedical.po.BindUser;
 import com.wkhmedical.po.CarInfo;
+import com.wkhmedical.repository.jpa.BaseAreaRepository;
 import com.wkhmedical.repository.jpa.BindUserRepository;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
 import com.wkhmedical.repository.jpa.EquipInfoRepository;
@@ -48,6 +54,8 @@ public class CarInfoServiceImpl implements CarInfoService {
 	ObdCarRepository obdCarRepository;
 	@Resource
 	EquipInfoRepository equipInfoRepository;
+	@Resource
+	BaseAreaRepository baseAreaRepository;
 
 	@Override
 	public Page<CarInfo> getCarInfoPage(Paging<CarInfoPageParam> paramBody) {
@@ -131,7 +139,7 @@ public class CarInfoServiceImpl implements CarInfoService {
 		}
 		//
 		CarInfo carInfo = AssistUtil.coverBean(carInfoBody, CarInfo.class);
-		Integer areaId = carInfo.getAreaId();
+		Long areaId = carInfo.getAreaId();
 		// 获取车辆所在区县运营维护负责人
 		BindUser bu1 = bindUserRepository.findByUtypeAndAreaIdAndIsDefault(1, areaId, 1);
 		BindUser bu2 = bindUserRepository.findByUtypeAndAreaIdAndIsDefault(2, areaId, 1);
@@ -140,8 +148,8 @@ public class CarInfoServiceImpl implements CarInfoService {
 		String id = BizUtil.genDbIdStr(idWorker);
 		carInfo.setId(id);
 		carInfo.setGroupId(areaId + "");// 目前需求暂将区间ID作为分组标准
-		carInfo.setProvId(BizUtil.getProvId(areaId));
-		carInfo.setCityId(BizUtil.getCityId(areaId));
+		carInfo.setProvId(BizUtil.getProvId4Long(areaId));
+		carInfo.setCityId(BizUtil.getCityId4Long(areaId));
 		carInfo.setPrinId(bu1 != null ? bu1.getId() : null);
 		carInfo.setMaintId(bu2 != null ? bu2.getId() : null);
 		carInfo.setDelFlag(0);
@@ -248,5 +256,63 @@ public class CarInfoServiceImpl implements CarInfoService {
 			lstChart.add(chartCar);
 		}
 		return lstChart;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.CarInfoService#getAreaCar(com.wkhmedical.dto.AreaCarBody)
+	 */
+	@Override
+	public AreaCarDTO getAreaCar(AreaCarBody paramBody) {
+		AreaCarDTO areaCarDTO = new AreaCarDTO();
+		Map<String, Object> mapArea = new HashMap<String, Object>();
+		// 地区ID
+		Long pid = null;
+		// 判断eid是否传递
+		String eid = paramBody.getEid();
+		if (StringUtils.isNotBlank(eid)) {
+			mapArea.put("eid", eid);
+		}
+		else {
+			// 未传递eid时，则需获取调用方传递的区域分类ID
+			try {
+				for (String keyStr : BizConstant.AREA_KEY_ARR) {
+					Long aid = (Long) PropertyUtils.getProperty(paramBody, keyStr);
+					if (aid != null) {
+						mapArea.put(keyStr, aid);
+						pid = aid;
+						break;
+					}
+				}
+			}
+			catch (Exception e) {
+			}
+		}
+		// 判断参数是否有误
+		if (mapArea.isEmpty()) {
+			throw new BizRuntimeException("obdlic_bizdata_error");
+		}
+		// 获取符合条件的车总数
+		Long vehicleTotal = 1L;
+		// 获取符合条件的覆盖乡镇数
+		Long townshipsTotal = 1L;
+		// 是否eid查询情况
+		if (StringUtils.isBlank(eid) && pid != null) {
+			// 车总数
+			vehicleTotal = carInfoRepository.findCarCountByMapArea(mapArea);
+			// 覆盖乡镇数
+			BaseArea baseArea = new BaseArea();
+			baseArea.setPid(pid);
+			Example<BaseArea> example = Example.of(baseArea);
+			townshipsTotal = baseAreaRepository.count(example);
+		}
+		else {
+			CarInfo carInfo = carInfoRepository.findByEid(eid);
+			pid = carInfo.getAreaId();
+		}
+		areaCarDTO.setQueryId(pid);
+		areaCarDTO.setVehicleTotal(vehicleTotal);
+		areaCarDTO.setTownshipsTotal(townshipsTotal);
+		return areaCarDTO;
 	}
 }

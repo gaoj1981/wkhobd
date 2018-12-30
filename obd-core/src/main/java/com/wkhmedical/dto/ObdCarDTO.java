@@ -67,6 +67,6 @@ public class ObdCarDTO implements Serializable {
 	private String carName;
 
 	@ApiModelProperty(value = "区县ID")
-	private Integer areaId;
+	private Long areaId;
 
 }

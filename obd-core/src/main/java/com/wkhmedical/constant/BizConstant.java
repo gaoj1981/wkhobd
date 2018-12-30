@@ -77,4 +77,6 @@ public class BizConstant {
 		MAP_CHECK_ITEMS.put("persontime", "PersonTime");
 	}
 
+	public static final String[] AREA_KEY_ARR = new String[] { "villId", "townId", "areaId", "cityId", "provId" };
+
 }

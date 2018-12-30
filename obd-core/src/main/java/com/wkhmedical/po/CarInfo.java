@@ -63,11 +63,11 @@ public class CarInfo implements Serializable {
 
 	private String maintId;
 
-	private Integer provId;
+	private Long provId;
 
-	private Integer cityId;
+	private Long cityId;
 
-	private Integer areaId;
+	private Long areaId;
 
 	private Integer delFlag;
 }

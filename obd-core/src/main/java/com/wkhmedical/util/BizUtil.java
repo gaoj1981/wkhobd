@@ -253,6 +253,19 @@ public class BizUtil {
 		}
 	}
 
+	public static Long getProvId4Long(long areaId) {
+		return areaId / 10000000000l * 10000000000l;
+	}
+
+	public static Long getCityId4Long(long areaId) {
+		long provId = getProvId4Long(areaId);
+		if (provId == 110000000000l || provId == 310000000000l || provId == 120000000000l || provId == 50000000000l) {
+			// 直辖市，省ID和市ID返回同一值
+			return provId;
+		}
+		return areaId / 100000000l * 100000000l;
+	}
+
 	public static Integer getProvId(int areaId) {
 		return areaId / 10000 * 10000;
 	}
@@ -352,4 +365,7 @@ public class BizUtil {
 		return rtnDcheck;
 	}
 
+	public static void main(String[] args) {
+		System.out.println(getProvId4Long(110100000000l));
+	}
 }

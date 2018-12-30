@@ -177,7 +177,7 @@ public class BindUserRepositoryImpl implements IBindUserRepository {
 	}
 
 	@Override
-	public void updateBindUserDefault(Integer areaId, Integer utype, Integer isDefault) {
+	public void updateBindUserDefault(Long areaId, Integer utype, Integer isDefault) {
 		if (utype == null || areaId == null || isDefault == null) return;
 		int defaultWhere = isDefault == 0 ? 1 : 0;
 		String sql = "UPDATE bind_user SET isDefault =" + isDefault + " WHERE areaId=" + areaId + " AND utype=" + utype + " AND isDefault="

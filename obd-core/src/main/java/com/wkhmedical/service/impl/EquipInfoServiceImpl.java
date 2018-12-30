@@ -137,7 +137,7 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 	}
 
 	@Override
-	public EquipExcelDTO getExcelList(String excelPath, Integer areaId) {
+	public EquipExcelDTO getExcelList(String excelPath, Long areaId) {
 		EquipExcelDTO rtnDTO = new EquipExcelDTO();
 		List<MgEquipExcel> rtnList = new ArrayList<MgEquipExcel>();
 		int errNum = 0;
@@ -401,7 +401,7 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 	 */
 	@Override
 	@Transactional
-	public boolean importEquipExcel(String excelPath, Integer areaId, String eid) {
+	public boolean importEquipExcel(String excelPath, Long areaId, String eid) {
 		List<EquipInfo> lstBatch = new ArrayList<EquipInfo>();
 		//
 		CarInfo carInfo = carInfoRepository.findByEid(eid);
@@ -421,8 +421,8 @@ public class EquipInfoServiceImpl implements EquipInfoService {
 					carInfo.setCarName(tmpExcel.getEquipName());
 					carInfo.setFrameNum(tmpExcel.getBhNum());
 					carInfo.setGroupId(areaId + "");
-					carInfo.setProvId(BizUtil.getProvId(areaId));
-					carInfo.setCityId(BizUtil.getCityId(areaId));
+					carInfo.setProvId(BizUtil.getProvId4Long(areaId));
+					carInfo.setCityId(BizUtil.getCityId4Long(areaId));
 					carInfo.setAreaId(areaId);
 					carInfoRepository.save(carInfo);
 				}

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wkhmedical.dto.AreaCarBody;
+import com.wkhmedical.dto.AreaCarDTO;
 import com.wkhmedical.dto.ChartCarDTO;
 import com.wkhmedical.dto.DeviceCheckSumBody;
 import com.wkhmedical.service.CarInfoService;
@@ -55,6 +57,12 @@ public class ChartsController {
 	@PostMapping("/car.check")
 	public Long getCheckSum(@RequestBody @Valid DeviceCheckSumBody paramBody) {
 		return obdLicService.getCheckSum(paramBody);
+	}
+
+	@ApiOperation(value = "车辆体检汇总")
+	@PostMapping("/car.area.num")
+	public AreaCarDTO getAreaCar(@RequestBody @Valid AreaCarBody paramBody) {
+		return carInfoService.getAreaCar(paramBody);
 	}
 
 }

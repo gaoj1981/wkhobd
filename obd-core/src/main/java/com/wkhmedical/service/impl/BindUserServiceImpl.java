@@ -69,7 +69,7 @@ public class BindUserServiceImpl implements BindUserService {
 		// 校验默认
 		Integer isDefault = infoBody.getIsDefault();
 		int utype = infoBody.getUtype();
-		int areaId = infoBody.getAreaId();
+		long areaId = infoBody.getAreaId();
 		if (isDefault != null && isDefault.intValue() == 1) {
 			BindUser buTmp = bindUserRepository.findByUtypeAndAreaIdAndIsDefault(utype, areaId, isDefault);
 			if (buTmp != null) {
@@ -167,7 +167,7 @@ public class BindUserServiceImpl implements BindUserService {
 			throw new BizRuntimeException("info_not_exists", id);
 		}
 		Integer utype = bindUserUpd.getUtype();
-		Integer areaId = bindUserUpd.getAreaId();
+		Long areaId = bindUserUpd.getAreaId();
 		if (isCoverAll == 1) {
 			// 覆盖所有当前区县对应车辆负责人
 			carInfoRepository.updateCarInfoBindUser(id, utype, areaId);
@@ -182,7 +182,7 @@ public class BindUserServiceImpl implements BindUserService {
 	}
 
 	@Override
-	public List<BindUser> getBindUserDefault(Integer areaId, String eid) {
+	public List<BindUser> getBindUserDefault(Long areaId, String eid) {
 		if (StringUtils.isBlank(eid)) {
 			// 不关联车辆ID情况，直接返回区县对应的默认负责人
 			return bindUserRepository.findByAreaIdAndIsDefault(areaId, 1);
@@ -199,7 +199,7 @@ public class BindUserServiceImpl implements BindUserService {
 			}
 			String prinId = carInfo.getPrinId();
 			String maintId = carInfo.getMaintId();
-			int carAreaId = carInfo.getAreaId();
+			long carAreaId = carInfo.getAreaId();
 			// 车辆所在区县一致情况
 			if (carAreaId == areaId.intValue()) {
 				if (StringUtils.isBlank(prinId)) {
