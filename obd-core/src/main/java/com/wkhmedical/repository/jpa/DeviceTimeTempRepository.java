@@ -1,6 +1,7 @@
 package com.wkhmedical.repository.jpa;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +12,7 @@ import com.wkhmedical.po.DeviceTimeTemp;
 public interface DeviceTimeTempRepository extends JpaRepository<DeviceTimeTemp, String>, IDeviceTimeTempRepository {
 
 	DeviceTimeTemp findByEidAndDt(String eid, Date dt);
+
+	List<DeviceTimeTemp> findTop2000ByFlagAndDtLessThan(Integer flag, Date dt);
+
 }

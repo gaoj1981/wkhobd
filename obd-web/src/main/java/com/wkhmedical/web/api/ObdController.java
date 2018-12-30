@@ -1,6 +1,7 @@
 package com.wkhmedical.web.api;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -21,9 +22,14 @@ import com.wkhmedical.dto.ObdCarDTO;
 import com.wkhmedical.message.Message;
 import com.wkhmedical.message.event.SendEvent;
 import com.wkhmedical.po.CarInfo;
+import com.wkhmedical.po.DeviceTimeTemp;
+import com.wkhmedical.repository.jpa.DeviceTimeTempRepository;
 import com.wkhmedical.service.CarInfoService;
 import com.wkhmedical.service.ObdCarService;
+import com.wkhmedical.util.BizUtil;
+import com.wkhmedical.util.DateUtil;
 import com.wkhmedical.util.MapGPSUtil;
+import com.wkhmedical.util.SnowflakeIdWorker;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,6 +55,9 @@ public class ObdController {
 	@Resource
 	ApplicationContext applicationContext;
 
+	@Resource
+	DeviceTimeTempRepository deviceTimeTempRepository;
+
 	@ApiOperation(value = "OBD推送实时车辆信息")
 	@PostMapping("/receiveData.json")
 	public void receiveData(@RequestBody @Valid String carStr) {
@@ -58,11 +67,18 @@ public class ObdController {
 		CarSendDTO obdSend = JSON.parseObject("{" + carStr + "'}", CarSendDTO.class);
 		obdCarService.saveObdCar(obdSend);
 		log.info("============END==============");
-		// 执行ws推送
+		// 业务其它处理
+		CarInfo carInfo = null;
 		try {
 			CarInfoParam paramBody = new CarInfoParam();
 			paramBody.setDeviceNumber(obdSend.getDeviceNumber());
-			CarInfo carInfo = carInfoService.getCarInfo(paramBody);
+			carInfo = carInfoService.getCarInfo(paramBody);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		// 执行ws推送
+		try {
 			// 是否推送数据到前端
 			if (carInfo != null) {
 				// 推送
@@ -81,6 +97,48 @@ public class ObdController {
 				messagingTemplate.convertAndSend("/queue/obd.data." + eid, obdCar);
 				Message message = new Message(eid, ObdCarDTO.class.getSimpleName(), obdCar);
 				applicationContext.publishEvent(new SendEvent(message));
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		// 开关机时间入库
+		try {
+			if (carInfo != null) {
+				String eid = carInfo.getEid();
+				Date dtNow = new Date();
+				Date dtSend = DateUtil.getCurDateByFormat("yyyyMMdd");
+				DeviceTimeTemp deviceTimeTemp = deviceTimeTempRepository.findByEidAndDt(eid, dtSend);
+				if (deviceTimeTemp == null) {
+					//
+					SnowflakeIdWorker idWorker = new SnowflakeIdWorker(BizUtil.getDbWorkerId(), BizUtil.getDbDatacenterId());
+					//
+					deviceTimeTemp = new DeviceTimeTemp();
+					deviceTimeTemp.setId(BizUtil.genDbIdStr(idWorker));
+					deviceTimeTemp.setEid(eid);
+					deviceTimeTemp.setDt(dtSend);
+					deviceTimeTemp.setSdt(dtNow);
+					deviceTimeTemp.setEdt(dtNow);
+					deviceTimeTemp.setFlag(0);
+					deviceTimeTempRepository.save(deviceTimeTemp);
+				}
+				else {
+					// 是否需要更改
+					boolean isUpd = false;
+					Date sdt = deviceTimeTemp.getSdt();
+					if (sdt == null || sdt.compareTo(dtNow) > 0) {
+						deviceTimeTemp.setSdt(dtNow);
+						isUpd = true;
+					}
+					Date edt = deviceTimeTemp.getEdt();
+					if (edt == null || edt.compareTo(dtNow) < 0) {
+						deviceTimeTemp.setEdt(dtNow);
+						isUpd = true;
+					}
+					if (isUpd) {
+						deviceTimeTempRepository.update(deviceTimeTemp);
+					}
+				}
 			}
 		}
 		catch (Exception e) {

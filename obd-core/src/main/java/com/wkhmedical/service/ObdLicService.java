@@ -15,4 +15,7 @@ public interface ObdLicService {
 	void updateEquipStuff(String sendStr);
 
 	Long getCheckSum(DeviceCheckSumBody paramBody);
+
+	void qzCheckTime();
+
 }

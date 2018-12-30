@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.taoxeo.lang.BeanUtils;
 import com.taoxeo.lang.exception.BizRuntimeException;
 import com.wkhmedical.config.ConfigProperties;
 import com.wkhmedical.constant.BizConstant;
@@ -26,6 +27,7 @@ import com.wkhmedical.exception.ObdLicException;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.po.DeviceCheck;
 import com.wkhmedical.po.DeviceCheckTime;
+import com.wkhmedical.po.DeviceTime;
 import com.wkhmedical.po.DeviceTimeTemp;
 import com.wkhmedical.po.MgObdLic;
 import com.wkhmedical.po.MgObdLicReq;
@@ -511,5 +513,43 @@ public class ObdLicServiceImpl implements ObdLicService {
 		Long villId = paramBody.getVillId();
 
 		return dcRepository.getCheckSum(eid, provId, cityId, areaId, townId, villId, inTypeStr);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.ObdLicService#qzCheckTime(java.lang.String)
+	 */
+	@Override
+	public void qzCheckTime() {
+		Date dtNow = DateUtil.getCurDateByFormat("yyyy-MM-dd");
+		List<DeviceTimeTemp> lstDtt = deviceTimeTempRepository.findTop2000ByFlagAndDtLessThan(0, dtNow);
+		DeviceTime devTime;
+		Date dt, sdt, edt;
+		for (DeviceTimeTemp dtt : lstDtt) {
+			try {
+				devTime = new DeviceTime();
+				BeanUtils.merageProperty(devTime, dtt);
+				dt = dtt.getDt();
+				sdt = dtt.getSdt();
+				edt = dtt.getEdt();
+				if (sdt == null) {
+					sdt = DateUtil.parseToDate(DateUtil.getDateBegin(dt), "yyyy-MM-dd HH:mm:ss");
+				}
+				if (edt == null) {
+					edt = DateUtil.parseToDate(DateUtil.getDateEnd(dt), "yyyy-MM-dd HH:mm:ss");
+				}
+				devTime.setTs(DateUtil.getDiffSeconds(sdt, edt));
+				// 移至正式开关机统计表中
+				deviceTimeRepository.save(devTime);
+				// 更改临时表的状态为已统计
+				dtt.setFlag(1);
+				deviceTimeTempRepository.update(dtt);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+
 	}
 }

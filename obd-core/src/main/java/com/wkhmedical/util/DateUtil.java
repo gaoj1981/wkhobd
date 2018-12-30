@@ -206,6 +206,11 @@ public class DateUtil {
 		return (time2 - time1) / 1000;
 	}
 
+	public static long getDiffSeconds(Date date1, Date date2) {
+		long seconds = (long) ((date2.getTime() - date1.getTime()) / 1000);
+		return seconds;
+	}
+
 	public static String getNowDateByFormat(String formatStr) {
 		SimpleDateFormat format = new SimpleDateFormat(formatStr);
 		Date date = new Date();
@@ -259,4 +264,9 @@ public class DateUtil {
 			return getDateAddDay4Str(dtNow, "yyyy-MM-dd", days);
 		}
 	}
+
+	public static String getDateEnd(Date date) {
+		return formatDate(date, "yyyy-MM-dd") + " 23:59:59";
+	}
+
 }
