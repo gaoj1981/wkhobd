@@ -4,6 +4,7 @@
 package com.wkhmedical.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -28,5 +29,5 @@ public class AreaCarDTO implements Serializable {
 
 	private Long townshipsTotal;
 
-	private CarAreaNum carAreaNum;
+	private List<CarAreaNum> data;
 }

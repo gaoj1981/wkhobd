@@ -365,6 +365,36 @@ public class BizUtil {
 		return rtnDcheck;
 	}
 
+	public static String getPrevArea(String areaKey) {
+		int i = 0;
+		for (String area : BizConstant.AREA_KEY_ARR) {
+			if (area.equals(areaKey)) {
+				i++;
+				break;
+			}
+			i++;
+		}
+		if (i > BizConstant.AREA_KEY_ARR.length - 1) {
+			i = BizConstant.AREA_KEY_ARR.length - 1;
+		}
+		return BizConstant.AREA_KEY_ARR[i];
+	}
+
+	public static String getNextArea(String areaKey) {
+		int i = 0;
+		for (String area : BizConstant.AREA_KEY_ARR) {
+			if (area.equals(areaKey)) {
+				i--;
+				break;
+			}
+			i++;
+		}
+		if (i < 0) {
+			i = 0;
+		}
+		return BizConstant.AREA_KEY_ARR[i];
+	}
+
 	public static void main(String[] args) {
 		System.out.println(getProvId4Long(110100000000l));
 	}

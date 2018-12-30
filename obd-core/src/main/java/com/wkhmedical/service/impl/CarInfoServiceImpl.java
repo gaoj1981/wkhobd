@@ -20,6 +20,7 @@ import com.taoxeo.repository.Paging;
 import com.wkhmedical.constant.BizConstant;
 import com.wkhmedical.dto.AreaCarBody;
 import com.wkhmedical.dto.AreaCarDTO;
+import com.wkhmedical.dto.CarAreaNum;
 import com.wkhmedical.dto.CarInfoAddBody;
 import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoEditBody;
@@ -268,6 +269,7 @@ public class CarInfoServiceImpl implements CarInfoService {
 		Map<String, Object> mapArea = new HashMap<String, Object>();
 		// 地区ID
 		Long pid = null;
+		String areaKey = null;
 		// 判断eid是否传递
 		String eid = paramBody.getEid();
 		if (StringUtils.isNotBlank(eid)) {
@@ -281,6 +283,7 @@ public class CarInfoServiceImpl implements CarInfoService {
 					if (aid != null) {
 						mapArea.put(keyStr, aid);
 						pid = aid;
+						areaKey = keyStr;
 						break;
 					}
 				}
@@ -309,10 +312,17 @@ public class CarInfoServiceImpl implements CarInfoService {
 		else {
 			CarInfo carInfo = carInfoRepository.findByEid(eid);
 			pid = carInfo.getAreaId();
+			areaKey = BizConstant.AREA_KEY_ARR[2];
 		}
+		// 其下区域key
+		String areaKeyNext = BizUtil.getNextArea(areaKey);
+		// 其下区域车辆数
+		List<CarAreaNum> lstCarAreaNum = carInfoRepository.findCarCountAreaGroupBy(pid, areaKey, areaKeyNext);
+		//
 		areaCarDTO.setQueryId(pid);
 		areaCarDTO.setVehicleTotal(vehicleTotal);
 		areaCarDTO.setTownshipsTotal(townshipsTotal);
+		areaCarDTO.setData(lstCarAreaNum);
 		return areaCarDTO;
 	}
 }

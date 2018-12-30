@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 
 import com.taoxeo.repository.HibernateSupport;
 import com.taoxeo.repository.JdbcQuery;
+import com.wkhmedical.dto.CarAreaNum;
 import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoPageParam;
 import com.wkhmedical.dto.CarInfoParam;
@@ -194,6 +195,16 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 			sqlAppend.append(" AND ci." + entry.getKey() + "='" + entry.getValue() + "'");
 		}
 		return hibernateSupport.countByNativeSql(sqlAppend.toString(), null);
+	}
+
+	@Override
+	public List<CarAreaNum> findCarCountAreaGroupBy(Long areaVal, String areaKey, String areaKeyNext) {
+		StringBuilder sqlAppend = new StringBuilder("SELECT ba.id AS areaId,ba.name AS areaName,SUM(1) AS number");
+		sqlAppend.append("  FROM car_info ci");
+		sqlAppend.append("  LEFT JOIN base_area ba ON ci." + areaKeyNext + " = ba.id");
+		sqlAppend.append("  WHERE ci." + areaKey + " = " + areaVal);
+		sqlAppend.append("  GROUP BY ba.id,ba.name");
+		return hibernateSupport.findByNativeSql(CarAreaNum.class, sqlAppend.toString(), null, 5000);
 	}
 
 }

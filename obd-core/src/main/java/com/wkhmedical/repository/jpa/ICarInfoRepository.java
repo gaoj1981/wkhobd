@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.wkhmedical.dto.CarAreaNum;
 import com.wkhmedical.dto.CarInfoDTO;
 import com.wkhmedical.dto.CarInfoPageParam;
 import com.wkhmedical.dto.CarInfoParam;
@@ -41,4 +42,5 @@ public interface ICarInfoRepository {
 
 	Long findCarCountByMapArea(Map<String, Object> mapArea);
 
+	List<CarAreaNum> findCarCountAreaGroupBy(Long areaVal, String areaKey, String areaKeyNext);
 }
