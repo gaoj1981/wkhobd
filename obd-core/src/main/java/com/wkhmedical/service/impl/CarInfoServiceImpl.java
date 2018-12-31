@@ -337,16 +337,19 @@ public class CarInfoServiceImpl implements CarInfoService {
 		int month = DateUtil.getNowMonth();
 		BigDecimal monthRateSum = BigDecimal.ZERO;
 		int monthNum = 0;
-		for (int i = 1; i < month; i++) {
+		// 月出车率 =(每日出车率相加)/当月天数
+		for (int i = 1; i <= month; i++) {
 			BigDecimal days = new BigDecimal(DateUtil.getDaysOfMonth(i));
-			Date[] dtMonthArr = DateUtil.getMonthSTArr(month);
+			Date[] dtMonthArr = DateUtil.getMonthSTArr(i);
 			BigDecimal bdRateSum = deviceTimeRateRepository.getRateSumByDate(dtMonthArr[0], dtMonthArr[1]);
-			if (bdRateSum.compareTo(BigDecimal.ZERO) > 0) {
+			if (bdRateSum != null && bdRateSum.compareTo(BigDecimal.ZERO) > 0) {
 				monthNum++;
-				monthRateSum.add(bdRateSum.divide(days));
+				monthRateSum = monthRateSum.add(bdRateSum.divide(days, 2, BigDecimal.ROUND_HALF_EVEN));
 			}
 		}
-		BigDecimal avgMonthRateSum = monthRateSum.divide(new BigDecimal(monthNum)).setScale(2, BigDecimal.ROUND_HALF_UP);
+		if (monthNum == 0) return BigDecimal.ZERO;
+		// 月平均出车率 = (月出车率相加)/月数
+		BigDecimal avgMonthRateSum = monthRateSum.divide(new BigDecimal(monthNum), 2, BigDecimal.ROUND_HALF_UP);
 		return avgMonthRateSum;
 	}
 }

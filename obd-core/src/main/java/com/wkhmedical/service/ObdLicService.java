@@ -1,5 +1,7 @@
 package com.wkhmedical.service;
 
+import java.math.BigDecimal;
+
 import com.wkhmedical.constant.LicStatus;
 import com.wkhmedical.dto.DeviceCheckSumBody;
 import com.wkhmedical.dto.ObdLicDTO;
@@ -15,6 +17,8 @@ public interface ObdLicService {
 	void updateEquipStuff(String sendStr);
 
 	Long getCheckSum(DeviceCheckSumBody paramBody);
+
+	BigDecimal getCheckExpRate();
 
 	void qzCheckTime();
 

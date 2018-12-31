@@ -96,4 +96,23 @@ public class DeviceCheckRepositoryImpl implements IDeviceCheckRepository {
 		return resNum.longValue();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.wkhmedical.repository.jpa.IDeviceCheckRepository#getCheckSumByStatus(java.lang.Integer)
+	 */
+	@Override
+	public BigDecimal getCheckSumByStatus(Integer status) {
+		String sql = "SELECT SUM(number) AS sumNum FROM device_check";
+		if (status != null) {
+			sql = sql + " WHERE status=" + status;
+		}
+		@SuppressWarnings("rawtypes")
+		List<Map> lstObj = hibernateSupport.findByNativeSql(Map.class, sql, null, 1);
+		if (lstObj == null || lstObj.get(0).get("sumNum") == null) {
+			return BigDecimal.ZERO;
+		}
+		return (BigDecimal) lstObj.get(0).get("sumNum");
+	}
+
 }

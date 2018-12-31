@@ -3,6 +3,7 @@ package com.wkhmedical.repository.jpa.impl;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -25,8 +26,14 @@ public class DeviceTimeRateRepositoryImpl implements IDeviceTimeRateRepository {
 	public BigDecimal getRateSumByDate(Date dt1, Date dt2) {
 		String sql = "SELECT SUM(rate) AS rateSum FROM device_time_rate WHERE dt>=? AND dt<=?";
 		Object[] values = new Object[] { dt1, dt2 };
-		List<BigDecimal> lstNum = hibernateSupport.findByNativeSql(BigDecimal.class, sql, values, 1);
-		return lstNum.get(0);
+		@SuppressWarnings("rawtypes")
+		List<Map> lstNum = hibernateSupport.findByNativeSql(Map.class, sql, values, 1);
+		if (lstNum == null || lstNum.get(0).get("rateSum") == null) {
+			return BigDecimal.ZERO;
+		}
+		else {
+			return (BigDecimal) lstNum.get(0).get("rateSum");
+		}
 	}
 
 }

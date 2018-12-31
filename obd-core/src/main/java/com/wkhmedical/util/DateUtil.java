@@ -309,13 +309,13 @@ public class DateUtil {
 			preMonth = "0";
 		}
 		int year = getNowYear();
-		Date dt1 = parseToDate(year + preMonth + "01", "yyyyMMdd");
+		Date dt1 = parseToDate(year + preMonth + month + "01", "yyyyMMdd");
 		int days = getDaysOfMonth(month);
-		Date dt2 = parseToDate(year + preMonth + days, "yyyyMMdd");
+		Date dt2 = parseToDate(year + preMonth + month + days, "yyyyMMdd");
 		return new Date[] { dt1, dt2 };
 	}
 
 	public static void main(String[] args) {
-		System.out.println(getDaysOfMonth(2));
+		System.out.println(getMonthSTArr(2)[0]);
 	}
 }

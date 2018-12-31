@@ -520,6 +520,16 @@ public class ObdLicServiceImpl implements ObdLicService {
 		return dcRepository.getCheckSum(eid, provId, cityId, areaId, townId, villId, inTypeStr);
 	}
 
+	@Override
+	public BigDecimal getCheckExpRate() {
+		// 检测异常数
+		BigDecimal expNum = dcRepository.getCheckSumByStatus(0);
+		// 检测总数
+		BigDecimal ttNum = dcRepository.getCheckSumByStatus(null);
+		if (ttNum.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
+		return expNum.divide(ttNum, 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100));
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see com.wkhmedical.service.ObdLicService#qzCheckTime(java.lang.String)
@@ -588,7 +598,7 @@ public class ObdLicServiceImpl implements ObdLicService {
 					// 计算日出车率 = (当日出车数/总车数)*100
 					bdDay = new BigDecimal(carDaySum);
 					bdSum = new BigDecimal(carSum);
-					rate = bdDay.divide(bdSum).multiply(bd100).setScale(2, BigDecimal.ROUND_HALF_UP);
+					rate = bdDay.divide(bdSum, 2, BigDecimal.ROUND_HALF_UP).multiply(bd100);
 				}
 				else {
 					rate = BigDecimal.ZERO;
@@ -605,4 +615,5 @@ public class ObdLicServiceImpl implements ObdLicService {
 
 		}
 	}
+
 }

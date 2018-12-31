@@ -72,4 +72,10 @@ public class ChartsController {
 		return carInfoService.getCarMonthRate();
 	}
 
+	@ApiOperation(value = "检测异常百分比")
+	@PostMapping("/check.exp.rate")
+	public BigDecimal checkExpRate() {
+		return obdLicService.getCheckExpRate();
+	}
+
 }
