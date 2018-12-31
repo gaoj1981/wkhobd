@@ -15,4 +15,8 @@ public interface DeviceTimeTempRepository extends JpaRepository<DeviceTimeTemp, 
 
 	List<DeviceTimeTemp> findTop2000ByFlagAndDtLessThan(Integer flag, Date dt);
 
+	DeviceTimeTemp findFirstByFlagAndDtLessThan(Integer flag, Date dt);
+
+	Long countByFlagAndDt(Integer flag, Date dt);
+
 }

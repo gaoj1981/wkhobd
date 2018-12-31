@@ -1,5 +1,6 @@
 package com.wkhmedical.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.po.DeviceCheck;
 import com.wkhmedical.po.DeviceCheckTime;
 import com.wkhmedical.po.DeviceTime;
+import com.wkhmedical.po.DeviceTimeRate;
 import com.wkhmedical.po.DeviceTimeTemp;
 import com.wkhmedical.po.MgObdLic;
 import com.wkhmedical.po.MgObdLicReq;
@@ -35,6 +37,7 @@ import com.wkhmedical.po.MgObdLicSum;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
 import com.wkhmedical.repository.jpa.DeviceCheckRepository;
 import com.wkhmedical.repository.jpa.DeviceCheckTimeRepository;
+import com.wkhmedical.repository.jpa.DeviceTimeRateRepository;
 import com.wkhmedical.repository.jpa.DeviceTimeRepository;
 import com.wkhmedical.repository.jpa.DeviceTimeTempRepository;
 import com.wkhmedical.repository.mongo.ObdLicRepository;
@@ -71,6 +74,8 @@ public class ObdLicServiceImpl implements ObdLicService {
 	DeviceTimeRepository deviceTimeRepository;
 	@Resource
 	DeviceTimeTempRepository deviceTimeTempRepository;
+	@Resource
+	DeviceTimeRateRepository deviceTimeRateRepository;
 
 	@Override
 	public ObdLicDTO getObdLic(String urlEid, String rsaStr) {
@@ -551,5 +556,53 @@ public class ObdLicServiceImpl implements ObdLicService {
 
 		}
 
+	}
+
+	@Override
+	public void qzDeviceTimeRate() {
+		Date dtNow = DateUtil.getCurDateByFormat("yyyy-MM-dd");
+		Date dtBegin = DateUtil.getDateAddDay(dtNow, -35);
+		SnowflakeIdWorker idWorker = new SnowflakeIdWorker(BizUtil.getDbWorkerId(), BizUtil.getDbDatacenterId());
+		BigDecimal rate, bdDay, bdSum = BigDecimal.ZERO;
+		BigDecimal bd100 = new BigDecimal("100");
+		//
+		for (Date dtTmp = dtBegin; dtTmp.compareTo(dtNow) < 0; dtTmp = DateUtil.getDateAddDay(dtTmp, 1)) {
+			try {
+				// 判断此时点日出车率是否统计
+				DeviceTimeRate dtRate = deviceTimeRateRepository.findByDt(dtTmp);
+				if (dtRate != null) {
+					// 出车率已统计
+					continue;
+				}
+				// 判断此时点出车数是否统计
+				Long timeTjNum = deviceTimeTempRepository.countByFlagAndDt(0, dtTmp);
+				if (timeTjNum > 0) {
+					// 此时点的车辆开关机尚未统计
+					continue;
+				}
+				// 获取此时点的当天出车数
+				Long carDaySum = deviceTimeRepository.countByDt(dtTmp);
+				// 此时点的车辆总数
+				Long carSum = carInfoRepository.findCarCountEndTime(dtTmp);
+				if (carSum > 0) {
+					// 计算日出车率 = (当日出车数/总车数)*100
+					bdDay = new BigDecimal(carDaySum);
+					bdSum = new BigDecimal(carSum);
+					rate = bdDay.divide(bdSum).multiply(bd100).setScale(2, BigDecimal.ROUND_HALF_UP);
+				}
+				else {
+					rate = BigDecimal.ZERO;
+				}
+				// 入库
+				dtRate = new DeviceTimeRate();
+				dtRate.setId(BizUtil.genDbIdStr(idWorker));
+				dtRate.setDt(dtTmp);
+				dtRate.setRate(rate);
+				deviceTimeRateRepository.save(dtRate);
+			}
+			catch (Exception e) {
+			}
+
+		}
 	}
 }

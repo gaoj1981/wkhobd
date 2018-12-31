@@ -1,6 +1,7 @@
 package com.wkhmedical.repository.jpa.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
 import com.wkhmedical.repository.jpa.ICarInfoRepository;
 import com.wkhmedical.util.BizUtil;
+import com.wkhmedical.util.DateUtil;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -205,6 +207,17 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		sqlAppend.append("  WHERE ci." + areaKey + " = " + areaVal);
 		sqlAppend.append("  GROUP BY ba.id,ba.name");
 		return hibernateSupport.findByNativeSql(CarAreaNum.class, sqlAppend.toString(), null, 5000);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.repository.jpa.ICarInfoRepository#findCarCountEndTime(java.util.Date)
+	 */
+	@Override
+	public Long findCarCountEndTime(Date endTime) {
+		String dtStr = DateUtil.getDateEnd(endTime);
+		String sql = "SELECT COUNT(1) FROM car_info WHERE insTime <='" + dtStr + "'";
+		return hibernateSupport.countByNativeSql(sql, null);
 	}
 
 }

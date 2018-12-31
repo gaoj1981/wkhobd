@@ -1,5 +1,6 @@
 package com.wkhmedical.repository.jpa;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -43,4 +44,6 @@ public interface ICarInfoRepository {
 	Long findCarCountByMapArea(Map<String, Object> mapArea);
 
 	List<CarAreaNum> findCarCountAreaGroupBy(Long areaVal, String areaKey, String areaKeyNext);
+
+	Long findCarCountEndTime(Date endTime);
 }
