@@ -269,4 +269,53 @@ public class DateUtil {
 		return formatDate(date, "yyyy-MM-dd") + " 23:59:59";
 	}
 
+	public static int getNowMonth() {
+		Calendar cal = Calendar.getInstance(java.util.Locale.CHINA);
+		cal.setTime(new Date());
+		int month = cal.get(Calendar.MONTH);
+		return month + 1;
+	}
+
+	public static int getNowYear() {
+		Calendar cal = Calendar.getInstance(java.util.Locale.CHINA);
+		cal.setTime(new Date());
+		int year = cal.get(Calendar.YEAR);
+		return year;
+	}
+
+	public static int getDaysOfYM(int year, int month) {
+		String preMonth = "";
+		if (month < 10) {
+			preMonth = "0";
+		}
+		Calendar calendar = Calendar.getInstance(java.util.Locale.CHINA);
+		calendar.setTime(parseToDate(year + preMonth + month + "01", "yyyyMMdd"));
+		return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+	}
+
+	public static int getDaysOfMonth(int month) {
+		String preMonth = "";
+		if (month < 10) {
+			preMonth = "0";
+		}
+		Calendar calendar = Calendar.getInstance(java.util.Locale.CHINA);
+		calendar.setTime(parseToDate(getNowYear() + preMonth + month + "01", "yyyyMMdd"));
+		return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+	}
+
+	public static Date[] getMonthSTArr(int month) {
+		String preMonth = "";
+		if (month < 10) {
+			preMonth = "0";
+		}
+		int year = getNowYear();
+		Date dt1 = parseToDate(year + preMonth + "01", "yyyyMMdd");
+		int days = getDaysOfMonth(month);
+		Date dt2 = parseToDate(year + preMonth + days, "yyyyMMdd");
+		return new Date[] { dt1, dt2 };
+	}
+
+	public static void main(String[] args) {
+		System.out.println(getDaysOfMonth(2));
+	}
 }

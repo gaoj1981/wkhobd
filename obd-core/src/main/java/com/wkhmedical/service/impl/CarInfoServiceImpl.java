@@ -1,5 +1,7 @@
 package com.wkhmedical.service.impl;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +36,13 @@ import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.repository.jpa.BaseAreaRepository;
 import com.wkhmedical.repository.jpa.BindUserRepository;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
+import com.wkhmedical.repository.jpa.DeviceTimeRateRepository;
 import com.wkhmedical.repository.jpa.EquipInfoRepository;
 import com.wkhmedical.repository.mongo.ObdCarRepository;
 import com.wkhmedical.service.CarInfoService;
 import com.wkhmedical.util.AssistUtil;
 import com.wkhmedical.util.BizUtil;
+import com.wkhmedical.util.DateUtil;
 import com.wkhmedical.util.SnowflakeIdWorker;
 
 import lombok.extern.log4j.Log4j2;
@@ -57,6 +61,8 @@ public class CarInfoServiceImpl implements CarInfoService {
 	EquipInfoRepository equipInfoRepository;
 	@Resource
 	BaseAreaRepository baseAreaRepository;
+	@Resource
+	DeviceTimeRateRepository deviceTimeRateRepository;
 
 	@Override
 	public Page<CarInfo> getCarInfoPage(Paging<CarInfoPageParam> paramBody) {
@@ -324,5 +330,23 @@ public class CarInfoServiceImpl implements CarInfoService {
 		areaCarDTO.setTownshipsTotal(townshipsTotal);
 		areaCarDTO.setData(lstCarAreaNum);
 		return areaCarDTO;
+	}
+
+	@Override
+	public BigDecimal getCarMonthRate() {
+		int month = DateUtil.getNowMonth();
+		BigDecimal monthRateSum = BigDecimal.ZERO;
+		int monthNum = 0;
+		for (int i = 1; i < month; i++) {
+			BigDecimal days = new BigDecimal(DateUtil.getDaysOfMonth(i));
+			Date[] dtMonthArr = DateUtil.getMonthSTArr(month);
+			BigDecimal bdRateSum = deviceTimeRateRepository.getRateSumByDate(dtMonthArr[0], dtMonthArr[1]);
+			if (bdRateSum.compareTo(BigDecimal.ZERO) > 0) {
+				monthNum++;
+				monthRateSum.add(bdRateSum.divide(days));
+			}
+		}
+		BigDecimal avgMonthRateSum = monthRateSum.divide(new BigDecimal(monthNum)).setScale(2, BigDecimal.ROUND_HALF_UP);
+		return avgMonthRateSum;
 	}
 }

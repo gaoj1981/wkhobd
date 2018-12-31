@@ -1,5 +1,6 @@
 package com.wkhmedical.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -39,4 +40,6 @@ public interface CarInfoService {
 	List<ChartCarDTO> getChartCarList(Integer groupType);
 
 	AreaCarDTO getAreaCar(AreaCarBody paramBody);
+	
+	BigDecimal getCarMonthRate();
 }

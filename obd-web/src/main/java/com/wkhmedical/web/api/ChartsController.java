@@ -3,6 +3,7 @@
  */
 package com.wkhmedical.web.api;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -59,10 +60,16 @@ public class ChartsController {
 		return obdLicService.getCheckSum(paramBody);
 	}
 
-	@ApiOperation(value = "车辆体检汇总")
+	@ApiOperation(value = "车辆区域覆盖汇总")
 	@PostMapping("/car.area.num")
 	public AreaCarDTO getAreaCar(@RequestBody @Valid AreaCarBody paramBody) {
 		return carInfoService.getAreaCar(paramBody);
+	}
+
+	@ApiOperation(value = "车辆月出车率")
+	@PostMapping("/car.month.rate")
+	public BigDecimal getCarMonthRate() {
+		return carInfoService.getCarMonthRate();
 	}
 
 }
