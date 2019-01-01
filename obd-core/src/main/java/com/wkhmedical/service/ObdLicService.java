@@ -23,4 +23,5 @@ public interface ObdLicService {
 	void qzCheckTime();
 
 	void qzDeviceTimeRate();
+	
 }

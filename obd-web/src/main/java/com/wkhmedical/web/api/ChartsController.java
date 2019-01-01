@@ -78,4 +78,11 @@ public class ChartsController {
 		return obdLicService.getCheckExpRate();
 	}
 
+	@ApiOperation(value = "月平均体检人数")
+	@PostMapping("/check.month.avg")
+	public BigDecimal checkMonthAvg() {
+		// return obdLicService.getCheckMonthAvg();
+		return null;
+	}
+
 }
