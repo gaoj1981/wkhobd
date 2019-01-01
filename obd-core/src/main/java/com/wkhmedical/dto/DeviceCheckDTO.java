@@ -44,6 +44,10 @@ public class DeviceCheckDTO implements Serializable {
 
 	private Long persontime;
 
+	private Long healthexam;
+
+	private Long tcmexam;
+
 	private String t0;
 
 	private String t1;

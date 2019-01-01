@@ -75,6 +75,8 @@ public class BizConstant {
 		MAP_CHECK_ITEMS.put("urineabnm", "UrineAbnm");
 		MAP_CHECK_ITEMS.put("urineexam", "UrineExam");
 		MAP_CHECK_ITEMS.put("persontime", "PersonTime");
+		MAP_CHECK_ITEMS.put("healthexam", "HealthExam");
+		MAP_CHECK_ITEMS.put("tcmexam", "TcmExam");
 	}
 
 	public static final String[] AREA_KEY_ARR = new String[] { "villId", "townId", "areaId", "cityId", "provId" };

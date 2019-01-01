@@ -343,6 +343,8 @@ public class BizUtil {
 		Long urineabnm = stats.getLong("UrineAbnm") == null ? 0L : stats.getLong("UrineAbnm");
 		Long urineexam = stats.getLong("UrineExam") == null ? 0L : stats.getLong("UrineExam");
 		Long persontime = stats.getLong("PersonTime") == null ? 0L : stats.getLong("PersonTime");
+		Long healthexam = stats.getLong("HealthExam") == null ? 0L : stats.getLong("HealthExam");
+		Long tcmexam = stats.getLong("TcmExam") == null ? 0L : stats.getLong("TcmExam");
 		//
 		rtnDcheck.setEid(eid);
 		rtnDcheck.setT0(t0);
@@ -361,6 +363,8 @@ public class BizUtil {
 		rtnDcheck.setUrineabnm(urineabnm);
 		rtnDcheck.setUrineexam(urineexam);
 		rtnDcheck.setPersontime(persontime);
+		rtnDcheck.setHealthexam(healthexam);
+		rtnDcheck.setTcmexam(tcmexam);
 		//
 		return rtnDcheck;
 	}

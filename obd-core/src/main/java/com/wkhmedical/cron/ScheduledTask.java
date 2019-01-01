@@ -26,7 +26,7 @@ public class ScheduledTask {
 		obdLicService.qzCheckTime();
 	}
 
-	@Scheduled(cron = "0 0/2 03,04,05,11 * * ?")
+	@Scheduled(cron = "0 0/2 03,04,05 * * ?")
 	public void qzDeviceTimeRate() {
 		obdLicService.qzDeviceTimeRate();
 	}

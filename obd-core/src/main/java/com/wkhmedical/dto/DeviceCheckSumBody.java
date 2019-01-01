@@ -60,4 +60,8 @@ public class DeviceCheckSumBody implements Serializable {
 
 	private Boolean persontime = false;
 
+	private Boolean healthexam = false;
+
+	private Boolean tcmexam = false;
+
 }
