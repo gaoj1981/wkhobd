@@ -31,4 +31,9 @@ public class ScheduledTask {
 		obdLicService.qzDeviceTimeRate();
 	}
 
+	@Scheduled(cron = "0 12 23 * * ?")
+	public void qzMonthSum() {
+		obdLicService.qzMonthSum();
+	}
+
 }

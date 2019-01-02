@@ -28,6 +28,7 @@ import com.wkhmedical.exception.ObdLicException;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.po.DeviceCheck;
 import com.wkhmedical.po.DeviceCheckTime;
+import com.wkhmedical.po.DeviceMonth;
 import com.wkhmedical.po.DeviceTime;
 import com.wkhmedical.po.DeviceTimeRate;
 import com.wkhmedical.po.DeviceTimeTemp;
@@ -37,6 +38,7 @@ import com.wkhmedical.po.MgObdLicSum;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
 import com.wkhmedical.repository.jpa.DeviceCheckRepository;
 import com.wkhmedical.repository.jpa.DeviceCheckTimeRepository;
+import com.wkhmedical.repository.jpa.DeviceMonthRepository;
 import com.wkhmedical.repository.jpa.DeviceTimeRateRepository;
 import com.wkhmedical.repository.jpa.DeviceTimeRepository;
 import com.wkhmedical.repository.jpa.DeviceTimeTempRepository;
@@ -76,6 +78,8 @@ public class ObdLicServiceImpl implements ObdLicService {
 	DeviceTimeTempRepository deviceTimeTempRepository;
 	@Resource
 	DeviceTimeRateRepository deviceTimeRateRepository;
+	@Resource
+	DeviceMonthRepository deviceMonthRepository;
 
 	@Override
 	public ObdLicDTO getObdLic(String urlEid, String rsaStr) {
@@ -612,6 +616,35 @@ public class ObdLicServiceImpl implements ObdLicService {
 			}
 			catch (Exception e) {
 			}
+
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.ObdLicService#qzMonthSum()
+	 */
+	@Override
+	public void qzMonthSum() {
+		Date dtNow = new Date();
+		// 处理上个月数据
+		String ymMonth = DateUtil.formatDate(DateUtil.getDateAddMonth(dtNow, -1), "yyyyMM");
+		DeviceMonth deviceMonth = deviceMonthRepository.findByYmMonth(ymMonth);
+		if (deviceMonth != null) {
+			Date updTime = deviceMonth.getUpdTime();
+			String updTimeStr = DateUtil.formatDate(updTime, "yyyyMM");
+			if (updTimeStr.compareTo(ymMonth) <= 0) {
+				// 需要重新更新
+			}
+		}
+
+		// 处理本月数据
+		ymMonth = DateUtil.getNowDateByFormat("yyyyMM");
+		deviceMonth = deviceMonthRepository.findByYmMonth(ymMonth);
+		if (deviceMonth != null) {
+			//
+		}
+		else {
 
 		}
 	}
