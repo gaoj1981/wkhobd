@@ -381,8 +381,7 @@ public class CarInfoServiceImpl implements CarInfoService {
 			for (Date dtTmp = dayArr[0]; dtTmp.compareTo(dayArr[1]) <= 0; dtTmp = DateUtil.getDateAddDay(dtTmp, 1)) {
 				dayRate = BigDecimal.ZERO;
 				// 获取此时点的当天出车数
-				Long carDaySum = deviceTimeRepository.countByDtAndEidAndProvIdAndCityIdAndAreaIdAndTownIdAndVillId(dtTmp, eid, provId, cityId, areaId,
-						townId, villId);
+				Long carDaySum = deviceTimeRepository.findCarDayCount(dtTmp, eid, provId, cityId, areaId, townId, villId);
 				// 此时点的车辆总数
 				Long carSum = carInfoRepository.findCarCountEndTime(dtTmp, provId, cityId, areaId, townId, villId);
 

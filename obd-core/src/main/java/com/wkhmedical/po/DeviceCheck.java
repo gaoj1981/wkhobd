@@ -38,4 +38,14 @@ public class DeviceCheck implements Serializable {
 
 	private Long time;
 
+	private Long provId;
+
+	private Long cityId;
+
+	private Long areaId;
+
+	private Long townId;
+
+	private Long villId;
+
 }

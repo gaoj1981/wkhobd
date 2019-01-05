@@ -20,6 +20,7 @@ import com.taoxeo.lang.exception.BizRuntimeException;
 import com.wkhmedical.config.ConfigProperties;
 import com.wkhmedical.constant.BizConstant;
 import com.wkhmedical.constant.LicStatus;
+import com.wkhmedical.dto.AreaCarBody;
 import com.wkhmedical.dto.DeviceCheckDTO;
 import com.wkhmedical.dto.DeviceCheckSumBody;
 import com.wkhmedical.dto.LicInfoDTO;
@@ -421,6 +422,11 @@ public class ObdLicServiceImpl implements ObdLicService {
 					dcObj.setStatus(0);
 					dcObj.setNumber(number);
 					dcObj.setTime(time);
+					dcObj.setProvId(carInfo.getProvId());
+					dcObj.setCityId(carInfo.getCityId());
+					dcObj.setAreaId(carInfo.getAreaId());
+					dcObj.setTownId(carInfo.getTownId());
+					dcObj.setVillId(carInfo.getVillId());
 					dcRepository.save(dcObj);
 				}
 				else {
@@ -530,6 +536,27 @@ public class ObdLicServiceImpl implements ObdLicService {
 		BigDecimal expNum = dcRepository.getCheckSumByStatus(0);
 		// 检测总数
 		BigDecimal ttNum = dcRepository.getCheckSumByStatus(null);
+		if (ttNum.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
+		return expNum.divide(ttNum, 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.ObdLicService#getCheckExpRate(com.wkhmedical.dto.AreaCarBody)
+	 */
+	@Override
+	public BigDecimal getCheckExpRate(AreaCarBody paramBody) {
+		String eid = paramBody.getEid();
+		Long provId = paramBody.getProvId();
+		Long cityId = paramBody.getCityId();
+		Long areaId = paramBody.getAreaId();
+		Long townId = paramBody.getTownId();
+		Long villId = paramBody.getVillId();
+
+		// 检测异常数
+		BigDecimal expNum = dcRepository.getCheckSumByStatus(0, eid, provId, cityId, areaId, townId, villId);
+		// 检测总数
+		BigDecimal ttNum = dcRepository.getCheckSumByStatus(null, eid, provId, cityId, areaId, townId, villId);
 		if (ttNum.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
 		return expNum.divide(ttNum, 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100));
 	}

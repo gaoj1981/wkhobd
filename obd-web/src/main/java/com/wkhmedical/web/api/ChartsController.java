@@ -74,8 +74,8 @@ public class ChartsController {
 
 	@ApiOperation(value = "检测异常百分比")
 	@PostMapping("/check.exp.rate")
-	public BigDecimal checkExpRate() {
-		return obdLicService.getCheckExpRate();
+	public BigDecimal checkExpRate(@RequestBody @Valid AreaCarBody paramBody) {
+		return obdLicService.getCheckExpRate(paramBody);
 	}
 
 	@ApiOperation(value = "月平均体检人数")

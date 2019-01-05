@@ -115,4 +115,34 @@ public class DeviceCheckRepositoryImpl implements IDeviceCheckRepository {
 		return (BigDecimal) lstObj.get(0).get("sumNum");
 	}
 
+	@Override
+	public BigDecimal getCheckSumByStatus(Integer status, String eid, Long provId, Long cityId, Long areaId, Long townId, Long villId) {
+		String sql = "SELECT SUM(number) AS sumNum FROM device_check WHERE 1=1";
+		if (status != null) {
+			sql = sql + " AND status=" + status;
+		}
+		if (provId != null) {
+			sql = sql + " AND provId=" + provId;
+		}
+		if (cityId != null) {
+			sql = sql + " AND cityId=" + cityId;
+		}
+		if (areaId != null) {
+			sql = sql + " AND areaId=" + areaId;
+		}
+		if (townId != null) {
+			sql = sql + " AND townId=" + townId;
+		}
+		if (villId != null) {
+			sql = sql + " AND villId=" + villId;
+		}
+
+		@SuppressWarnings("rawtypes")
+		List<Map> lstObj = hibernateSupport.findByNativeSql(Map.class, sql, null, 1);
+		if (lstObj == null || lstObj.get(0).get("sumNum") == null) {
+			return BigDecimal.ZERO;
+		}
+		return (BigDecimal) lstObj.get(0).get("sumNum");
+	}
+
 }
