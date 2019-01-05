@@ -544,6 +544,8 @@ public class ObdLicServiceImpl implements ObdLicService {
 		List<DeviceTimeTemp> lstDtt = deviceTimeTempRepository.findTop2000ByFlagAndDtLessThan(0, dtNow);
 		DeviceTime devTime;
 		Date dt, sdt, edt;
+		String eid;
+		CarInfo carInfo;
 		for (DeviceTimeTemp dtt : lstDtt) {
 			try {
 				devTime = new DeviceTime();
@@ -558,6 +560,16 @@ public class ObdLicServiceImpl implements ObdLicService {
 					edt = DateUtil.parseToDate(DateUtil.getDateEnd(dt), "yyyy-MM-dd HH:mm:ss");
 				}
 				devTime.setTs(DateUtil.getDiffSeconds(sdt, edt));
+				// 完善区域属性
+				eid = devTime.getEid();
+				carInfo = carInfoRepository.findByEid(eid);
+				if (carInfo != null) {
+					devTime.setProvId(carInfo.getProvId());
+					devTime.setCityId(carInfo.getCityId());
+					devTime.setAreaId(carInfo.getAreaId());
+					devTime.setTownId(carInfo.getTownId());
+					devTime.setVillId(carInfo.getVillId());
+				}
 				// 移至正式开关机统计表中
 				deviceTimeRepository.save(devTime);
 				// 更改临时表的状态为已统计

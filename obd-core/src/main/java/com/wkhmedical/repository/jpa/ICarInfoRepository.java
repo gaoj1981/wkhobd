@@ -46,4 +46,6 @@ public interface ICarInfoRepository {
 	List<CarAreaNum> findCarCountAreaGroupBy(Long areaVal, String areaKey, String areaKeyNext);
 
 	Long findCarCountEndTime(Date endTime);
+
+	Long findCarCountEndTime(Date endTime, Long provId, Long cityId, Long areaId, Long townId, Long villId);
 }

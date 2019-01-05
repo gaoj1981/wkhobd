@@ -68,8 +68,8 @@ public class ChartsController {
 
 	@ApiOperation(value = "车辆月出车率")
 	@PostMapping("/car.month.rate")
-	public BigDecimal getCarMonthRate() {
-		return carInfoService.getCarMonthRate();
+	public BigDecimal getCarMonthRate(@RequestBody @Valid AreaCarBody paramBody) {
+		return carInfoService.getCarMonthRate(paramBody);
 	}
 
 	@ApiOperation(value = "检测异常百分比")

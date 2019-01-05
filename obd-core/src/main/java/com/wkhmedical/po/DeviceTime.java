@@ -42,4 +42,14 @@ public class DeviceTime implements Serializable {
 
 	private Integer flag;
 
+	private Long provId;
+
+	private Long cityId;
+
+	private Long areaId;
+
+	private Long townId;
+
+	private Long villId;
+
 }

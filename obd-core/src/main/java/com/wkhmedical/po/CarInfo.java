@@ -69,5 +69,9 @@ public class CarInfo implements Serializable {
 
 	private Long areaId;
 
+	private Long townId;
+
+	private Long villId;
+
 	private Integer delFlag;
 }

@@ -220,4 +220,26 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		return hibernateSupport.countByNativeSql(sql, null);
 	}
 
+	@Override
+	public Long findCarCountEndTime(Date endTime, Long provId, Long cityId, Long areaId, Long townId, Long villId) {
+		String dtStr = DateUtil.getDateEnd(endTime);
+		String sql = "SELECT COUNT(1) FROM car_info WHERE insTime <='" + dtStr + "'";
+		if (provId != null) {
+			sql += " AND provId=" + provId;
+		}
+		if (cityId != null) {
+			sql += " AND cityId=" + cityId;
+		}
+		if (areaId != null) {
+			sql += " AND areaId=" + areaId;
+		}
+		if (townId != null) {
+			sql += " AND townId=" + townId;
+		}
+		if (villId != null) {
+			sql += " AND villId=" + villId;
+		}
+		return hibernateSupport.countByNativeSql(sql, null);
+	}
+
 }

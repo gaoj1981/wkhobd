@@ -40,6 +40,8 @@ public interface CarInfoService {
 	List<ChartCarDTO> getChartCarList(Integer groupType);
 
 	AreaCarDTO getAreaCar(AreaCarBody paramBody);
-	
+
 	BigDecimal getCarMonthRate();
+
+	BigDecimal getCarMonthRate(AreaCarBody paramBody);
 }

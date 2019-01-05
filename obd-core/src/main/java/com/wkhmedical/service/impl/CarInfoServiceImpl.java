@@ -37,6 +37,7 @@ import com.wkhmedical.repository.jpa.BaseAreaRepository;
 import com.wkhmedical.repository.jpa.BindUserRepository;
 import com.wkhmedical.repository.jpa.CarInfoRepository;
 import com.wkhmedical.repository.jpa.DeviceTimeRateRepository;
+import com.wkhmedical.repository.jpa.DeviceTimeRepository;
 import com.wkhmedical.repository.jpa.EquipInfoRepository;
 import com.wkhmedical.repository.mongo.ObdCarRepository;
 import com.wkhmedical.service.CarInfoService;
@@ -61,6 +62,8 @@ public class CarInfoServiceImpl implements CarInfoService {
 	EquipInfoRepository equipInfoRepository;
 	@Resource
 	BaseAreaRepository baseAreaRepository;
+	@Resource
+	DeviceTimeRepository deviceTimeRepository;
 	@Resource
 	DeviceTimeRateRepository deviceTimeRateRepository;
 
@@ -352,4 +355,62 @@ public class CarInfoServiceImpl implements CarInfoService {
 		BigDecimal avgMonthRateSum = monthRateSum.divide(new BigDecimal(monthNum), 2, BigDecimal.ROUND_HALF_UP);
 		return avgMonthRateSum;
 	}
+
+	@Override
+	public BigDecimal getCarMonthRate(AreaCarBody paramBody) {
+		int month = DateUtil.getNowMonth();
+		BigDecimal monthRateSum = BigDecimal.ZERO;
+		int monthNum = 0;
+		Date[] dayArr;
+		String eid = paramBody.getEid();
+		Long provId = paramBody.getProvId();
+		Long cityId = paramBody.getCityId();
+		Long areaId = paramBody.getAreaId();
+		Long townId = paramBody.getTownId();
+		Long villId = paramBody.getVillId();
+
+		BigDecimal bdDay, bdSum, dayRate, daySum, monthRate;
+		BigDecimal bd100 = new BigDecimal("100");
+		// 月平均出车率
+		for (int i = 1; i <= month; i++) {
+			monthRate = BigDecimal.ZERO;
+			daySum = BigDecimal.ZERO;
+			// 当前月的开始结束日期
+			dayArr = DateUtil.getMonthSTArr(month);
+			// 循环计算日出车率
+			for (Date dtTmp = dayArr[0]; dtTmp.compareTo(dayArr[1]) <= 0; dtTmp = DateUtil.getDateAddDay(dtTmp, 1)) {
+				dayRate = BigDecimal.ZERO;
+				// 获取此时点的当天出车数
+				Long carDaySum = deviceTimeRepository.countByDtAndEidAndProvIdAndCityIdAndAreaIdAndTownIdAndVillId(dtTmp, eid, provId, cityId, areaId,
+						townId, villId);
+				// 此时点的车辆总数
+				Long carSum = carInfoRepository.findCarCountEndTime(dtTmp, provId, cityId, areaId, townId, villId);
+
+				if (carSum > 0) {
+					// 计算日出车率 = (当日出车数/总车数)*100
+					bdDay = new BigDecimal(carDaySum);
+					bdSum = new BigDecimal(carSum);
+					dayRate = bdDay.divide(bdSum, 2, BigDecimal.ROUND_HALF_UP).multiply(bd100);
+				}
+				else {
+					dayRate = BigDecimal.ZERO;
+				}
+				// 出车率相加
+				daySum = daySum.add(dayRate);
+			}
+			// 月出车率 =(每日出车率相加)/当月天数
+			BigDecimal days = new BigDecimal(DateUtil.getDaysOfMonth(i));
+			monthRate = daySum.divide(days, 2, BigDecimal.ROUND_HALF_EVEN);
+			monthRateSum = monthRateSum.add(monthRate);
+			// 计算有数据的月份
+			if (monthRate.compareTo(BigDecimal.ZERO) > 0) {
+				monthNum++;
+			}
+		}
+		if (monthNum == 0) return BigDecimal.ZERO;
+		// 月平均出车率 = (月出车率相加)/月数
+		BigDecimal avgMonthRateSum = monthRateSum.divide(new BigDecimal(monthNum), 2, BigDecimal.ROUND_HALF_UP);
+		return avgMonthRateSum;
+	}
+
 }

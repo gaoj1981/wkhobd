@@ -14,4 +14,7 @@ public interface DeviceTimeRepository extends JpaRepository<DeviceTime, String>,
 	List<DeviceTime> findByDt(Date dt);
 
 	Long countByDt(Date dt);
+
+	Long countByDtAndEidAndProvIdAndCityIdAndAreaIdAndTownIdAndVillId(Date dt, String eid, Long provId, Long cityId, Long areaId, Long townId,
+			Long villId);
 }
