@@ -24,6 +24,7 @@ import com.wkhmedical.dto.AreaCarBody;
 import com.wkhmedical.dto.DeviceCheckDTO;
 import com.wkhmedical.dto.DeviceCheckSumBody;
 import com.wkhmedical.dto.LicInfoDTO;
+import com.wkhmedical.dto.MonthAvgExamDTO;
 import com.wkhmedical.dto.ObdLicDTO;
 import com.wkhmedical.exception.ObdLicException;
 import com.wkhmedical.po.CarInfo;
@@ -686,6 +687,19 @@ public class ObdLicServiceImpl implements ObdLicService {
 		else {
 
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.ObdLicService#getCheckMonthAvg(com.wkhmedical.dto.AreaCarBody)
+	 */
+	@Override
+	public MonthAvgExamDTO getCheckMonthAvg(AreaCarBody paramBody) {
+		// 过一年的月份列表
+
+		// 体检人数
+
+		return null;
 	}
 
 }

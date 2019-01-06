@@ -19,6 +19,7 @@ import com.wkhmedical.dto.AreaCarBody;
 import com.wkhmedical.dto.AreaCarDTO;
 import com.wkhmedical.dto.ChartCarDTO;
 import com.wkhmedical.dto.DeviceCheckSumBody;
+import com.wkhmedical.dto.MonthAvgExamDTO;
 import com.wkhmedical.service.CarInfoService;
 import com.wkhmedical.service.ObdLicService;
 
@@ -80,9 +81,9 @@ public class ChartsController {
 
 	@ApiOperation(value = "月平均体检人数")
 	@PostMapping("/check.month.avg")
-	public BigDecimal checkMonthAvg() {
-		// return obdLicService.getCheckMonthAvg();
-		return null;
+	public MonthAvgExamDTO checkMonthAvg(@RequestBody @Valid AreaCarBody paramBody) {
+
+		return obdLicService.getCheckMonthAvg(paramBody);
 	}
 
 }

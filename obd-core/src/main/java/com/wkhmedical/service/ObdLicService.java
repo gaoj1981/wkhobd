@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import com.wkhmedical.constant.LicStatus;
 import com.wkhmedical.dto.AreaCarBody;
 import com.wkhmedical.dto.DeviceCheckSumBody;
+import com.wkhmedical.dto.MonthAvgExamDTO;
 import com.wkhmedical.dto.ObdLicDTO;
 
 public interface ObdLicService {
@@ -28,4 +29,7 @@ public interface ObdLicService {
 	void qzDeviceTimeRate();
 
 	void qzMonthSum();
+	
+	MonthAvgExamDTO getCheckMonthAvg(AreaCarBody paramBody);
+	
 }
