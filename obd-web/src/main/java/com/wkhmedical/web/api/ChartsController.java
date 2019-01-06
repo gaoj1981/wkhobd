@@ -82,7 +82,6 @@ public class ChartsController {
 	@ApiOperation(value = "月平均体检人数")
 	@PostMapping("/check.month.avg")
 	public MonthAvgExamDTO checkMonthAvg(@RequestBody @Valid AreaCarBody paramBody) {
-
 		return obdLicService.getCheckMonthAvg(paramBody);
 	}
 

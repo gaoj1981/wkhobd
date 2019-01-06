@@ -315,7 +315,29 @@ public class DateUtil {
 		return new Date[] { dt1, dt2 };
 	}
 
+	public static String[] getMonthYear() {
+		String[] latest12Months = new String[12];
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1); // 要先+1,才能把本月的算进去
+		for (int i = 0; i < 12; i++) {
+			cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1); // 逐次往前推1个月
+			latest12Months[11 - i] = cal.get(Calendar.YEAR) + fillZero(cal.get(Calendar.MONTH) + 1);
+		}
+		return latest12Months;
+	}
+
+	public static String fillZero(int i) {
+		String month = "";
+		if (i < 10) {
+			month = "0" + i;
+		}
+		else {
+			month = String.valueOf(i);
+		}
+		return month;
+	}
+
 	public static void main(String[] args) {
-		System.out.println(getMonthSTArr(2)[0]);
+		System.out.println(getMonthYear());
 	}
 }

@@ -37,4 +37,14 @@ public class DeviceCheckTime implements Serializable {
 
 	private Date dt;
 
+	private Long provId;
+
+	private Long cityId;
+
+	private Long areaId;
+
+	private Long townId;
+
+	private Long villId;
+
 }

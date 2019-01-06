@@ -445,6 +445,11 @@ public class ObdLicServiceImpl implements ObdLicService {
 					dcTimeObj.setType(typeName);
 					dcTimeObj.setNumber(number);
 					dcTimeObj.setDt(dtSend);
+					dcTimeObj.setProvId(carInfo.getProvId());
+					dcTimeObj.setCityId(carInfo.getCityId());
+					dcTimeObj.setAreaId(carInfo.getAreaId());
+					dcTimeObj.setTownId(carInfo.getTownId());
+					dcTimeObj.setVillId(carInfo.getVillId());
 					deviceCheckTimeRepository.save(dcTimeObj);
 				}
 				else {
@@ -696,8 +701,11 @@ public class ObdLicServiceImpl implements ObdLicService {
 	@Override
 	public MonthAvgExamDTO getCheckMonthAvg(AreaCarBody paramBody) {
 		// 过一年的月份列表
-
-		// 体检人数
+		String[] monthArr = DateUtil.getMonthYear();
+		for (String monthTmp : monthArr) {
+			// 体检人数
+			log.info(monthTmp);
+		}
 
 		return null;
 	}
