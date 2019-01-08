@@ -1,6 +1,7 @@
 package com.wkhmedical.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.wkhmedical.constant.LicStatus;
 import com.wkhmedical.dto.AreaCarBody;
@@ -30,6 +31,6 @@ public interface ObdLicService {
 
 	void qzMonthSum();
 	
-	MonthAvgExamDTO getCheckMonthAvg(AreaCarBody paramBody);
+	List<MonthAvgExamDTO> getCheckMonthAvg(AreaCarBody paramBody);
 	
 }

@@ -1,5 +1,6 @@
 package com.wkhmedical.util;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -303,6 +304,12 @@ public class DateUtil {
 		return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 	}
 
+	public static int getDaysOfMonth(String month) {
+		Calendar calendar = Calendar.getInstance(java.util.Locale.CHINA);
+		calendar.setTime(parseToDate(getNowYear() + month + "01", "yyyyMMdd"));
+		return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+	}
+
 	public static Date[] getMonthSTArr(int month) {
 		String preMonth = "";
 		if (month < 10) {
@@ -312,6 +319,15 @@ public class DateUtil {
 		Date dt1 = parseToDate(year + preMonth + month + "01", "yyyyMMdd");
 		int days = getDaysOfMonth(month);
 		Date dt2 = parseToDate(year + preMonth + month + days, "yyyyMMdd");
+		return new Date[] { dt1, dt2 };
+	}
+
+	public static Date[] getMonthSTArr(String ymStr) {
+		String month = ymStr.substring(4);
+		String year = ymStr.substring(0, 4);
+		Date dt1 = parseToDate(year + month + "01", "yyyyMMdd");
+		int days = getDaysOfMonth(month);
+		Date dt2 = parseToDate(year + month + days, "yyyyMMdd");
 		return new Date[] { dt1, dt2 };
 	}
 
@@ -338,6 +354,12 @@ public class DateUtil {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(getMonthYear());
+		Long a = 1L;
+		Long b = 2L;
+		BigDecimal ba = new BigDecimal(a);
+		BigDecimal bb = new BigDecimal(b);
+		Long c = 0L;
+		c = ba.divide(bb, 0, BigDecimal.ROUND_HALF_UP).longValue();
+		System.out.println(c);
 	}
 }

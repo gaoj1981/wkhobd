@@ -1,6 +1,7 @@
 package com.wkhmedical.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -699,15 +700,49 @@ public class ObdLicServiceImpl implements ObdLicService {
 	 * @see com.wkhmedical.service.ObdLicService#getCheckMonthAvg(com.wkhmedical.dto.AreaCarBody)
 	 */
 	@Override
-	public MonthAvgExamDTO getCheckMonthAvg(AreaCarBody paramBody) {
+	public List<MonthAvgExamDTO> getCheckMonthAvg(AreaCarBody paramBody) {
+		List<MonthAvgExamDTO> rtnList = new ArrayList<MonthAvgExamDTO>();
+		// 业务数据准备
+		String eid = paramBody.getEid();
+		Long provId = paramBody.getProvId();
+		Long cityId = paramBody.getCityId();
+		Long areaId = paramBody.getAreaId();
+		Long townId = paramBody.getTownId();
+		Long villId = paramBody.getVillId();
+		String type = BizConstant.MAP_CHECK_ITEMS.get("healthexam");
+
+		//
+		MonthAvgExamDTO monthAvgObj;
+		Long ckNum = 0L;
+		Long carNum = 0L;
+		Long avgNum = 0L;
+		BigDecimal bckNum;
+		BigDecimal bcarNum;
+		Date[] dtRangeArr;
 		// 过一年的月份列表
 		String[] monthArr = DateUtil.getMonthYear();
 		for (String monthTmp : monthArr) {
+			dtRangeArr = DateUtil.getMonthSTArr(monthTmp);
 			// 体检人数
-			log.info(monthTmp);
+			ckNum = deviceCheckTimeRepository.getCheckSum(eid, provId, cityId, areaId, townId, villId, type, dtRangeArr[0], dtRangeArr[1]);
+			// 车辆数
+			carNum = carInfoRepository.countByInsTimeLessThan(DateUtil.getDateAddDay(dtRangeArr[1], 1));
+			// 平均体检人数
+			if (carNum > 0) {
+				bckNum = new BigDecimal(ckNum);
+				bcarNum = new BigDecimal(carNum);
+				avgNum = bckNum.divide(bcarNum, 0, BigDecimal.ROUND_HALF_UP).longValue();
+			}
+			else {
+				avgNum = 0L;
+			}
+			//
+			monthAvgObj = new MonthAvgExamDTO();
+			monthAvgObj.setMonth(Integer.valueOf(monthTmp.substring(4)));
+			monthAvgObj.setAvgExamNum(avgNum);
+			rtnList.add(monthAvgObj);
 		}
-
-		return null;
+		return rtnList;
 	}
 
 }

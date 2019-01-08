@@ -59,30 +59,29 @@ public class DeviceCheckRepositoryImpl implements IDeviceCheckRepository {
 		StringBuilder sqlBuf = new StringBuilder("");
 		sqlBuf.append(" SELECT SUM(dc.number) AS sumNum");
 		sqlBuf.append(" FROM device_check dc");
-		sqlBuf.append(" LEFT JOIN car_info ci ON dc.eid=ci.eid");
 		sqlBuf.append(" WHERE 1 = 1");
 		if (StringUtils.isNotBlank(eid)) {
 			sqlBuf.append(" AND dc.eid = ?");
 			paramList.add(eid);
 		}
 		if (provId != null) {
-			sqlBuf.append(" AND ci.provId = ?");
+			sqlBuf.append(" AND dc.provId = ?");
 			paramList.add(provId);
 		}
 		if (cityId != null) {
-			sqlBuf.append(" AND ci.cityId = ?");
+			sqlBuf.append(" AND dc.cityId = ?");
 			paramList.add(cityId);
 		}
 		if (areaId != null) {
-			sqlBuf.append(" AND ci.areaId = ?");
+			sqlBuf.append(" AND dc.areaId = ?");
 			paramList.add(areaId);
 		}
 		if (townId != null) {
-			sqlBuf.append(" AND ci.townId = ?");
+			sqlBuf.append(" AND dc.townId = ?");
 			paramList.add(townId);
 		}
 		if (villId != null) {
-			sqlBuf.append(" AND ci.villId = ?");
+			sqlBuf.append(" AND dc.villId = ?");
 			paramList.add(villId);
 		}
 		// 处理体检项IN查询

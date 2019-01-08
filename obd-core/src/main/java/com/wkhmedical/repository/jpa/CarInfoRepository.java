@@ -1,5 +1,7 @@
 package com.wkhmedical.repository.jpa;
 
+import java.util.Date;
+
 import org.springframework.stereotype.Repository;
 
 import com.taoxeo.repository.JpaRepository;
@@ -16,4 +18,5 @@ public interface CarInfoRepository extends JpaRepository<CarInfo, String>, ICarI
 
 	CarInfo findByPlateNum(String plateNum);
 
+	Long countByInsTimeLessThan(Date dt);
 }

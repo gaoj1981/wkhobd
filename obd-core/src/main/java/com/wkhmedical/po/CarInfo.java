@@ -1,7 +1,9 @@
 package com.wkhmedical.po;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -74,4 +76,8 @@ public class CarInfo implements Serializable {
 	private Long villId;
 
 	private Integer delFlag;
+
+	@Column(insertable = false, updatable = false)
+	private Date insTime;
+
 }
