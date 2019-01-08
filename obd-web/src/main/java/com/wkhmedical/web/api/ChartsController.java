@@ -19,7 +19,9 @@ import com.wkhmedical.dto.AreaCarBody;
 import com.wkhmedical.dto.AreaCarDTO;
 import com.wkhmedical.dto.ChartCarDTO;
 import com.wkhmedical.dto.DeviceCheckSumBody;
+import com.wkhmedical.dto.MonthAvgCarDTO;
 import com.wkhmedical.dto.MonthAvgExamDTO;
+import com.wkhmedical.dto.MonthAvgTimeDTO;
 import com.wkhmedical.service.CarInfoService;
 import com.wkhmedical.service.ObdLicService;
 
@@ -33,7 +35,7 @@ import lombok.extern.log4j.Log4j2;
  */
 @Log4j2
 @RestController
-@Api(tags = "车辆接口")
+@Api(tags = "图表统计接口")
 @RequestMapping("/api/charts")
 public class ChartsController {
 
@@ -83,6 +85,18 @@ public class ChartsController {
 	@PostMapping("/check.month.avg")
 	public List<MonthAvgExamDTO> checkMonthAvg(@RequestBody @Valid AreaCarBody paramBody) {
 		return obdLicService.getCheckMonthAvg(paramBody);
+	}
+
+	@ApiOperation(value = "月平均运营时长")
+	@PostMapping("/time.month.avg")
+	public List<MonthAvgTimeDTO> timeMonthAvg(@RequestBody @Valid AreaCarBody paramBody) {
+		return obdLicService.getTimeMonthAvg(paramBody);
+	}
+
+	@ApiOperation(value = "月云巡诊车出车比例")
+	@PostMapping("/car.month.avg")
+	public List<MonthAvgCarDTO> carMonthAvg(@RequestBody @Valid AreaCarBody paramBody) {
+		return obdLicService.getCarMonthAvg(paramBody);
 	}
 
 }

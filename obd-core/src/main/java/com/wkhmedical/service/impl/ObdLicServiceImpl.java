@@ -25,7 +25,9 @@ import com.wkhmedical.dto.AreaCarBody;
 import com.wkhmedical.dto.DeviceCheckDTO;
 import com.wkhmedical.dto.DeviceCheckSumBody;
 import com.wkhmedical.dto.LicInfoDTO;
+import com.wkhmedical.dto.MonthAvgCarDTO;
 import com.wkhmedical.dto.MonthAvgExamDTO;
+import com.wkhmedical.dto.MonthAvgTimeDTO;
 import com.wkhmedical.dto.ObdLicDTO;
 import com.wkhmedical.exception.ObdLicException;
 import com.wkhmedical.po.CarInfo;
@@ -719,7 +721,7 @@ public class ObdLicServiceImpl implements ObdLicService {
 		BigDecimal bckNum;
 		BigDecimal bcarNum;
 		Date[] dtRangeArr;
-		// 过一年的月份列表
+		// 一年的月份列表
 		String[] monthArr = DateUtil.getMonthYear();
 		for (String monthTmp : monthArr) {
 			dtRangeArr = DateUtil.getMonthSTArr(monthTmp);
@@ -740,6 +742,88 @@ public class ObdLicServiceImpl implements ObdLicService {
 			monthAvgObj = new MonthAvgExamDTO();
 			monthAvgObj.setMonth(Integer.valueOf(monthTmp.substring(4)));
 			monthAvgObj.setAvgExamNum(avgNum);
+			rtnList.add(monthAvgObj);
+		}
+		return rtnList;
+	}
+
+	@Override
+	public List<MonthAvgTimeDTO> getTimeMonthAvg(AreaCarBody paramBody) {
+		List<MonthAvgTimeDTO> rtnList = new ArrayList<MonthAvgTimeDTO>();
+		// 业务数据准备
+		String eid = paramBody.getEid();
+		Long provId = paramBody.getProvId();
+		Long cityId = paramBody.getCityId();
+		Long areaId = paramBody.getAreaId();
+		Long townId = paramBody.getTownId();
+		Long villId = paramBody.getVillId();
+
+		//
+		MonthAvgTimeDTO monthAvgObj;
+		Long tsNum = 0L;
+		Long carNum = 0L;
+		Long avgNum = 0L;
+		BigDecimal btsNum;
+		BigDecimal bcarNum;
+		Date[] dtRangeArr;
+		// 一年的月份列表
+		String[] monthArr = DateUtil.getMonthYear();
+		for (String monthTmp : monthArr) {
+			dtRangeArr = DateUtil.getMonthSTArr(monthTmp);
+			// 运营时长
+			tsNum = deviceTimeRepository.getTimeSum(eid, provId, cityId, areaId, townId, villId, dtRangeArr[0], dtRangeArr[1]);
+			// 车辆数
+			carNum = carInfoRepository.countByInsTimeLessThan(DateUtil.getDateAddDay(dtRangeArr[1], 1));
+			// 平均运营时长
+			if (carNum > 0) {
+				btsNum = new BigDecimal(tsNum);
+				bcarNum = new BigDecimal(carNum);
+				avgNum = btsNum.divide(bcarNum, 0, BigDecimal.ROUND_HALF_UP).longValue();
+			}
+			else {
+				avgNum = 0L;
+			}
+			//
+			monthAvgObj = new MonthAvgTimeDTO();
+			monthAvgObj.setMonth(Integer.valueOf(monthTmp.substring(4)));
+			monthAvgObj.setOperatDuration(avgNum);
+			rtnList.add(monthAvgObj);
+		}
+		return rtnList;
+	}
+
+	@Override
+	public List<MonthAvgCarDTO> getCarMonthAvg(AreaCarBody paramBody) {
+		List<MonthAvgCarDTO> rtnList = new ArrayList<MonthAvgCarDTO>();
+		// 业务数据准备
+		String eid = paramBody.getEid();
+		Long provId = paramBody.getProvId();
+		Long cityId = paramBody.getCityId();
+		Long areaId = paramBody.getAreaId();
+		Long townId = paramBody.getTownId();
+		Long villId = paramBody.getVillId();
+
+		//
+		MonthAvgCarDTO monthAvgObj;
+		Long runNum = 0L;
+		Long norunNum = 0L;
+		Long carNum = 0L;
+		Date[] dtRangeArr;
+		// 一年的月份列表
+		String[] monthArr = DateUtil.getMonthYear();
+		for (String monthTmp : monthArr) {
+			dtRangeArr = DateUtil.getMonthSTArr(monthTmp);
+			// 车辆数
+			carNum = carInfoRepository.countByInsTimeLessThan(DateUtil.getDateAddDay(dtRangeArr[1], 1));
+			// 出车数
+			runNum = deviceTimeRepository.getCarSum(eid, provId, cityId, areaId, townId, villId, dtRangeArr[0], dtRangeArr[1]);
+			// 未出车数
+			norunNum = carNum - runNum;
+			//
+			monthAvgObj = new MonthAvgCarDTO();
+			monthAvgObj.setMonth(Integer.valueOf(monthTmp.substring(4)));
+			monthAvgObj.setOutwardRunNum(runNum);
+			monthAvgObj.setNoDrivingOut(norunNum);
 			rtnList.add(monthAvgObj);
 		}
 		return rtnList;
