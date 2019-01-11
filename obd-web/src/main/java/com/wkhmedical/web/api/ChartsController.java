@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wkhmedical.dto.AreaCarBody;
 import com.wkhmedical.dto.AreaCarDTO;
 import com.wkhmedical.dto.ChartCarDTO;
+import com.wkhmedical.dto.CheckPeopleTotal;
 import com.wkhmedical.dto.DeviceCheckSumBody;
 import com.wkhmedical.dto.MonthAvgCarDTO;
 import com.wkhmedical.dto.MonthAvgExamDTO;
 import com.wkhmedical.dto.MonthAvgTimeDTO;
+import com.wkhmedical.dto.TimeTotal;
 import com.wkhmedical.service.CarInfoService;
 import com.wkhmedical.service.ObdLicService;
 
@@ -97,6 +99,21 @@ public class ChartsController {
 	@PostMapping("/car.month.avg")
 	public List<MonthAvgCarDTO> carMonthAvg(@RequestBody @Valid AreaCarBody paramBody) {
 		return obdLicService.getCarMonthAvg(paramBody);
+	}
+
+	@ApiOperation(value = "累积运营时长")
+	@PostMapping("/time.total")
+	public TimeTotal getTimeTotal(@RequestBody @Valid AreaCarBody paramBody) {
+		TimeTotal rtnObj = new TimeTotal();
+		Long timeTotal = obdLicService.getTimeTotal(paramBody);
+		rtnObj.setOperationDuration(timeTotal);
+		return rtnObj;
+	}
+
+	@ApiOperation(value = "体检人数统计")
+	@PostMapping("/check.people.total")
+	public CheckPeopleTotal getCheckPeopleTotal(@RequestBody @Valid AreaCarBody paramBody) {
+		return obdLicService.getCheckPeopleTotal(paramBody);
 	}
 
 }

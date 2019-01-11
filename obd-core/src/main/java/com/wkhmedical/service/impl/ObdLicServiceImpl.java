@@ -22,6 +22,7 @@ import com.wkhmedical.config.ConfigProperties;
 import com.wkhmedical.constant.BizConstant;
 import com.wkhmedical.constant.LicStatus;
 import com.wkhmedical.dto.AreaCarBody;
+import com.wkhmedical.dto.CheckPeopleTotal;
 import com.wkhmedical.dto.DeviceCheckDTO;
 import com.wkhmedical.dto.DeviceCheckSumBody;
 import com.wkhmedical.dto.LicInfoDTO;
@@ -827,6 +828,62 @@ public class ObdLicServiceImpl implements ObdLicService {
 			rtnList.add(monthAvgObj);
 		}
 		return rtnList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.ObdLicService#getTimeTotal(com.wkhmedical.dto.AreaCarBody)
+	 */
+	@Override
+	public Long getTimeTotal(AreaCarBody paramBody) {
+		// 业务数据准备
+		String eid = paramBody.getEid();
+		Long provId = paramBody.getProvId();
+		Long cityId = paramBody.getCityId();
+		Long areaId = paramBody.getAreaId();
+		Long townId = paramBody.getTownId();
+		Long villId = paramBody.getVillId();
+		// 运营时长
+		return deviceTimeRepository.getTimeSum(eid, provId, cityId, areaId, townId, villId, null, null);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.ObdLicService#getCheckPeopleTotal(com.wkhmedical.dto.AreaCarBody)
+	 */
+	@Override
+	public CheckPeopleTotal getCheckPeopleTotal(AreaCarBody paramBody) {
+		// curTime
+		Date dtNow = DateUtil.getCurDateByFormat("yyyy-MM-dd");
+		Date dtEnd = dtNow;
+		Date dtStart;
+		// 业务数据准备
+		String eid = paramBody.getEid();
+		Long provId = paramBody.getProvId();
+		Long cityId = paramBody.getCityId();
+		Long areaId = paramBody.getAreaId();
+		Long townId = paramBody.getTownId();
+		Long villId = paramBody.getVillId();
+		String type = BizConstant.MAP_CHECK_ITEMS.get("healthexam");
+		// yesterdayData
+		Date dtYesterday = DateUtil.getDateAddDay(dtNow, -1);
+		Long yesterdayData = deviceCheckTimeRepository.getCheckSum(eid, provId, cityId, areaId, townId, villId, type, dtYesterday, dtYesterday);
+		// weekData
+		dtStart = DateUtil.parseToDate(DateUtil.getCurWeekBegin(), "yyyy-MM-dd");
+		Long weekData = deviceCheckTimeRepository.getCheckSum(eid, provId, cityId, areaId, townId, villId, type, dtStart, dtEnd);
+		// monthData
+		dtStart = DateUtil.getCurMonthBegin();
+		Long monthData = deviceCheckTimeRepository.getCheckSum(eid, provId, cityId, areaId, townId, villId, type, dtStart, dtEnd);
+		// yearData
+		dtStart = DateUtil.getCurYearBegin();
+		Long yearData = deviceCheckTimeRepository.getCheckSum(eid, provId, cityId, areaId, townId, villId, type, dtStart, dtEnd);
+		//
+		CheckPeopleTotal rtnTotal = new CheckPeopleTotal();
+		rtnTotal.setYesterdayData(yesterdayData);
+		rtnTotal.setWeekData(weekData);
+		rtnTotal.setMonthData(monthData);
+		rtnTotal.setYearData(yearData);
+		return rtnTotal;
 	}
 
 }

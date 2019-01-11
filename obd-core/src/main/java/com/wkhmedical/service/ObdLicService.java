@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.wkhmedical.constant.LicStatus;
 import com.wkhmedical.dto.AreaCarBody;
+import com.wkhmedical.dto.CheckPeopleTotal;
 import com.wkhmedical.dto.DeviceCheckSumBody;
 import com.wkhmedical.dto.MonthAvgCarDTO;
 import com.wkhmedical.dto.MonthAvgExamDTO;
@@ -39,4 +40,8 @@ public interface ObdLicService {
 
 	List<MonthAvgCarDTO> getCarMonthAvg(AreaCarBody paramBody);
 
+	Long getTimeTotal(AreaCarBody paramBody);
+
+	CheckPeopleTotal getCheckPeopleTotal(AreaCarBody paramBody);
+	
 }

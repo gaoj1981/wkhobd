@@ -1,6 +1,5 @@
 package com.wkhmedical.util;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -185,6 +184,23 @@ public class DateUtil {
 		return days[weekday];
 	}
 
+	/**
+	 * 根据日期算出周几
+	 * 
+	 * @param ymd
+	 * @return
+	 * @throws Exception
+	 */
+	public static int getweekNum(Date date) {
+		int weekday = 0;
+		if (date != null) {
+			Calendar calendar1 = Calendar.getInstance(java.util.Locale.CHINA);
+			calendar1.setTime(date);
+			weekday = calendar1.get(Calendar.DAY_OF_WEEK) - 1;
+		}
+		return weekday;
+	}
+
 	public static String getStrTimes() {
 		Long timeLn = new Date().getTime();
 		return timeLn.toString();
@@ -264,6 +280,21 @@ public class DateUtil {
 			days = 0 - days;
 			return getDateAddDay4Str(dtNow, "yyyy-MM-dd", days);
 		}
+	}
+
+	public static Date getCurMonthBegin() {
+		int year = getNowYear();
+		int month = getNowMonth();
+		String preMonth = "";
+		if (month < 10) {
+			preMonth = "0";
+		}
+		return parseToDate(year + "-" + preMonth + month + "-01", "yyyy-MM-dd");
+	}
+
+	public static Date getCurYearBegin() {
+		int year = getNowYear();
+		return parseToDate(year + "-01-01", "yyyy-MM-dd");
 	}
 
 	public static String getDateEnd(Date date) {
@@ -354,12 +385,6 @@ public class DateUtil {
 	}
 
 	public static void main(String[] args) {
-		Long a = 1L;
-		Long b = 2L;
-		BigDecimal ba = new BigDecimal(a);
-		BigDecimal bb = new BigDecimal(b);
-		Long c = 0L;
-		c = ba.divide(bb, 0, BigDecimal.ROUND_HALF_UP).longValue();
-		System.out.println(c);
+		System.out.println(getCurMonthBegin());
 	}
 }
