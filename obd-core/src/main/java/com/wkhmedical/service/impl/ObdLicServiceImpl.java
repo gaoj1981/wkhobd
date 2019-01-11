@@ -22,6 +22,7 @@ import com.wkhmedical.config.ConfigProperties;
 import com.wkhmedical.constant.BizConstant;
 import com.wkhmedical.constant.LicStatus;
 import com.wkhmedical.dto.AreaCarBody;
+import com.wkhmedical.dto.CheckItemTotal;
 import com.wkhmedical.dto.CheckPeopleTotal;
 import com.wkhmedical.dto.DeviceCheckDTO;
 import com.wkhmedical.dto.DeviceCheckSumBody;
@@ -538,6 +539,50 @@ public class ObdLicServiceImpl implements ObdLicService {
 		Long villId = paramBody.getVillId();
 
 		return dcRepository.getCheckSum(eid, provId, cityId, areaId, townId, villId, inTypeStr);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.wkhmedical.service.ObdLicService#getCheckItemSum(com.wkhmedical.dto.DeviceCheckSumBody)
+	 */
+	@Override
+	public CheckItemTotal getCheckItemSum(DeviceCheckSumBody paramBody) {
+		StringBuilder inStrs = new StringBuilder("");
+
+		// 反射机制获取需要汇总的体检项
+		for (Map.Entry<String, String> entry : BizConstant.MAP_CHECK_ITEMS.entrySet()) {
+			try {
+				Boolean isTrue = (Boolean) PropertyUtils.getProperty(paramBody, entry.getKey());
+				if (isTrue) {
+					inStrs.append("'" + entry.getValue() + "',");
+				}
+			}
+			catch (Exception e) {
+			}
+		}
+
+		String inTypeStr = inStrs.toString();
+		if (inTypeStr.endsWith(",")) {
+			inTypeStr = inTypeStr.substring(0, inTypeStr.length() - 1);
+		}
+		String eid = paramBody.getEid();
+		Long provId = paramBody.getProvId();
+		Long cityId = paramBody.getCityId();
+		Long areaId = paramBody.getAreaId();
+		Long townId = paramBody.getTownId();
+		Long villId = paramBody.getVillId();
+		//
+		CheckItemTotal rtnObj = new CheckItemTotal();
+		List<DeviceCheck> lstObj = dcRepository.getCheckItemSum(eid, provId, cityId, areaId, townId, villId, inTypeStr);
+		for (DeviceCheck dcTmp : lstObj) {
+			try {
+				PropertyUtils.setProperty(rtnObj, dcTmp.getType().toLowerCase(), dcTmp.getNumber());
+			}
+			catch (Exception e) {
+			}
+		}
+		return rtnObj;
 	}
 
 	@Override

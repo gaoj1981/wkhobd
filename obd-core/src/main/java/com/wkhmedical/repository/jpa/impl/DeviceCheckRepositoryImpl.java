@@ -97,6 +97,50 @@ public class DeviceCheckRepositoryImpl implements IDeviceCheckRepository {
 
 	/*
 	 * (non-Javadoc)
+	 * @see com.wkhmedical.repository.jpa.IDeviceCheckRepository#getCheckSum(com.wkhmedical.dto.
+	 * DeviceCheckSumBody)
+	 */
+	@Override
+	public List<DeviceCheck> getCheckItemSum(String eid, Long provId, Long cityId, Long areaId, Long townId, Long villId, String inTypeStr) {
+		List<Object> paramList = new ArrayList<Object>();
+		StringBuilder sqlBuf = new StringBuilder("");
+		sqlBuf.append(" SELECT SUM(dc.number) AS number,dc.type");
+		sqlBuf.append(" FROM device_check dc");
+		sqlBuf.append(" WHERE 1 = 1");
+		if (StringUtils.isNotBlank(eid)) {
+			sqlBuf.append(" AND dc.eid = ?");
+			paramList.add(eid);
+		}
+		if (provId != null) {
+			sqlBuf.append(" AND dc.provId = ?");
+			paramList.add(provId);
+		}
+		if (cityId != null) {
+			sqlBuf.append(" AND dc.cityId = ?");
+			paramList.add(cityId);
+		}
+		if (areaId != null) {
+			sqlBuf.append(" AND dc.areaId = ?");
+			paramList.add(areaId);
+		}
+		if (townId != null) {
+			sqlBuf.append(" AND dc.townId = ?");
+			paramList.add(townId);
+		}
+		if (villId != null) {
+			sqlBuf.append(" AND dc.villId = ?");
+			paramList.add(villId);
+		}
+		// 处理体检项IN查询
+		if (StringUtils.isNotBlank(inTypeStr)) {
+			sqlBuf.append(" AND dc.type IN (" + inTypeStr + ")");
+		}
+		sqlBuf.append(" GROUP BY dc.type");
+		return hibernateSupport.findByNativeSql(DeviceCheck.class, sqlBuf.toString(), paramList.toArray());
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see
 	 * com.wkhmedical.repository.jpa.IDeviceCheckRepository#getCheckSumByStatus(java.lang.Integer)
 	 */

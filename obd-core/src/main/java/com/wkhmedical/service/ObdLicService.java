@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.wkhmedical.constant.LicStatus;
 import com.wkhmedical.dto.AreaCarBody;
+import com.wkhmedical.dto.CheckItemTotal;
 import com.wkhmedical.dto.CheckPeopleTotal;
 import com.wkhmedical.dto.DeviceCheckSumBody;
 import com.wkhmedical.dto.MonthAvgCarDTO;
@@ -23,6 +24,8 @@ public interface ObdLicService {
 	void updateEquipStuff(String sendStr);
 
 	Long getCheckSum(DeviceCheckSumBody paramBody);
+
+	CheckItemTotal getCheckItemSum(DeviceCheckSumBody paramBody);
 
 	BigDecimal getCheckExpRate();
 
@@ -43,5 +46,5 @@ public interface ObdLicService {
 	Long getTimeTotal(AreaCarBody paramBody);
 
 	CheckPeopleTotal getCheckPeopleTotal(AreaCarBody paramBody);
-	
+
 }
