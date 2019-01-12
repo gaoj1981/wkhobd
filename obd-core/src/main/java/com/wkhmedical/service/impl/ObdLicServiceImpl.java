@@ -664,14 +664,14 @@ public class ObdLicServiceImpl implements ObdLicService {
 				if (StringUtils.isNotBlank(deviceNumber)) {
 					obdCar = obdCarRepository.findTopByDeviceNumberAndInsTimeGreaterThanOrderByInsTimeAsc(deviceNumber, sdt);
 					if (obdCar != null) {
-						sdis = new BigDecimal(obdCar.getTotalMileage());
+						sdis = new BigDecimal(obdCar.getTotalMileage()).setScale(4);
 					}
 					else {
 						sdis = BigDecimal.ZERO;
 					}
 					obdCar = obdCarRepository.findTopByDeviceNumberAndInsTimeLessThanOrderByInsTimeDesc(deviceNumber, edt);
 					if (obdCar != null) {
-						edis = new BigDecimal(obdCar.getTotalMileage());
+						edis = new BigDecimal(obdCar.getTotalMileage()).setScale(4);
 					}
 					else {
 						edis = BigDecimal.ZERO;
