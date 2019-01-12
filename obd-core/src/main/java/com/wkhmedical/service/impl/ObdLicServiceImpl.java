@@ -28,6 +28,7 @@ import com.wkhmedical.dto.DeviceCheckDTO;
 import com.wkhmedical.dto.DeviceCheckSumBody;
 import com.wkhmedical.dto.LicInfoDTO;
 import com.wkhmedical.dto.MonthAvgCarDTO;
+import com.wkhmedical.dto.MonthAvgDisDTO;
 import com.wkhmedical.dto.MonthAvgExamDTO;
 import com.wkhmedical.dto.MonthAvgTimeDTO;
 import com.wkhmedical.dto.ObdLicDTO;
@@ -770,6 +771,53 @@ public class ObdLicServiceImpl implements ObdLicService {
 		else {
 
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.ObdLicService#getDisMonthAvg(com.wkhmedical.dto.AreaCarBody)
+	 */
+	@Override
+	public List<MonthAvgDisDTO> getDisMonthAvg(AreaCarBody paramBody) {
+		List<MonthAvgDisDTO> rtnList = new ArrayList<MonthAvgDisDTO>();
+		// 业务数据准备
+		String eid = paramBody.getEid();
+		Long provId = paramBody.getProvId();
+		Long cityId = paramBody.getCityId();
+		Long areaId = paramBody.getAreaId();
+		Long townId = paramBody.getTownId();
+		Long villId = paramBody.getVillId();
+
+		//
+		MonthAvgDisDTO monthAvgObj;
+		BigDecimal disNum = BigDecimal.ZERO;
+		Long carNum = 0L;
+		BigDecimal avgNum = BigDecimal.ZERO;
+		BigDecimal bcarNum;
+		Date[] dtRangeArr;
+		// 半年的月份列表
+		String[] monthArr = DateUtil.getMonthHalfYear();
+		for (String monthTmp : monthArr) {
+			dtRangeArr = DateUtil.getMonthSTArr(monthTmp);
+			// 运营距离
+			disNum = deviceTimeRepository.getDisSum(eid, provId, cityId, areaId, townId, villId, dtRangeArr[0], dtRangeArr[1]);
+			// 车辆数
+			carNum = carInfoRepository.countByInsTimeLessThan(DateUtil.getDateAddDay(dtRangeArr[1], 1));
+			// 平均运营时长
+			if (carNum > 0) {
+				bcarNum = new BigDecimal(carNum);
+				avgNum = disNum.divide(bcarNum, 3, BigDecimal.ROUND_HALF_UP);
+			}
+			else {
+				avgNum = BigDecimal.ZERO;
+			}
+			//
+			monthAvgObj = new MonthAvgDisDTO();
+			monthAvgObj.setMonth(Integer.valueOf(monthTmp.substring(4)));
+			monthAvgObj.setAverageDistance(avgNum);
+			rtnList.add(monthAvgObj);
+		}
+		return rtnList;
 	}
 
 	/*

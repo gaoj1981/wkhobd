@@ -9,6 +9,7 @@ import com.wkhmedical.dto.CheckItemTotal;
 import com.wkhmedical.dto.CheckPeopleTotal;
 import com.wkhmedical.dto.DeviceCheckSumBody;
 import com.wkhmedical.dto.MonthAvgCarDTO;
+import com.wkhmedical.dto.MonthAvgDisDTO;
 import com.wkhmedical.dto.MonthAvgExamDTO;
 import com.wkhmedical.dto.MonthAvgTimeDTO;
 import com.wkhmedical.dto.ObdLicDTO;
@@ -36,6 +37,8 @@ public interface ObdLicService {
 	void qzDeviceTimeRate();
 
 	void qzMonthSum();
+
+	List<MonthAvgDisDTO> getDisMonthAvg(AreaCarBody paramBody);
 
 	List<MonthAvgExamDTO> getCheckMonthAvg(AreaCarBody paramBody);
 

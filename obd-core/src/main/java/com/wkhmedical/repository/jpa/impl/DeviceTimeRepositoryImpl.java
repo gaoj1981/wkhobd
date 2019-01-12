@@ -108,6 +108,53 @@ public class DeviceTimeRepositoryImpl implements IDeviceTimeRepository {
 	}
 
 	@Override
+	public BigDecimal getDisSum(String eid, Long provId, Long cityId, Long areaId, Long townId, Long villId, Date dtStart, Date dtEnd) {
+		List<Object> paramList = new ArrayList<Object>();
+		StringBuilder sqlBuf = new StringBuilder("");
+		sqlBuf.append(" SELECT SUM(dct.dis) AS sumNum");
+		sqlBuf.append(" FROM device_time dct");
+		sqlBuf.append(" WHERE 1 = 1");
+		if (StringUtils.isNotBlank(eid)) {
+			sqlBuf.append(" AND dct.eid = ?");
+			paramList.add(eid);
+		}
+		if (provId != null) {
+			sqlBuf.append(" AND dct.provId = ?");
+			paramList.add(provId);
+		}
+		if (cityId != null) {
+			sqlBuf.append(" AND dct.cityId = ?");
+			paramList.add(cityId);
+		}
+		if (areaId != null) {
+			sqlBuf.append(" AND dct.areaId = ?");
+			paramList.add(areaId);
+		}
+		if (townId != null) {
+			sqlBuf.append(" AND dct.townId = ?");
+			paramList.add(townId);
+		}
+		if (villId != null) {
+			sqlBuf.append(" AND dct.villId = ?");
+			paramList.add(villId);
+		}
+		// 处理日期查询
+		if (dtStart != null) {
+			sqlBuf.append(" AND dct.dt >= ?");
+			paramList.add(dtStart);
+		}
+		if (dtEnd != null) {
+			sqlBuf.append(" AND dct.dt <= ?");
+			paramList.add(dtEnd);
+		}
+		@SuppressWarnings("rawtypes")
+		List<Map> lstCount = hibernateSupport.findByNativeSql(Map.class, sqlBuf.toString(), paramList.toArray());
+		BigDecimal resNum = (BigDecimal) lstCount.get(0).get("sumNum");
+		if (resNum == null) return BigDecimal.ZERO;
+		return resNum;
+	}
+
+	@Override
 	public Long getCarSum(String eid, Long provId, Long cityId, Long areaId, Long townId, Long villId, Date dtStart, Date dtEnd) {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuilder sqlBuf = new StringBuilder("");

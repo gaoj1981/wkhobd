@@ -373,6 +373,17 @@ public class DateUtil {
 		return latest12Months;
 	}
 
+	public static String[] getMonthHalfYear() {
+		String[] latest6Months = new String[6];
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1); // 要先+1,才能把本月的算进去
+		for (int i = 0; i < 6; i++) {
+			cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1); // 逐次往前推1个月
+			latest6Months[5 - i] = cal.get(Calendar.YEAR) + fillZero(cal.get(Calendar.MONTH) + 1);
+		}
+		return latest6Months;
+	}
+
 	public static String fillZero(int i) {
 		String month = "";
 		if (i < 10) {
@@ -385,6 +396,9 @@ public class DateUtil {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(getCurMonthBegin());
+		String[] str = getMonthHalfYear();
+		for (String tmp : str) {
+			System.out.println(tmp);
+		}
 	}
 }
