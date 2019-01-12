@@ -21,7 +21,7 @@ public class ScheduledTask {
 		log.info("使用Cron：It's time to rest!", System.currentTimeMillis());
 	}
 
-	@Scheduled(cron = "0 43 01,02,13 * * ?")
+	@Scheduled(cron = "0 0/2 01,02 * * ?")
 	public void qzCheckTime() {
 		obdLicService.qzCheckTime();
 	}
