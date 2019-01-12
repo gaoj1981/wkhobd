@@ -7,6 +7,7 @@ import com.wkhmedical.constant.LicStatus;
 import com.wkhmedical.dto.AreaCarBody;
 import com.wkhmedical.dto.CheckItemTotal;
 import com.wkhmedical.dto.CheckPeopleTotal;
+import com.wkhmedical.dto.CheckTypeTotal;
 import com.wkhmedical.dto.DeviceCheckSumBody;
 import com.wkhmedical.dto.MonthAvgCarDTO;
 import com.wkhmedical.dto.MonthAvgDisDTO;
@@ -48,6 +49,10 @@ public interface ObdLicService {
 
 	Long getTimeTotal(AreaCarBody paramBody);
 
+	BigDecimal getDisTotal(AreaCarBody paramBody);
+
 	CheckPeopleTotal getCheckPeopleTotal(AreaCarBody paramBody);
+
+	CheckTypeTotal getCheckTypeTotal(AreaCarBody paramBody);
 
 }

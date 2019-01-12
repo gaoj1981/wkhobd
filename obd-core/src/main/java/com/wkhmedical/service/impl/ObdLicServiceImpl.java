@@ -24,6 +24,7 @@ import com.wkhmedical.constant.LicStatus;
 import com.wkhmedical.dto.AreaCarBody;
 import com.wkhmedical.dto.CheckItemTotal;
 import com.wkhmedical.dto.CheckPeopleTotal;
+import com.wkhmedical.dto.CheckTypeTotal;
 import com.wkhmedical.dto.DeviceCheckDTO;
 import com.wkhmedical.dto.DeviceCheckSumBody;
 import com.wkhmedical.dto.LicInfoDTO;
@@ -1006,6 +1007,49 @@ public class ObdLicServiceImpl implements ObdLicService {
 		rtnTotal.setMonthData(monthData);
 		rtnTotal.setYearData(yearData);
 		return rtnTotal;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.ObdLicService#getCheckTypeTotal(com.wkhmedical.dto.AreaCarBody)
+	 */
+	@Override
+	public CheckTypeTotal getCheckTypeTotal(AreaCarBody paramBody) {
+		// 业务数据准备
+		String eid = paramBody.getEid();
+		Long provId = paramBody.getProvId();
+		Long cityId = paramBody.getCityId();
+		Long areaId = paramBody.getAreaId();
+		Long townId = paramBody.getTownId();
+		Long villId = paramBody.getVillId();
+
+		// 检测项总数目
+		Long itemCount = deviceCheckTimeRepository.getCheckItemCount(eid, provId, cityId, areaId, townId, villId);
+		// 中医体质人数
+		Long tcmNum = deviceCheckTimeRepository.getCheckSum(eid, provId, cityId, areaId, townId, villId, BizConstant.MAP_CHECK_ITEMS.get("tcmexam"),
+				null, null);
+		//
+		CheckTypeTotal rtnObj = new CheckTypeTotal();
+		rtnObj.setInspectTotal(itemCount);
+		rtnObj.setTcmConstitutionTotal(tcmNum);
+		return rtnObj;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.ObdLicService#getDisTotal(com.wkhmedical.dto.AreaCarBody)
+	 */
+	@Override
+	public BigDecimal getDisTotal(AreaCarBody paramBody) {
+		// 业务数据准备
+		String eid = paramBody.getEid();
+		Long provId = paramBody.getProvId();
+		Long cityId = paramBody.getCityId();
+		Long areaId = paramBody.getAreaId();
+		Long townId = paramBody.getTownId();
+		Long villId = paramBody.getVillId();
+		// 运营里程
+		return deviceTimeRepository.getDisSum(eid, provId, cityId, areaId, townId, villId, null, null);
 	}
 
 }

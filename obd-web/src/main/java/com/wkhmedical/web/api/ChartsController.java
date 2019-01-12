@@ -20,7 +20,9 @@ import com.wkhmedical.dto.AreaCarDTO;
 import com.wkhmedical.dto.ChartCarDTO;
 import com.wkhmedical.dto.CheckItemTotal;
 import com.wkhmedical.dto.CheckPeopleTotal;
+import com.wkhmedical.dto.CheckTypeTotal;
 import com.wkhmedical.dto.DeviceCheckSumBody;
+import com.wkhmedical.dto.DisTotal;
 import com.wkhmedical.dto.MonthAvgCarDTO;
 import com.wkhmedical.dto.MonthAvgDisDTO;
 import com.wkhmedical.dto.MonthAvgExamDTO;
@@ -128,6 +130,21 @@ public class ChartsController {
 	@PostMapping("/check.people.total")
 	public CheckPeopleTotal getCheckPeopleTotal(@RequestBody @Valid AreaCarBody paramBody) {
 		return obdLicService.getCheckPeopleTotal(paramBody);
+	}
+
+	@ApiOperation(value = "检测项总数统计")
+	@PostMapping("/check.type.total")
+	public CheckTypeTotal getCheckTypeTotal(@RequestBody @Valid AreaCarBody paramBody) {
+		return obdLicService.getCheckTypeTotal(paramBody);
+	}
+
+	@ApiOperation(value = "累积服务里程")
+	@PostMapping("/dis.total")
+	public DisTotal getDisTotal(@RequestBody @Valid AreaCarBody paramBody) {
+		DisTotal rtnObj = new DisTotal();
+		BigDecimal disTotal = obdLicService.getDisTotal(paramBody);
+		rtnObj.setServiceMileage(disTotal);
+		return rtnObj;
 	}
 
 }
