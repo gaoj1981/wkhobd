@@ -1,5 +1,7 @@
 package com.wkhmedical.repository.mongo.impl;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Optional;
 
 import javax.annotation.Resource;
@@ -26,6 +28,18 @@ public class ObdCarRepositoryImpl implements IObdCarRepository {
 		if (optObj.isPresent()) {
 			return optObj.get();
 		}
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.repository.mongo.IObdCarRepository#findObdDayDis(java.lang.String,
+	 * java.util.Date)
+	 */
+	@Override
+	public BigDecimal findObdDayDis(String deviceNumber, Date dt, int mmFlag) {
+		// TODO Auto-generated method stub
+
 		return null;
 	}
 

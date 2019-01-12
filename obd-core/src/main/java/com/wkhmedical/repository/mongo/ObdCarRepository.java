@@ -1,5 +1,6 @@
 package com.wkhmedical.repository.mongo;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -13,5 +14,9 @@ public interface ObdCarRepository extends MongoRepository<MgObdCar, String>, IOb
 	MgObdCar findByDeviceNumber(String deviceNumber);
 
 	List<MgObdCar> findTopByDeviceNumberOrderByInsTimeDesc(String deviceNumber);
-	
+
+	MgObdCar findTopByDeviceNumberAndInsTimeLessThanOrderByInsTimeDesc(String deviceNumber, Date intTime);
+
+	MgObdCar findTopByDeviceNumberAndInsTimeGreaterThanOrderByInsTimeAsc(String deviceNumber, Date intTime);
+
 }

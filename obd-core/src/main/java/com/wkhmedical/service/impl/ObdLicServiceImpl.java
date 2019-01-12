@@ -39,6 +39,7 @@ import com.wkhmedical.po.DeviceMonth;
 import com.wkhmedical.po.DeviceTime;
 import com.wkhmedical.po.DeviceTimeRate;
 import com.wkhmedical.po.DeviceTimeTemp;
+import com.wkhmedical.po.MgObdCar;
 import com.wkhmedical.po.MgObdLic;
 import com.wkhmedical.po.MgObdLicReq;
 import com.wkhmedical.po.MgObdLicSum;
@@ -49,6 +50,7 @@ import com.wkhmedical.repository.jpa.DeviceMonthRepository;
 import com.wkhmedical.repository.jpa.DeviceTimeRateRepository;
 import com.wkhmedical.repository.jpa.DeviceTimeRepository;
 import com.wkhmedical.repository.jpa.DeviceTimeTempRepository;
+import com.wkhmedical.repository.mongo.ObdCarRepository;
 import com.wkhmedical.repository.mongo.ObdLicRepository;
 import com.wkhmedical.repository.mongo.ObdLicReqRepository;
 import com.wkhmedical.repository.mongo.ObdLicSumRepository;
@@ -87,6 +89,9 @@ public class ObdLicServiceImpl implements ObdLicService {
 	DeviceTimeRateRepository deviceTimeRateRepository;
 	@Resource
 	DeviceMonthRepository deviceMonthRepository;
+
+	@Resource
+	ObdCarRepository obdCarRepository;
 
 	@Override
 	public ObdLicDTO getObdLic(String urlEid, String rsaStr) {
@@ -626,8 +631,10 @@ public class ObdLicServiceImpl implements ObdLicService {
 		List<DeviceTimeTemp> lstDtt = deviceTimeTempRepository.findTop2000ByFlagAndDtLessThan(0, dtNow);
 		DeviceTime devTime;
 		Date dt, sdt, edt;
-		String eid;
+		String eid, deviceNumber;
 		CarInfo carInfo;
+		MgObdCar obdCar;
+		BigDecimal sdis, edis;
 		for (DeviceTimeTemp dtt : lstDtt) {
 			try {
 				devTime = new DeviceTime();
@@ -651,6 +658,28 @@ public class ObdLicServiceImpl implements ObdLicService {
 					devTime.setAreaId(carInfo.getAreaId());
 					devTime.setTownId(carInfo.getTownId());
 					devTime.setVillId(carInfo.getVillId());
+				}
+				// 更新行驶距离
+				deviceNumber = carInfo.getDeviceNumber();
+				if (StringUtils.isNotBlank(deviceNumber)) {
+					obdCar = obdCarRepository.findTopByDeviceNumberAndInsTimeGreaterThanOrderByInsTimeAsc(deviceNumber, sdt);
+					if (obdCar != null) {
+						sdis = new BigDecimal(obdCar.getTotalMileage());
+					}
+					else {
+						sdis = BigDecimal.ZERO;
+					}
+					obdCar = obdCarRepository.findTopByDeviceNumberAndInsTimeLessThanOrderByInsTimeDesc(deviceNumber, edt);
+					if (obdCar != null) {
+						edis = new BigDecimal(obdCar.getTotalMileage());
+					}
+					else {
+						edis = BigDecimal.ZERO;
+					}
+					devTime.setDis(edis.subtract(sdis));
+				}
+				else {
+					devTime.setDis(BigDecimal.ZERO);
 				}
 				// 移至正式开关机统计表中
 				deviceTimeRepository.save(devTime);
