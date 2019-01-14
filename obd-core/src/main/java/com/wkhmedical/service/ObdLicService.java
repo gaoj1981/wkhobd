@@ -3,12 +3,17 @@ package com.wkhmedical.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
+import com.taoxeo.repository.Paging;
 import com.wkhmedical.constant.LicStatus;
 import com.wkhmedical.dto.AreaCarBody;
 import com.wkhmedical.dto.CheckItemTotal;
 import com.wkhmedical.dto.CheckPeopleTotal;
 import com.wkhmedical.dto.CheckTypeTotal;
 import com.wkhmedical.dto.DeviceCheckSumBody;
+import com.wkhmedical.dto.DeviceTimeBody;
+import com.wkhmedical.dto.DeviceTimeDTO;
 import com.wkhmedical.dto.MonthAvgCarDTO;
 import com.wkhmedical.dto.MonthAvgDisDTO;
 import com.wkhmedical.dto.MonthAvgExamDTO;
@@ -54,5 +59,7 @@ public interface ObdLicService {
 	CheckPeopleTotal getCheckPeopleTotal(AreaCarBody paramBody);
 
 	CheckTypeTotal getCheckTypeTotal(AreaCarBody paramBody);
+
+	Page<DeviceTimeDTO> getDeviceTimePage(Paging<DeviceTimeBody> paramBody);
 
 }

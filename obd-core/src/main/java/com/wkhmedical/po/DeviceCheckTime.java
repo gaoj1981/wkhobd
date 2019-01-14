@@ -33,6 +33,8 @@ public class DeviceCheckTime implements Serializable {
 
 	private String type;
 
+	private Integer status;
+
 	private Long number;
 
 	private Date dt;

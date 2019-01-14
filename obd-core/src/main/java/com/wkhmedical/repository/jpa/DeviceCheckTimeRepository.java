@@ -12,4 +12,5 @@ public interface DeviceCheckTimeRepository extends JpaRepository<DeviceCheckTime
 
 	DeviceCheckTime findByEidAndTypeAndDt(String eid, String type, Date dt);
 
+	Long countByEidAndDt(String eid, Date dt);
 }

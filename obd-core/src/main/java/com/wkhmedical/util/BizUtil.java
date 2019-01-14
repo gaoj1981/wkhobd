@@ -369,6 +369,18 @@ public class BizUtil {
 		return rtnDcheck;
 	}
 
+	public static Integer getCheckStatus(String typeStr) {
+		if (typeStr.endsWith("Abnm")) {
+			return 0;
+		}
+		else if (typeStr.endsWith("Exam")) {
+			return 1;
+		}
+		else {
+			return 2;
+		}
+	}
+
 	public static String getPrevArea(String areaKey) {
 		int i = 0;
 		for (String area : BizConstant.AREA_KEY_ARR) {

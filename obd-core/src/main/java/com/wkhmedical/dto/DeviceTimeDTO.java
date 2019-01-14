@@ -1,16 +1,13 @@
 /**
  * 
  */
-package com.wkhmedical.po;
+package com.wkhmedical.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,17 +16,13 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@Entity
-@Table(name = "device_time")
-public class DeviceTime implements Serializable {
+@ApiModel(value = "日级汇总对象", description = "返回日级汇总的信息")
+public class DeviceTimeDTO implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	@Id
-	private String id;
 
 	private String eid;
 
@@ -63,4 +56,5 @@ public class DeviceTime implements Serializable {
 
 	private Long rps;
 
+	private String plateNum;
 }

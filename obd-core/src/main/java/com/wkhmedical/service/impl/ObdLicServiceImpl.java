@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.taoxeo.lang.BeanUtils;
 import com.taoxeo.lang.exception.BizRuntimeException;
+import com.taoxeo.repository.Paging;
 import com.wkhmedical.config.ConfigProperties;
 import com.wkhmedical.constant.BizConstant;
 import com.wkhmedical.constant.LicStatus;
@@ -27,6 +29,8 @@ import com.wkhmedical.dto.CheckPeopleTotal;
 import com.wkhmedical.dto.CheckTypeTotal;
 import com.wkhmedical.dto.DeviceCheckDTO;
 import com.wkhmedical.dto.DeviceCheckSumBody;
+import com.wkhmedical.dto.DeviceTimeBody;
+import com.wkhmedical.dto.DeviceTimeDTO;
 import com.wkhmedical.dto.LicInfoDTO;
 import com.wkhmedical.dto.MonthAvgCarDTO;
 import com.wkhmedical.dto.MonthAvgDisDTO;
@@ -431,8 +435,8 @@ public class ObdLicServiceImpl implements ObdLicService {
 					dcObj = new DeviceCheck();
 					dcObj.setId(BizUtil.genDbIdStr(idWorker));
 					dcObj.setEid(eid);
-					dcObj.setType(entry.getValue());
-					dcObj.setStatus(0);
+					dcObj.setType(typeName);
+					dcObj.setStatus(BizUtil.getCheckStatus(typeName));
 					dcObj.setNumber(number);
 					dcObj.setTime(time);
 					dcObj.setProvId(carInfo.getProvId());
@@ -455,6 +459,7 @@ public class ObdLicServiceImpl implements ObdLicService {
 					dcTimeObj.setId(BizUtil.genDbIdStr(idWorker));
 					dcTimeObj.setEid(eid);
 					dcTimeObj.setType(typeName);
+					dcTimeObj.setStatus(dcObj.getStatus());
 					dcTimeObj.setNumber(number);
 					dcTimeObj.setDt(dtSend);
 					dcTimeObj.setProvId(carInfo.getProvId());
@@ -618,7 +623,8 @@ public class ObdLicServiceImpl implements ObdLicService {
 		// 检测异常数
 		BigDecimal expNum = dcRepository.getCheckSumByStatus(0, eid, provId, cityId, areaId, townId, villId);
 		// 检测总数
-		BigDecimal ttNum = dcRepository.getCheckSumByStatus(null, eid, provId, cityId, areaId, townId, villId);
+		BigDecimal nnNum = dcRepository.getCheckSumByStatus(1, eid, provId, cityId, areaId, townId, villId);
+		BigDecimal ttNum = expNum.add(nnNum);
 		if (ttNum.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
 		return expNum.divide(ttNum, 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100));
 	}
@@ -684,6 +690,36 @@ public class ObdLicServiceImpl implements ObdLicService {
 				}
 				else {
 					devTime.setDis(BigDecimal.ZERO);
+				}
+				// 检测人次统计
+				DeviceCheckTime dctObj = deviceCheckTimeRepository.findByEidAndTypeAndDt(eid, BizConstant.MAP_CHECK_ITEMS.get("persontime"), dt);
+				if (dctObj == null) {
+					devTime.setPts(0L);
+				}
+				else {
+					devTime.setPts(dctObj.getNumber());
+				}
+				// 检测项统计
+				Long cks = deviceCheckTimeRepository.countByEidAndDt(eid, dt);
+				devTime.setCks(cks);
+				// 检测百分比
+				BigDecimal expNum = deviceCheckTimeRepository.getCheckSumByStatus(0, eid, dt);
+				// 检测总数
+				BigDecimal nnNum = deviceCheckTimeRepository.getCheckSumByStatus(1, eid, dt);
+				BigDecimal ttNum = expNum.add(nnNum);
+				if (ttNum.compareTo(BigDecimal.ZERO) == 0) {
+					devTime.setExprt(0);
+				}
+				else {
+					devTime.setExprt(expNum.divide(ttNum, 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).intValue());
+				}
+				// 累计打印
+				dctObj = deviceCheckTimeRepository.findByEidAndTypeAndDt(eid, BizConstant.MAP_CHECK_ITEMS.get("report"), dt);
+				if (dctObj == null) {
+					devTime.setRps(0L);
+				}
+				else {
+					devTime.setRps(dctObj.getNumber());
 				}
 				// 移至正式开关机统计表中
 				deviceTimeRepository.save(devTime);
@@ -1052,6 +1088,17 @@ public class ObdLicServiceImpl implements ObdLicService {
 		Long villId = paramBody.getVillId();
 		// 运营里程
 		return deviceTimeRepository.getDisSum(eid, provId, cityId, areaId, townId, villId, null, null);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.ObdLicService#getDeviceTimePage(com.taoxeo.repository.Paging)
+	 */
+	@Override
+	public Page<DeviceTimeDTO> getDeviceTimePage(Paging<DeviceTimeBody> paramBody) {
+		DeviceTimeBody queryObj = paramBody.getQuery();
+		Page<DeviceTimeDTO> pgInfo = deviceTimeRepository.findPgDeviceTimeDTO(queryObj, paramBody.toPageable());
+		return pgInfo;
 	}
 
 }

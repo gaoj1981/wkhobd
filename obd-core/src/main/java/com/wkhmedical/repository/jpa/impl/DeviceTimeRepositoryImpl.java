@@ -10,10 +10,16 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import com.taoxeo.repository.HibernateSupport;
 import com.taoxeo.repository.JdbcQuery;
+import com.wkhmedical.dto.DeviceTimeBody;
+import com.wkhmedical.dto.DeviceTimeDTO;
 import com.wkhmedical.repository.jpa.IDeviceTimeRepository;
+import com.wkhmedical.util.BizUtil;
 
 public class DeviceTimeRepositoryImpl implements IDeviceTimeRepository {
 
@@ -199,6 +205,42 @@ public class DeviceTimeRepositoryImpl implements IDeviceTimeRepository {
 		BigInteger resNum = (BigInteger) lstCount.get(0).get("sumNum");
 		if (resNum == null) return 0L;
 		return resNum.longValue();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.wkhmedical.repository.jpa.IDeviceTimeRepository#findPgDeviceTimeDTO(com.wkhmedical.dto.
+	 * DeviceTimeBody, org.springframework.data.domain.Pageable)
+	 */
+	@Override
+	public Page<DeviceTimeDTO> findPgDeviceTimeDTO(DeviceTimeBody paramBody, Pageable pageable) {
+		List<Object> paramList = new ArrayList<Object>();
+		StringBuffer sqlBuf = new StringBuffer();
+		sqlBuf.append(" SELECT d.*,c.plateNum");
+		sqlBuf.append(" FROM device_time d");
+		sqlBuf.append(" LEFT JOIN car_info c ON d.eid = c.eid");
+		sqlBuf.append(" WHERE 1=1");
+		BizUtil.setSqlJoin(paramBody, "eid", sqlBuf, paramList, " AND d.eid = ?");
+		BizUtil.setSqlJoin(paramBody, "plateNum", sqlBuf, paramList, " AND c.plateNum = ?");
+		BizUtil.setSqlJoin(paramBody, "provId", sqlBuf, paramList, " AND d.provId = ?");
+		BizUtil.setSqlJoin(paramBody, "cityId", sqlBuf, paramList, " AND d.cityId = ?");
+		BizUtil.setSqlJoin(paramBody, "areaId", sqlBuf, paramList, " AND d.areaId = ?");
+		BizUtil.setSqlJoin(paramBody, "townId", sqlBuf, paramList, " AND d.townId = ?");
+		BizUtil.setSqlJoin(paramBody, "villId", sqlBuf, paramList, " AND d.villId = ?");
+		BizUtil.setSqlJoin(paramBody, "sdt", sqlBuf, paramList, " AND d.dt >= ?");
+		BizUtil.setSqlJoin(paramBody, "edt", sqlBuf, paramList, " AND d.dt <= ?");
+
+		//
+		String orderByStr = " ORDER BY d.eid DESC";
+		sqlBuf.append(orderByStr);
+		//
+		int page = pageable.getPageNumber();
+		int size = pageable.getPageSize();
+		List<DeviceTimeDTO> lstRes = hibernateSupport.findByNativeSql(DeviceTimeDTO.class, sqlBuf.toString(), paramList.toArray(), page * size, size);
+		PageImpl<DeviceTimeDTO> pageResult = new PageImpl<DeviceTimeDTO>(lstRes, pageable, lstRes.size());
+		//
+		return pageResult;
 	}
 
 }

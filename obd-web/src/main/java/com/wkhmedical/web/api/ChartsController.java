@@ -9,12 +9,14 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.taoxeo.repository.Paging;
 import com.wkhmedical.dto.AreaCarBody;
 import com.wkhmedical.dto.AreaCarDTO;
 import com.wkhmedical.dto.ChartCarDTO;
@@ -22,6 +24,8 @@ import com.wkhmedical.dto.CheckItemTotal;
 import com.wkhmedical.dto.CheckPeopleTotal;
 import com.wkhmedical.dto.CheckTypeTotal;
 import com.wkhmedical.dto.DeviceCheckSumBody;
+import com.wkhmedical.dto.DeviceTimeBody;
+import com.wkhmedical.dto.DeviceTimeDTO;
 import com.wkhmedical.dto.DisTotal;
 import com.wkhmedical.dto.MonthAvgCarDTO;
 import com.wkhmedical.dto.MonthAvgDisDTO;
@@ -145,6 +149,12 @@ public class ChartsController {
 		BigDecimal disTotal = obdLicService.getDisTotal(paramBody);
 		rtnObj.setServiceMileage(disTotal);
 		return rtnObj;
+	}
+
+	@ApiOperation(value = "获取日汇总分页对象")
+	@PostMapping("/get.page")
+	public Page<DeviceTimeDTO> getDeviceTimePage(@RequestBody @Valid Paging<DeviceTimeBody> paramBody) {
+		return obdLicService.getDeviceTimePage(paramBody);
 	}
 
 }

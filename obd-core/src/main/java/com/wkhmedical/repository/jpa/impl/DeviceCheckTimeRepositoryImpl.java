@@ -118,4 +118,31 @@ public class DeviceCheckTimeRepositoryImpl implements IDeviceCheckTimeRepository
 		return resNum.longValue();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.repository.jpa.IDeviceCheckTimeRepository#getCheckSumByStatus(java.lang.
+	 * Integer, java.lang.String, java.util.Date)
+	 */
+	@Override
+	public BigDecimal getCheckSumByStatus(Integer status, String eid, Date dt) {
+		List<Object> paramList = new ArrayList<Object>();
+		String sql = "SELECT SUM(number) AS sumNum FROM device_check_time WHERE 1=1";
+		if (status != null) {
+			sql = sql + " AND status=" + status;
+		}
+		if (StringUtils.isNotBlank(eid)) {
+			sql = sql + " AND eid='" + eid + "'";
+		}
+		if (dt != null) {
+			sql = sql + " AND dt=?";
+			paramList.add(dt);
+		}
+		@SuppressWarnings("rawtypes")
+		List<Map> lstObj = hibernateSupport.findByNativeSql(Map.class, sql, paramList.toArray(), 1);
+		if (lstObj == null || lstObj.get(0).get("sumNum") == null) {
+			return BigDecimal.ZERO;
+		}
+		return (BigDecimal) lstObj.get(0).get("sumNum");
+	}
+
 }
