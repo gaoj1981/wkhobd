@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,11 +28,8 @@ public class DeviceTimeDTO implements Serializable {
 
 	private String eid;
 
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dt;
-
-	private Date sdt;
-
-	private Date edt;
 
 	private Long ts;
 
@@ -55,6 +54,8 @@ public class DeviceTimeDTO implements Serializable {
 	private Integer exprt;
 
 	private Long rps;
+
+	private Long wds;
 
 	private String plateNum;
 }

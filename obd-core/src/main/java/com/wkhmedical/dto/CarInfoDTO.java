@@ -92,11 +92,11 @@ public class CarInfoDTO implements Serializable {
 	private String maintUrTel;
 
 	@ApiModelProperty(value = "省ID")
-	private Integer provId;
+	private Long provId;
 
 	@ApiModelProperty(value = "市ID")
-	private Integer cityId;
+	private Long cityId;
 
 	@ApiModelProperty(value = "区县ID")
-	private Integer areaId;
+	private Long areaId;
 }

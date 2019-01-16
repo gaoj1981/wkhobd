@@ -6,6 +6,8 @@ package com.wkhmedical.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +34,9 @@ public class DeviceTimeBody implements Serializable {
 	private String eid;
 	private String plateNum;
 
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date sdt;
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date edt;
 }

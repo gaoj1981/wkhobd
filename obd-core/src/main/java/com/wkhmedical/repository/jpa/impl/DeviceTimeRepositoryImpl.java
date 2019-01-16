@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 
 import com.taoxeo.repository.HibernateSupport;
 import com.taoxeo.repository.JdbcQuery;
@@ -217,7 +220,19 @@ public class DeviceTimeRepositoryImpl implements IDeviceTimeRepository {
 	public Page<DeviceTimeDTO> findPgDeviceTimeDTO(DeviceTimeBody paramBody, Pageable pageable) {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = new StringBuffer();
-		sqlBuf.append(" SELECT d.*,c.plateNum");
+		sqlBuf.append(" SELECT d.eid,");
+		sqlBuf.append(" MIN(d.provId) AS provId,");
+		sqlBuf.append(" MIN(d.cityId) AS cityId,");
+		sqlBuf.append(" MIN(d.areaId) AS areaId,");
+		sqlBuf.append(" MIN(d.townId) AS townId,");
+		sqlBuf.append(" MIN(d.villId) AS villId,");
+		sqlBuf.append(" SUM(d.dis) AS dis,");
+		sqlBuf.append(" SUM(d.pts) AS pts,");
+		sqlBuf.append(" SUM(d.cks) AS cks,");
+		sqlBuf.append(" ceil(SUM(d.exprt) / COUNT(1)) AS exprt,");
+		sqlBuf.append(" SUM(d.rps) AS rps,");
+		sqlBuf.append(" COUNT(1) AS wds,");
+		sqlBuf.append(" SUM(d.ts) AS ts");
 		sqlBuf.append(" FROM device_time d");
 		sqlBuf.append(" LEFT JOIN car_info c ON d.eid = c.eid");
 		sqlBuf.append(" WHERE 1=1");
@@ -230,9 +245,18 @@ public class DeviceTimeRepositoryImpl implements IDeviceTimeRepository {
 		BizUtil.setSqlJoin(paramBody, "villId", sqlBuf, paramList, " AND d.villId = ?");
 		BizUtil.setSqlJoin(paramBody, "sdt", sqlBuf, paramList, " AND d.dt >= ?");
 		BizUtil.setSqlJoin(paramBody, "edt", sqlBuf, paramList, " AND d.dt <= ?");
-
+		sqlBuf.append(" GROUP BY d.eid");
 		//
-		String orderByStr = " ORDER BY d.eid DESC";
+		String orderByStr = " ORDER BY ";
+		Sort sort = pageable.getSort();
+		Iterator<Order> iter = sort.iterator();
+		Order order;
+		while (iter.hasNext()) {
+			order = iter.next();
+			System.out.println(order.getProperty() + " " + order.getDirection().name());
+			orderByStr = orderByStr + order.getProperty() + " " + order.getDirection().name() + ",";
+		}
+		orderByStr += " d.eid DESC";
 		sqlBuf.append(orderByStr);
 		//
 		int page = pageable.getPageNumber();
