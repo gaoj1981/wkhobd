@@ -253,7 +253,6 @@ public class DeviceTimeRepositoryImpl implements IDeviceTimeRepository {
 		Order order;
 		while (iter.hasNext()) {
 			order = iter.next();
-			System.out.println(order.getProperty() + " " + order.getDirection().name());
 			orderByStr = orderByStr + order.getProperty() + " " + order.getDirection().name() + ",";
 		}
 		orderByStr += " d.eid DESC";
