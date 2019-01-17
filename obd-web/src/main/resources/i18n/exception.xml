@@ -49,6 +49,7 @@
 	<entry key="obdlic_active_already">该设备已存在使用中的授权。ID：{0}</entry>
 	
 	<entry key="obdcar_data_dirty">OBD存在脏数据</entry>
+	<entry key="obdcar_eid_data_not_exists">eid:{0}无OBD数据</entry>
 	<entry key="obdcar_not_devicenumber">deviceNumber不存在</entry>
 	<entry key="obdcar_carinfo_nomatch">OBD的eid:{0}与deviceNumber：{1}不匹配</entry>
 	<entry key="obdcar_eid_devicenumber_double">eid:{0}与deviceNumber：{1}匹配重复</entry>

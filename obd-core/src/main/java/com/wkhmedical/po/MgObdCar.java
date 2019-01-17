@@ -5,6 +5,8 @@ import java.util.Date;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -15,6 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Document(collection = "obd_car")
+@CompoundIndexes({ @CompoundIndex(name = "idx_deviceNumber_act", def = "{'deviceNumber': 1, 'act': -1}") })
 public class MgObdCar {
 
 	/**
@@ -164,4 +167,10 @@ public class MgObdCar {
 	 * 位置纬度
 	 */
 	private BigDecimal lat;
+
+	@Field("rc")
+	private Integer recordCount;
+
+	@Field("act")
+	private String accOpenTime;
 }

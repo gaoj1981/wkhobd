@@ -37,6 +37,8 @@ public class CarSendDTO {
 	private Double averageSpeed;
 	private BigDecimal lng;
 	private BigDecimal lat;
+	private Integer recordCount;
+	private String accOpenTime;
 
 	private String eid;
 }

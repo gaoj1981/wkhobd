@@ -114,4 +114,10 @@ public class CarController {
 		return carInfoService.getCountSum();
 	}
 
+	@ApiOperation(value = "获取OBD最近开机列表")
+	@PostMapping("/get.obd.acc")
+	public List<ObdCarDTO> getObdAccList(@ApiParam(value = "车辆ID", required = true) @RequestParam String eid) {
+		return obdCarService.getObdCarList(eid);
+	}
+
 }

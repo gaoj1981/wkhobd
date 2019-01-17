@@ -1,11 +1,13 @@
 package com.wkhmedical.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.taoxeo.lang.BeanUtils;
@@ -74,6 +76,53 @@ public class ObdCarServiceImpl implements ObdCarService {
 			}
 			return obdCarDTO;
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.ObdCarService#getObdCarPage(java.lang.String)
+	 */
+	@Override
+	public List<ObdCarDTO> getObdCarList(String eid) {
+		List<ObdCarDTO> rtnList = new ArrayList<ObdCarDTO>();
+		//
+		CarInfo carInfo = carInfoRepository.findByEid(eid);
+		if (carInfo == null) {
+			throw new BizRuntimeException("carinfo_not_exists", eid);
+		}
+		String deviceNumber = carInfo.getDeviceNumber();
+		if (StringUtils.isBlank(deviceNumber)) {
+			throw new BizRuntimeException("obdcar_not_related", eid);
+		}
+		// 获取最大批次号
+		MgObdCar obdCar = obdCarRepository.findTopByDeviceNumberOrderByAccOpenTimeDesc(deviceNumber);
+		if (obdCar == null) {
+			throw new BizRuntimeException("obdcar_eid_data_not_exists", eid);
+		}
+		String accOpenTime = obdCar.getAccOpenTime();
+		// 获取最近记录
+		if (accOpenTime == null) {
+			return rtnList;
+		}
+		List<MgObdCar> lstObd = obdCarRepository.findByDeviceNumberAndAccOpenTimeOrderByRecordCountAsc(deviceNumber, accOpenTime);
+		// 处理MgObdCar->ObdCarDTO
+		ObdCarDTO obdCarDTO = new ObdCarDTO();
+		for (MgObdCar obdTmp : lstObd) {
+			obdCarDTO = new ObdCarDTO();
+			BeanUtils.merageProperty(obdCarDTO, obdTmp);
+			rtnList.add(obdCarDTO);
+		}
+		return rtnList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.wkhmedical.service.ObdCarService#getObdCarPage(java.lang.String)
+	 */
+	@Override
+	public Page<ObdCarDTO> getObdCarPage(String eid) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
