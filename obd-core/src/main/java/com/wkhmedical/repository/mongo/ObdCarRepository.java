@@ -19,7 +19,7 @@ public interface ObdCarRepository extends MongoRepository<MgObdCar, String>, IOb
 
 	MgObdCar findTopByDeviceNumberAndInsTimeGreaterThanOrderByInsTimeAsc(String deviceNumber, Date intTime);
 
-	List<MgObdCar> findByDeviceNumberAndAccOpenTimeOrderByRecordCountAsc(String deviceNumber, String accOpenTime);
+	List<MgObdCar> findByDeviceNumberAndAccOpenTimeOrderByRecordCountAsc(String deviceNumber, Long accOpenTime);
 
 	MgObdCar findTopByDeviceNumberOrderByAccOpenTimeDesc(String deviceNumber);
 }

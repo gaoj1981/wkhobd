@@ -172,5 +172,5 @@ public class MgObdCar {
 	private Integer recordCount;
 
 	@Field("act")
-	private String accOpenTime;
+	private Long accOpenTime;
 }

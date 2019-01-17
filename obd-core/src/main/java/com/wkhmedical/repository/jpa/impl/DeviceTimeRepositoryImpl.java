@@ -21,6 +21,7 @@ import com.taoxeo.repository.HibernateSupport;
 import com.taoxeo.repository.JdbcQuery;
 import com.wkhmedical.dto.DeviceTimeBody;
 import com.wkhmedical.dto.DeviceTimeDTO;
+import com.wkhmedical.repository.jpa.DeviceTimeRepository;
 import com.wkhmedical.repository.jpa.IDeviceTimeRepository;
 import com.wkhmedical.util.BizUtil;
 
@@ -30,6 +31,9 @@ public class DeviceTimeRepositoryImpl implements IDeviceTimeRepository {
 	HibernateSupport hibernateSupport;
 	@Resource
 	JdbcQuery jdbcQuery;
+
+	@Resource
+	DeviceTimeRepository deviceTimeRepository;
 
 	/*
 	 * (non-Javadoc)
@@ -218,9 +222,11 @@ public class DeviceTimeRepositoryImpl implements IDeviceTimeRepository {
 	 */
 	@Override
 	public Page<DeviceTimeDTO> findPgDeviceTimeDTO(DeviceTimeBody paramBody, Pageable pageable) {
+		//
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuffer sqlBuf = new StringBuffer();
 		sqlBuf.append(" SELECT d.eid,");
+		sqlBuf.append(" MIN(c.plateNum) AS plateNum,");
 		sqlBuf.append(" MIN(d.provId) AS provId,");
 		sqlBuf.append(" MIN(d.cityId) AS cityId,");
 		sqlBuf.append(" MIN(d.areaId) AS areaId,");
@@ -258,10 +264,24 @@ public class DeviceTimeRepositoryImpl implements IDeviceTimeRepository {
 		orderByStr += " d.eid DESC";
 		sqlBuf.append(orderByStr);
 		//
+		String sql = sqlBuf.toString();
 		int page = pageable.getPageNumber();
 		int size = pageable.getPageSize();
 		List<DeviceTimeDTO> lstRes = hibernateSupport.findByNativeSql(DeviceTimeDTO.class, sqlBuf.toString(), paramList.toArray(), page * size, size);
-		PageImpl<DeviceTimeDTO> pageResult = new PageImpl<DeviceTimeDTO>(lstRes, pageable, lstRes.size());
+		//
+		String countSql = sql.substring(sql.indexOf("FROM"));
+		countSql = countSql.substring(0, countSql.indexOf("ORDER BY"));
+		countSql = "SELECT COUNT(1)" + countSql;
+		@SuppressWarnings("rawtypes")
+		List<Map> lstCount = hibernateSupport.findByNativeSql(Map.class, countSql, paramList.toArray());
+		long total = 0L;
+		if (lstCount == null) {
+			total = 0L;
+		}
+		else {
+			total = lstCount.size();
+		}
+		PageImpl<DeviceTimeDTO> pageResult = new PageImpl<DeviceTimeDTO>(lstRes, pageable, total);
 		//
 		return pageResult;
 	}

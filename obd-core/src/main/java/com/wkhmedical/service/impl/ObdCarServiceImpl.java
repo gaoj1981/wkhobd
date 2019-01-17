@@ -99,7 +99,7 @@ public class ObdCarServiceImpl implements ObdCarService {
 		if (obdCar == null) {
 			throw new BizRuntimeException("obdcar_eid_data_not_exists", eid);
 		}
-		String accOpenTime = obdCar.getAccOpenTime();
+		Long accOpenTime = obdCar.getAccOpenTime();
 		// 获取最近记录
 		if (accOpenTime == null) {
 			return rtnList;
