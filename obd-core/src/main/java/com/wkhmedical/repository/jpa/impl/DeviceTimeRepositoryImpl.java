@@ -241,7 +241,7 @@ public class DeviceTimeRepositoryImpl implements IDeviceTimeRepository {
 		sqlBuf.append(" SUM(d.ts) AS ts");
 		sqlBuf.append(" FROM device_time d");
 		sqlBuf.append(" LEFT JOIN car_info c ON d.eid = c.eid");
-		sqlBuf.append(" WHERE 1=1");
+		sqlBuf.append(" WHERE 1=1 AND c.delFlag=0");
 		BizUtil.setSqlJoin(paramBody, "eid", sqlBuf, paramList, " AND d.eid = ?");
 		BizUtil.setSqlJoin(paramBody, "plateNum", sqlBuf, paramList, " AND c.plateNum = ?");
 		BizUtil.setSqlJoin(paramBody, "provId", sqlBuf, paramList, " AND d.provId = ?");
