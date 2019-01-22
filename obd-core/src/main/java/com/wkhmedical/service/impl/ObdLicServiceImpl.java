@@ -643,11 +643,26 @@ public class ObdLicServiceImpl implements ObdLicService {
 		CarInfo carInfo;
 		MgObdCar obdCar;
 		BigDecimal sdis, edis;
+		String id;
 		for (DeviceTimeTemp dtt : lstDtt) {
 			try {
-				devTime = new DeviceTime();
-				BeanUtils.merageProperty(devTime, dtt);
+				// 判断eid是否存在
+				eid = dtt.getEid();
 				dt = dtt.getDt();
+				devTime = deviceTimeRepository.findByEidAndDt(eid, dt);
+				//
+				if (devTime == null) {
+					id = null;
+					devTime = new DeviceTime();
+				}
+				else {
+					id = devTime.getId();
+				}
+				BeanUtils.merageProperty(devTime, dtt);
+				// 更新ID
+				if (id != null) {
+					devTime.setId(id);
+				}
 				sdt = dtt.getSdt();
 				edt = dtt.getEdt();
 				if (sdt == null) {
@@ -657,8 +672,9 @@ public class ObdLicServiceImpl implements ObdLicService {
 					edt = DateUtil.parseToDate(DateUtil.getDateEnd(dt), "yyyy-MM-dd HH:mm:ss");
 				}
 				devTime.setTs(DateUtil.getDiffSeconds(sdt, edt));
+				// 运营天数
+				devTime.setWds(1);
 				// 完善区域属性
-				eid = devTime.getEid();
 				carInfo = carInfoRepository.findByEid(eid);
 				if (carInfo != null) {
 					devTime.setProvId(carInfo.getProvId());
@@ -699,14 +715,15 @@ public class ObdLicServiceImpl implements ObdLicService {
 				else {
 					devTime.setPts(dctObj.getNumber());
 				}
-				// 检测项统计
-				Long cks = deviceCheckTimeRepository.countByEidAndDt(eid, dt);
-				devTime.setCks(cks);
-				// 检测百分比
+				// 检测正常数
+				BigDecimal nnNum = deviceCheckTimeRepository.getCheckSumByStatus(1, eid, dt);
+				// 检测异常数
 				BigDecimal expNum = deviceCheckTimeRepository.getCheckSumByStatus(0, eid, dt);
 				// 检测总数
-				BigDecimal nnNum = deviceCheckTimeRepository.getCheckSumByStatus(1, eid, dt);
 				BigDecimal ttNum = expNum.add(nnNum);
+				// 检测项统计
+				devTime.setCks(nnNum.longValue());
+				// 检测异常百分比
 				if (ttNum.compareTo(BigDecimal.ZERO) == 0) {
 					devTime.setExprt(0);
 				}

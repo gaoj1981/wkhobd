@@ -204,7 +204,7 @@ public class CarInfoRepositoryImpl implements ICarInfoRepository {
 		StringBuilder sqlAppend = new StringBuilder("SELECT ba.id AS areaId,ba.name AS areaName,SUM(1) AS number");
 		sqlAppend.append("  FROM car_info ci");
 		sqlAppend.append("  LEFT JOIN base_area ba ON ci." + areaKeyNext + " = ba.id");
-		sqlAppend.append("  WHERE ci." + areaKey + " = " + areaVal);
+		sqlAppend.append("  WHERE ci.delFlag = 0 AND ci." + areaKey + " = " + areaVal);
 		sqlAppend.append("  GROUP BY ba.id,ba.name");
 		return hibernateSupport.findByNativeSql(CarAreaNum.class, sqlAppend.toString(), null, 5000);
 	}

@@ -63,4 +63,6 @@ public class DeviceTime implements Serializable {
 
 	private Long rps;
 
+	private Integer wds;
+
 }
