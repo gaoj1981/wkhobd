@@ -21,4 +21,5 @@ public interface IDeviceTimeRepository {
 
 	Page<DeviceTimeDTO> findPgDeviceTimeDTO(DeviceTimeBody paramBody, Pageable pageable);
 
+	BigDecimal getCkSum(String eid, Long provId, Long cityId, Long areaId, Long townId, Long villId, int flag);
 }

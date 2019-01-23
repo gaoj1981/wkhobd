@@ -59,7 +59,7 @@ public class DeviceTime implements Serializable {
 
 	private Long cks;
 
-	private Integer exprt;
+	private Long exprt;
 
 	private Long rps;
 

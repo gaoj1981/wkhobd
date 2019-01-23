@@ -286,4 +286,47 @@ public class DeviceTimeRepositoryImpl implements IDeviceTimeRepository {
 		return pageResult;
 	}
 
+	@Override
+	public BigDecimal getCkSum(String eid, Long provId, Long cityId, Long areaId, Long townId, Long villId, int flag) {
+		List<Object> paramList = new ArrayList<Object>();
+		StringBuilder sqlBuf = new StringBuilder("");
+		if (flag == 1) {
+			sqlBuf.append(" SELECT SUM(dct.cks) AS sumNum");
+		}
+		else {
+			sqlBuf.append(" SELECT SUM(dct.exprt) AS sumNum");
+		}
+		sqlBuf.append(" FROM device_time dct");
+		sqlBuf.append(" WHERE 1 = 1");
+		if (StringUtils.isNotBlank(eid)) {
+			sqlBuf.append(" AND dct.eid = ?");
+			paramList.add(eid);
+		}
+		if (provId != null) {
+			sqlBuf.append(" AND dct.provId = ?");
+			paramList.add(provId);
+		}
+		if (cityId != null) {
+			sqlBuf.append(" AND dct.cityId = ?");
+			paramList.add(cityId);
+		}
+		if (areaId != null) {
+			sqlBuf.append(" AND dct.areaId = ?");
+			paramList.add(areaId);
+		}
+		if (townId != null) {
+			sqlBuf.append(" AND dct.townId = ?");
+			paramList.add(townId);
+		}
+		if (villId != null) {
+			sqlBuf.append(" AND dct.villId = ?");
+			paramList.add(villId);
+		}
+		@SuppressWarnings("rawtypes")
+		List<Map> lstCount = hibernateSupport.findByNativeSql(Map.class, sqlBuf.toString(), paramList.toArray());
+		BigDecimal resNum = (BigDecimal) lstCount.get(0).get("sumNum");
+		if (resNum == null) return BigDecimal.ZERO;
+		return resNum;
+	}
+
 }

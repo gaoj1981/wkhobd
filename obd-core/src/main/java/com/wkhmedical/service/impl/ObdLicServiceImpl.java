@@ -621,11 +621,18 @@ public class ObdLicServiceImpl implements ObdLicService {
 		Long villId = paramBody.getVillId();
 
 		// 检测异常数
-		BigDecimal expNum = dcRepository.getCheckSumByStatus(0, eid, provId, cityId, areaId, townId, villId);
+		BigDecimal expNum = deviceTimeRepository.getCkSum(eid, provId, cityId, areaId, townId, villId, 0);
 		// 检测总数
-		BigDecimal ttNum = dcRepository.getCheckSumByStatus(1, eid, provId, cityId, areaId, townId, villId);
+		BigDecimal ttNum = deviceTimeRepository.getCkSum(eid, provId, cityId, areaId, townId, villId, 1);
+
+		// // 检测异常数
+		// BigDecimal expNum = dcRepository.getCheckSumByStatus(0, eid, provId, cityId, areaId,
+		// townId, villId);
+		// // 检测总数
+		// BigDecimal ttNum = dcRepository.getCheckSumByStatus(1, eid, provId, cityId, areaId,
+		// townId, villId);
 		if (ttNum.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
-		return expNum.divide(ttNum, 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100));
+		return expNum.divide(ttNum, 2, BigDecimal.ROUND_HALF_DOWN).multiply(new BigDecimal(100));
 	}
 
 	/*
@@ -722,10 +729,12 @@ public class ObdLicServiceImpl implements ObdLicService {
 				devTime.setCks(ttNum.longValue());
 				// 检测异常百分比
 				if (ttNum.compareTo(BigDecimal.ZERO) == 0) {
-					devTime.setExprt(0);
+					devTime.setExprt(0L);
 				}
 				else {
-					devTime.setExprt(expNum.divide(ttNum, 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).intValue());
+					// devTime.setExprt(expNum.divide(ttNum, 2,
+					// BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).intValue());
+					devTime.setExprt(expNum.longValue());
 				}
 				// 累计打印
 				dctObj = deviceCheckTimeRepository.findByEidAndTypeAndDt(eid, BizConstant.MAP_CHECK_ITEMS.get("report"), dt);
