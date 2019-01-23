@@ -144,4 +144,42 @@ public class DeviceCheckTimeRepositoryImpl implements IDeviceCheckTimeRepository
 		return (BigDecimal) lstObj.get(0).get("sumNum");
 	}
 
+	@Override
+	public BigDecimal getCheckSumByStatus(Integer status, String eid, Long provId, Long cityId, Long areaId, Long townId, Long villId) {
+		List<Object> paramList = new ArrayList<Object>();
+		String sql = "SELECT SUM(number) AS sumNum FROM device_check_time WHERE 1=1";
+		if (status != null) {
+			sql = sql + " AND status=" + status;
+		}
+		if (StringUtils.isNotBlank(eid)) {
+			sql = sql + " AND eid='" + eid + "'";
+		}
+		if (provId != null) {
+			sql = sql + " AND provId=?";
+			paramList.add(provId);
+		}
+		if (cityId != null) {
+			sql = sql + " AND cityId=?";
+			paramList.add(cityId);
+		}
+		if (areaId != null) {
+			sql = sql + " AND areaId=?";
+			paramList.add(areaId);
+		}
+		if (townId != null) {
+			sql = sql + " AND townId=?";
+			paramList.add(townId);
+		}
+		if (villId != null) {
+			sql = sql + " AND villId=?";
+			paramList.add(villId);
+		}
+		@SuppressWarnings("rawtypes")
+		List<Map> lstObj = hibernateSupport.findByNativeSql(Map.class, sql, paramList.toArray(), 1);
+		if (lstObj == null || lstObj.get(0).get("sumNum") == null) {
+			return BigDecimal.ZERO;
+		}
+		return (BigDecimal) lstObj.get(0).get("sumNum");
+	}
+
 }

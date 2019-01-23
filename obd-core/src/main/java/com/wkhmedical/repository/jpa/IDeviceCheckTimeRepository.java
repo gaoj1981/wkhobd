@@ -11,4 +11,5 @@ public interface IDeviceCheckTimeRepository {
 
 	BigDecimal getCheckSumByStatus(Integer status, String eid, Date dt);
 
+	BigDecimal getCheckSumByStatus(Integer status, String eid, Long provId, Long cityId, Long areaId, Long townId, Long villId);
 }

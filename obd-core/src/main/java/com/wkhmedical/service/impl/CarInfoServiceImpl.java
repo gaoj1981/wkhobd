@@ -11,7 +11,6 @@ import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +29,6 @@ import com.wkhmedical.dto.CarInfoPageParam;
 import com.wkhmedical.dto.CarInfoParam;
 import com.wkhmedical.dto.ChartCarDTO;
 import com.wkhmedical.dto.EquipInfoBody;
-import com.wkhmedical.po.BaseArea;
 import com.wkhmedical.po.BindUser;
 import com.wkhmedical.po.CarInfo;
 import com.wkhmedical.repository.jpa.BaseAreaRepository;
@@ -313,10 +311,10 @@ public class CarInfoServiceImpl implements CarInfoService {
 			// 车总数
 			vehicleTotal = carInfoRepository.findCarCountByMapArea(mapArea);
 			// 覆盖乡镇数
-			BaseArea baseArea = new BaseArea();
-			baseArea.setPid(pid);
-			Example<BaseArea> example = Example.of(baseArea);
-			townshipsTotal = baseAreaRepository.count(example);
+			// BaseArea baseArea = new BaseArea();
+			// baseArea.setPid(pid);
+			// Example<BaseArea> example = Example.of(baseArea);
+			// townshipsTotal = baseAreaRepository.count(example);
 		}
 		else {
 			CarInfo carInfo = carInfoRepository.findByEid(eid);
@@ -327,6 +325,8 @@ public class CarInfoServiceImpl implements CarInfoService {
 		String areaKeyNext = BizUtil.getNextArea(areaKey);
 		// 其下区域车辆数
 		List<CarAreaNum> lstCarAreaNum = carInfoRepository.findCarCountAreaGroupBy(pid, areaKey, areaKeyNext);
+		//
+		townshipsTotal = carInfoRepository.findCarCountByMapArea(mapArea);
 		//
 		areaCarDTO.setQueryId(pid);
 		areaCarDTO.setVehicleTotal(vehicleTotal);

@@ -235,7 +235,7 @@ public class DeviceTimeRepositoryImpl implements IDeviceTimeRepository {
 		sqlBuf.append(" SUM(d.dis) AS dis,");
 		sqlBuf.append(" SUM(d.pts) AS pts,");
 		sqlBuf.append(" SUM(d.cks) AS cks,");
-		sqlBuf.append(" ceil(SUM(d.exprt) / COUNT(1)) AS exprt,");
+		sqlBuf.append(" ceil(SUM(d.exprt) / SUM(CASE d.exprt WHEN 0 THEN 0 ELSE 1 END)) AS exprt,");
 		sqlBuf.append(" SUM(d.rps) AS rps,");
 		sqlBuf.append(" SUM(d.wds) AS wds,");
 		sqlBuf.append(" SUM(d.ts) AS ts");
