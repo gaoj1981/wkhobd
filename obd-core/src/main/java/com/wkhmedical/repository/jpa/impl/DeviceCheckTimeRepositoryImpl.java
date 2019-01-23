@@ -83,9 +83,9 @@ public class DeviceCheckTimeRepositoryImpl implements IDeviceCheckTimeRepository
 	public Long getCheckItemCount(String eid, Long provId, Long cityId, Long areaId, Long townId, Long villId) {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuilder sqlBuf = new StringBuilder("");
-		sqlBuf.append(" SELECT SUM(dct.number) AS sumNum");
-		sqlBuf.append(" FROM device_check_time dct");
-		sqlBuf.append(" WHERE 1 = 1 AND status=1");
+		sqlBuf.append(" SELECT SUM(dct.cks) AS sumNum");
+		sqlBuf.append(" FROM device_time dct");
+		sqlBuf.append(" WHERE 1 = 1");
 		if (StringUtils.isNotBlank(eid)) {
 			sqlBuf.append(" AND dct.eid = ?");
 			paramList.add(eid);

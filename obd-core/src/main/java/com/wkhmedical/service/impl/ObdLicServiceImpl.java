@@ -623,8 +623,7 @@ public class ObdLicServiceImpl implements ObdLicService {
 		// 检测异常数
 		BigDecimal expNum = dcRepository.getCheckSumByStatus(0, eid, provId, cityId, areaId, townId, villId);
 		// 检测总数
-		BigDecimal nnNum = dcRepository.getCheckSumByStatus(1, eid, provId, cityId, areaId, townId, villId);
-		BigDecimal ttNum = expNum.add(nnNum);
+		BigDecimal ttNum = dcRepository.getCheckSumByStatus(1, eid, provId, cityId, areaId, townId, villId);
 		if (ttNum.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
 		return expNum.divide(ttNum, 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100));
 	}
@@ -715,14 +714,12 @@ public class ObdLicServiceImpl implements ObdLicService {
 				else {
 					devTime.setPts(dctObj.getNumber());
 				}
-				// 检测正常数
-				BigDecimal nnNum = deviceCheckTimeRepository.getCheckSumByStatus(1, eid, dt);
+				// 检测正常数即总数
+				BigDecimal ttNum = deviceCheckTimeRepository.getCheckSumByStatus(1, eid, dt);
 				// 检测异常数
 				BigDecimal expNum = deviceCheckTimeRepository.getCheckSumByStatus(0, eid, dt);
-				// 检测总数
-				BigDecimal ttNum = expNum.add(nnNum);
 				// 检测项统计
-				devTime.setCks(nnNum.longValue());
+				devTime.setCks(ttNum.longValue());
 				// 检测异常百分比
 				if (ttNum.compareTo(BigDecimal.ZERO) == 0) {
 					devTime.setExprt(0);
