@@ -1,7 +1,6 @@
 package com.wkhmedical.repository.jpa.impl;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -84,9 +83,9 @@ public class DeviceCheckTimeRepositoryImpl implements IDeviceCheckTimeRepository
 	public Long getCheckItemCount(String eid, Long provId, Long cityId, Long areaId, Long townId, Long villId) {
 		List<Object> paramList = new ArrayList<Object>();
 		StringBuilder sqlBuf = new StringBuilder("");
-		sqlBuf.append(" SELECT COUNT(DISTINCT(dct.type)) AS sumNum");
+		sqlBuf.append(" SELECT SUM(dct.number) AS sumNum");
 		sqlBuf.append(" FROM device_check_time dct");
-		sqlBuf.append(" WHERE 1 = 1");
+		sqlBuf.append(" WHERE 1 = 1 AND status=1");
 		if (StringUtils.isNotBlank(eid)) {
 			sqlBuf.append(" AND dct.eid = ?");
 			paramList.add(eid);
@@ -113,7 +112,7 @@ public class DeviceCheckTimeRepositoryImpl implements IDeviceCheckTimeRepository
 		}
 		@SuppressWarnings("rawtypes")
 		List<Map> lstCount = hibernateSupport.findByNativeSql(Map.class, sqlBuf.toString(), paramList.toArray());
-		BigInteger resNum = (BigInteger) lstCount.get(0).get("sumNum");
+		BigDecimal resNum = (BigDecimal) lstCount.get(0).get("sumNum");
 		if (resNum == null) return 0L;
 		return resNum.longValue();
 	}
