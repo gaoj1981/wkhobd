@@ -674,7 +674,7 @@ public class ObdLicServiceImpl implements ObdLicService {
 				// 运营天数
 				devTime.setWds(1);
 				// 完善区域属性
-				carInfo = carInfoRepository.findByEid(eid);
+				carInfo = carInfoRepository.findByEidAndDelFlag(eid, 0);
 				if (carInfo != null) {
 					devTime.setProvId(carInfo.getProvId());
 					devTime.setCityId(carInfo.getCityId());
