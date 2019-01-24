@@ -19,4 +19,6 @@ public interface CarInfoRepository extends JpaRepository<CarInfo, String>, ICarI
 	CarInfo findByPlateNum(String plateNum);
 
 	Long countByInsTimeLessThan(Date dt);
+
+	Long countByDelFlagAndInsTimeLessThan(int delFlag, Date dt);
 }

@@ -896,7 +896,7 @@ public class ObdLicServiceImpl implements ObdLicService {
 		Long areaId = paramBody.getAreaId();
 		Long townId = paramBody.getTownId();
 		Long villId = paramBody.getVillId();
-		String type = BizConstant.MAP_CHECK_ITEMS.get("healthexam");
+		String type = BizConstant.MAP_CHECK_ITEMS.get("persontime");
 
 		//
 		MonthAvgExamDTO monthAvgObj;
@@ -913,7 +913,7 @@ public class ObdLicServiceImpl implements ObdLicService {
 			// 体检人数
 			ckNum = deviceCheckTimeRepository.getCheckSum(eid, provId, cityId, areaId, townId, villId, type, dtRangeArr[0], dtRangeArr[1]);
 			// 车辆数
-			carNum = carInfoRepository.countByInsTimeLessThan(DateUtil.getDateAddDay(dtRangeArr[1], 1));
+			carNum = carInfoRepository.countByDelFlagAndInsTimeLessThan(0, DateUtil.getDateAddDay(dtRangeArr[1], 1));
 			// 平均体检人数
 			if (carNum > 0) {
 				bckNum = new BigDecimal(ckNum);
